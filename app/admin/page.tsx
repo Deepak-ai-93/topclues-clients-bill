@@ -9,7 +9,10 @@ import {
   Plus, 
   ArrowRight,
   UploadCloud,
-  FileCheck
+  FileCheck,
+  Calendar,
+  UserPlus,
+  BarChart3
 } from 'lucide-react';
 
 interface RecentDocument {
@@ -29,6 +32,8 @@ export default function AdminDashboardPage() {
   const [stats, setStats] = useState({
     totalClients: 0,
     totalDocuments: 0,
+    totalContent: 0,
+    totalLeads: 0,
     recentDocuments: [] as RecentDocument[]
   });
   const [loading, setLoading] = useState(true);
@@ -41,6 +46,8 @@ export default function AdminDashboardPage() {
         setStats({
           totalClients: data.totalClients,
           totalDocuments: data.totalDocuments,
+          totalContent: data.totalContent || 0,
+          totalLeads: data.totalLeads || 0,
           recentDocuments: data.recentDocuments as RecentDocument[]
         });
       } catch (err) {
@@ -92,7 +99,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
         {/* KPI: Total Clients */}
         <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
@@ -128,6 +135,44 @@ export default function AdminDashboardPage() {
             </div>
             <Link href="/admin/billing" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
               Billing console <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* KPI: Content Calendar */}
+        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
+          <div className="flex justify-between items-start">
+            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Content Calendar</span>
+            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
+              <Calendar className="w-4 h-4 text-neutral-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-baseline justify-between">
+            <div>
+              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalContent}</span>
+              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Scheduled Assets</p>
+            </div>
+            <Link href="/admin/content" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
+              Manage <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* KPI: Leads */}
+        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
+          <div className="flex justify-between items-start">
+            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Leads Pipeline</span>
+            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
+              <UserPlus className="w-4 h-4 text-neutral-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-baseline justify-between">
+            <div>
+              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalLeads}</span>
+              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Active Leads Tracked</p>
+            </div>
+            <Link href="/admin/leads" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
+              Manage <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>

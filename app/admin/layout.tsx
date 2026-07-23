@@ -8,6 +8,8 @@ import {
   Users, 
   CreditCard, 
   BarChart3,
+  Calendar,
+  UserPlus,
   LogOut, 
   ShieldCheck
 } from 'lucide-react';
@@ -87,6 +89,22 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             >
               <BarChart3 className="w-4.5 h-4.5 text-neutral-400" />
               <span>Reports</span>
+            </Link>
+
+            <Link 
+              href="/admin/content" 
+              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 hover:text-black hover:bg-neutral-100/60 transition-colors"
+            >
+              <Calendar className="w-4.5 h-4.5 text-neutral-400" />
+              <span>Content</span>
+            </Link>
+
+            <Link 
+              href="/admin/leads" 
+              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 hover:text-black hover:bg-neutral-100/60 transition-colors"
+            >
+              <UserPlus className="w-4.5 h-4.5 text-neutral-400" />
+              <span>Leads</span>
             </Link>
           </nav>
         </div>

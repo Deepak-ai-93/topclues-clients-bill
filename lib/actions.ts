@@ -220,6 +220,14 @@ export async function getAdminDashboardData() {
     .from('billing_documents')
     .select('*', { count: 'exact', head: true });
 
+  const { count: contentCount } = await supabaseAdmin
+    .from('content_calendars')
+    .select('*', { count: 'exact', head: true });
+
+  const { count: leadsCount } = await supabaseAdmin
+    .from('leads')
+    .select('*', { count: 'exact', head: true });
+
   // Get 5 most recent documents
   const { data: recentDocuments } = await supabaseAdmin
     .from('billing_documents')
@@ -230,6 +238,8 @@ export async function getAdminDashboardData() {
   return {
     totalClients: clientsCount || 0,
     totalDocuments: documentsCount || 0,
+    totalContent: contentCount || 0,
+    totalLeads: leadsCount || 0,
     recentDocuments: recentDocuments || [],
   };
 }
@@ -604,6 +614,328 @@ export async function downloadReport(reportId: string) {
     return { success: true, url: signedData.signedUrl };
   } catch (error: any) {
     return { success: false, error: error.message || 'An error occurred while preparing download.' };
+  }
+}
+
+// ==========================================
+// CONTENT CALENDAR ACTIONS
+// ==========================================
+
+export async function getAdminContentData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: entries, error } = await supabaseAdmin
+    .from('content_calendars')
+    .select('*, client:profiles(name, email)')
+    .order('publish_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching content:', error);
+    return { entries: [], clients: clients || [] };
+  }
+
+  return { entries: entries || [], clients: clients || [] };
+}
+
+export async function createContentEntry(data: {
+  clientId: string;
+  title: string;
+  description: string;
+  platform: string;
+  publishDate: string;
+  status: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('content_calendars')
+      .insert({
+        client_id: data.clientId,
+        title: data.title,
+        description: data.description,
+        platform: data.platform,
+        publish_date: data.publishDate,
+        status: data.status
+      });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/content');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred while creating content entry.' };
+  }
+}
+
+export async function updateContentEntry(entryId: string, data: {
+  title: string;
+  description: string;
+  platform: string;
+  publishDate: string;
+  status: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('content_calendars')
+      .update({
+        title: data.title,
+        description: data.description,
+        platform: data.platform,
+        publish_date: data.publishDate,
+        status: data.status
+      })
+      .eq('id', entryId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/content');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred while updating content entry.' };
+  }
+}
+
+export async function deleteContentEntry(entryId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('content_calendars')
+      .delete()
+      .eq('id', entryId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/content');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred during deletion.' };
+  }
+}
+
+export async function getClientContent() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: entries, error } = await supabaseAdmin
+    .from('content_calendars')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('publish_date', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching client content:', error);
+    return { entries: [] };
+  }
+
+  return { entries: entries || [] };
+}
+
+// ==========================================
+// LEAD MANAGEMENT ACTIONS
+// ==========================================
+
+export async function getAdminLeadsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: leads, error } = await supabaseAdmin
+    .from('leads')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching leads:', error);
+    return { leads: [], clients: clients || [] };
+  }
+
+  return { leads: leads || [], clients: clients || [] };
+}
+
+export async function createLead(data: {
+  clientId: string;
+  name: string;
+  email: string;
+  phone: string;
+  source: string;
+  status: string;
+  notes: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .insert({
+        client_id: data.clientId,
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        source: data.source,
+        status: data.status,
+        notes: data.notes
+      });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/leads');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred while creating lead.' };
+  }
+}
+
+export async function updateLead(leadId: string, data: {
+  name: string;
+  email: string;
+  phone: string;
+  source: string;
+  status: string;
+  notes: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .update({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        source: data.source,
+        status: data.status,
+        notes: data.notes
+      })
+      .eq('id', leadId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/leads');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred while updating lead.' };
+  }
+}
+
+export async function deleteLead(leadId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .delete()
+      .eq('id', leadId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/leads');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred during lead deletion.' };
+  }
+}
+
+export async function getClientLeads() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: leads, error } = await supabaseAdmin
+    .from('leads')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching client leads:', error);
+    return { leads: [] };
+  }
+
+  return { leads: leads || [] };
+}
+
+export async function updateClientLeadStatus(leadId: string, status: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { data: lead } = await supabaseAdmin
+      .from('leads')
+      .select('client_id')
+      .eq('id', leadId)
+      .single();
+
+    if (!lead || lead.client_id !== session.userId) {
+      return { success: false, error: 'Access denied.' };
+    }
+
+    const { error } = await supabaseAdmin
+      .from('leads')
+      .update({ status })
+      .eq('id', leadId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
   }
 }
 
