@@ -1,0 +1,201 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { getAdminDashboardData } from '../../lib/actions';
+import Link from 'next/link';
+import { 
+  Users, 
+  FileText, 
+  Plus, 
+  ArrowRight,
+  UploadCloud,
+  FileCheck
+} from 'lucide-react';
+
+interface RecentDocument {
+  id: string;
+  title: string;
+  billing_date: string;
+  pdf_name: string;
+  created_at: string;
+  client?: {
+    name: string;
+    email: string;
+  };
+}
+
+export default function AdminDashboardPage() {
+  const [mounted, setMounted] = useState(false);
+  const [stats, setStats] = useState({
+    totalClients: 0,
+    totalDocuments: 0,
+    recentDocuments: [] as RecentDocument[]
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+    async function loadDashboard() {
+      try {
+        const data = await getAdminDashboardData();
+        setStats({
+          totalClients: data.totalClients,
+          totalDocuments: data.totalDocuments,
+          recentDocuments: data.recentDocuments as RecentDocument[]
+        });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadDashboard();
+  }, []);
+
+  if (!mounted || loading) {
+    return (
+      <div className="p-8 max-w-7xl mx-auto space-y-6 flex items-center justify-center min-h-[50vh]">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-xs text-neutral-400 font-mono tracking-widest">LOADING SECURE METRICS...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-6 md:p-8 space-y-8 max-w-7xl mx-auto font-sans">
+      
+      {/* Page Title Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Billing Console</h1>
+          <p className="text-sm text-neutral-500 mt-1">Manage client registrations, upload invoice PDFs, and monitor access credentials.</p>
+        </div>
+
+        <div className="flex gap-3">
+          <Link
+            href="/admin/clients"
+            className="flex items-center gap-2 px-4 py-2 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Provision Client
+          </Link>
+          <Link
+            href="/admin/billing"
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-neutral-800 hover:bg-neutral-50 rounded-xl text-xs font-semibold transition-all shadow-sm"
+          >
+            <UploadCloud className="w-3.5 h-3.5 text-neutral-500" />
+            Upload PDF
+          </Link>
+        </div>
+      </div>
+
+      {/* KPI Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        
+        {/* KPI: Total Clients */}
+        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
+          <div className="flex justify-between items-start">
+            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Registered Clients</span>
+            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
+              <Users className="w-4 h-4 text-neutral-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-baseline justify-between">
+            <div>
+              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalClients}</span>
+              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Secure Auth Accounts</p>
+            </div>
+            <Link href="/admin/clients" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
+              Manage <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+
+        {/* KPI: Total Documents */}
+        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
+          <div className="flex justify-between items-start">
+            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Billing Vault</span>
+            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
+              <FileText className="w-4 h-4 text-neutral-500" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-baseline justify-between">
+            <div>
+              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalDocuments}</span>
+              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">PDF Documents Logged</p>
+            </div>
+            <Link href="/admin/billing" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
+              Billing console <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Recent Activity Table */}
+      <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
+        <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <FileCheck className="w-4.5 h-4.5 text-neutral-500" />
+            <h2 className="text-sm font-semibold text-neutral-950">Recent Billing Uploads</h2>
+          </div>
+          <span className="text-[10px] font-mono bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded border border-neutral-200">
+            AUDITED
+          </span>
+        </div>
+
+        {stats.recentDocuments.length === 0 ? (
+          <div className="py-12 text-center">
+            <FileText className="w-10 h-10 text-neutral-300 mx-auto mb-2" />
+            <p className="text-xs text-neutral-500 font-medium">No billing documents uploaded yet.</p>
+            <Link 
+              href="/admin/billing"
+              className="text-xs font-semibold text-neutral-900 underline mt-2 inline-block hover:text-neutral-700"
+            >
+              Upload your first PDF
+            </Link>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-neutral-200 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                  <th className="py-3 px-6">Billing Title</th>
+                  <th className="py-3 px-6">Client Name</th>
+                  <th className="py-3 px-6">Billing Date</th>
+                  <th className="py-3 px-6">File Name</th>
+                  <th className="py-3 px-6 text-right">Uploaded At</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-neutral-100 text-xs">
+                {stats.recentDocuments.map((doc) => (
+                  <tr key={doc.id} className="hover:bg-neutral-50/50 transition-colors">
+                    <td className="py-3.5 px-6 font-semibold text-neutral-900">{doc.title}</td>
+                    <td className="py-3.5 px-6 text-neutral-700">
+                      {doc.client ? (
+                        <div>
+                          <div className="font-semibold">{doc.client.name}</div>
+                          <div className="text-[10px] text-neutral-400">{doc.client.email}</div>
+                        </div>
+                      ) : (
+                        <span className="text-neutral-400 italic">Deleted Client</span>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-6 text-neutral-500 font-mono">{doc.billing_date}</td>
+                    <td className="py-3.5 px-6 font-mono text-neutral-500">{doc.pdf_name}</td>
+                    <td className="py-3.5 px-6 text-right text-neutral-400">
+                      {new Date(doc.created_at).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+    </div>
+  );
+}

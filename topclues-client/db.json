@@ -1,0 +1,48 @@
+{
+  "users": [
+    {
+      "id": "usr_admin_1784628682364",
+      "email": "dbagada910@gmail.com",
+      "passwordHash": "3f7dced2dd68fc1e10f3d3c306d0f028:19c6e544bd9a49f1f5098e009b40ac71b27f41960aedbff0d745a5d8be30619dd114dc3fdbe14a0cf626194d139a713630b446142eae2dff2678120226975f60",
+      "role": "admin",
+      "status": "active",
+      "createdAt": "2026-07-21T10:11:22.367Z"
+    }
+  ],
+  "clients": [],
+  "packages": [],
+  "packageHistory": [],
+  "invoices": [],
+  "upgradeRequests": [],
+  "notifications": [],
+  "activityLogs": [
+    {
+      "id": "act_1784628682578_96za",
+      "userId": "usr_admin_1784628682364",
+      "userEmail": "dbagada910@gmail.com",
+      "role": "admin",
+      "action": "User Logged In",
+      "details": "Successful login of admin user.",
+      "ipAddress": "127.0.0.1",
+      "createdAt": "2026-07-21T10:11:22.578Z"
+    }
+  ],
+  "loginHistory": [
+    {
+      "id": "log_1784628682577",
+      "userId": "usr_admin_1784628682364",
+      "email": "dbagada910@gmail.com",
+      "role": "admin",
+      "loginTime": "2026-07-21T10:11:22.577Z",
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Next.js Action"
+    }
+  ],
+  "supportTickets": [],
+  "settings": {
+    "companyName": "TopClues",
+    "emailNotificationsEnabled": true,
+    "billingCycleDefaults": "monthly",
+    "announcement": "Welcome to the Client Portal."
+  }
+}

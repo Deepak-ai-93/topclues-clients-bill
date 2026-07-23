@@ -1,0 +1,8 @@
+{
+  "name": "TopClues Client Managements",
+  "description": "An enterprise-grade client management portal with separate admin and client dashboards, invoice management, package tracking, and upgrade requests.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
