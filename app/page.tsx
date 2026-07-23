@@ -144,18 +144,15 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[radial-gradient(#262626_1px,transparent_1px)] [background-size:24px_24px] opacity-30 pointer-events-none" />
         
         {/* Brand Header */}
-        <div className="relative z-10 flex items-center gap-2">
+        <div className="relative z-10 flex items-center gap-3">
           <Image
             src="/Logo(1).png"
-            alt="Marketing Medicine"
-            width={36}
-            height={36}
+            alt="Logo"
+            width={48}
+            height={48}
             className="rounded-xl"
           />
-          <div>
-            <span className="font-semibold text-lg tracking-tight">MARKETING MEDICINE</span>
-            <span className="text-[10px] text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
-          </div>
+          <span className="text-[10px] text-neutral-400 font-mono border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
         </div>
 
         {/* Hero Concept Content */}

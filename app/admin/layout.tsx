@@ -31,18 +31,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div>
           {/* Brand Header */}
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-            <Link href="/admin" className="flex items-center gap-2">
+            <Link href="/admin" className="flex items-center gap-3">
               <Image
                 src="/Logo(1).png"
-                alt="Marketing Medicine"
-                width={32}
-                height={32}
-                className="rounded-lg"
+                alt="Logo"
+                width={44}
+                height={44}
+                className="rounded-xl"
               />
-              <div>
-                <span className="font-semibold text-sm tracking-tight text-neutral-900">Marketing Medicine</span>
-                <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Console Mode</p>
-              </div>
+              <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Console Mode</p>
             </Link>
           </div>
 

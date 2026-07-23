@@ -108,18 +108,15 @@ export default function AdminLoginForm() {
     <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Brand */}
-        <div className="flex items-center gap-2 mb-8 justify-center">
+        <div className="flex items-center gap-3 mb-8 justify-center">
           <Image
             src="/Logo(1).png"
-            alt="Marketing Medicine"
-            width={36}
-            height={36}
+            alt="Logo"
+            width={48}
+            height={48}
             className="rounded-xl"
           />
-          <div>
-            <span className="font-semibold text-lg tracking-tight text-white">MARKETING MEDICINE</span>
-            <span className="text-[10px] text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
-          </div>
+          <span className="text-[10px] text-neutral-400 font-mono border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
         </div>
 
         <div className="bg-white rounded-2xl p-8 shadow-lg">

@@ -194,17 +194,14 @@ export default function TutorialPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-2.5 mb-3">
+          <div className="flex items-center gap-3 mb-3">
             <Image
               src="/Logo(1).png"
-              alt="Marketing Medicine"
-              width={32}
-              height={32}
-              className="rounded-lg"
+              alt="Logo"
+              width={44}
+              height={44}
+              className="rounded-xl"
             />
-            <div>
-              <span className="font-semibold text-sm tracking-tight text-neutral-900">Marketing Medicine Tutorial</span>
-            </div>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-2">
             How to Use the Portal
