@@ -31,6 +31,11 @@ export default function LandingPage() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const mainRef = useRef<HTMLDivElement>(null);
+  const highlightsRef = useRef<HTMLDivElement>(null);
+  const highlightsScrollRef = useRef<HTMLDivElement>(null);
+  const [activeCard, setActiveCard] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -82,7 +87,35 @@ export default function LandingPage() {
           onToggle: self => { if (self.isActive) setActiveSection(s.dataset.section || ''); }
         });
       });
+
     }, mainRef);
+
+    // Horizontal scroll for achievements (outside gsap.context, uses refs directly)
+    const hScroll = highlightsScrollRef.current;
+    const hSection = highlightsRef.current;
+    if (hScroll && hSection) {
+      const cards = gsap.utils.toArray<HTMLElement>('.hscroll-card');
+      const totalWidth = hScroll.scrollWidth - hSection.offsetWidth;
+      if (totalWidth > 0) {
+        ScrollTrigger.create({
+          trigger: hSection,
+          pin: true,
+          start: 'top top',
+          end: () => `+=${totalWidth}`,
+          scrub: 1.5,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const idx = Math.round(progress * (cards.length - 1));
+            setActiveCard(Math.min(idx, cards.length - 1));
+          }
+        });
+        gsap.to(hScroll, {
+          x: () => -totalWidth,
+          ease: 'none'
+        });
+      }
+    }
 
     return () => ctx.revert();
   }, []);
@@ -90,6 +123,30 @@ export default function LandingPage() {
   const scrollTo = (id: string) => {
     setMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      const next = diff > 0
+        ? Math.min(activeCard + 1, achievements.length - 1)
+        : Math.max(activeCard - 1, 0);
+      const scrollContainer = highlightsScrollRef.current;
+      if (scrollContainer) {
+        const card = scrollContainer.querySelectorAll('.hscroll-card')[next] as HTMLElement;
+        if (card) {
+          scrollContainer.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+          const offset = -(card.offsetLeft);
+          scrollContainer.style.transform = `translateX(${offset}px)`;
+          setActiveCard(next);
+        }
+      }
+    }
   };
 
   const services = [
@@ -290,47 +347,77 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== ACHIEVEMENTS TIMELINE ===== */}
-      <section id="highlights" data-section="highlights" className="py-24 md:py-32 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
+      {/* ===== HORIZONTAL SCROLL: ACHIEVEMENTS ===== */}
+      <section id="highlights" data-section="highlights" ref={highlightsRef} className="relative bg-white overflow-hidden">
+        <div className="h-screen flex flex-col justify-center">
+          <div className="px-6 md:px-16 text-center mb-8 md:mb-12">
             <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Milestones</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 mb-4 split-line">Achievements & Recognition</h2>
-          </motion.div>
-
-          <div className="relative">
-            <div className="absolute left-6 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-neutral-200" />
-            {achievements.map((a, i) => (
-              <motion.div key={`${a.year}-${i}`}
-                initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.6 }}
-                className={`relative flex items-start gap-6 mb-12 md:mb-16 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}
-              >
-                <div className={`flex-1 ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'} hidden md:block`}>
-                  <span className="text-[10px] font-mono text-emerald-400">{a.year}</span>
-                  <h3 className="text-sm font-bold text-black mt-1">{a.title}</h3>
-                  <p className="text-xs text-neutral-400 mt-1">{a.desc}</p>
-                </div>
-                <div className="relative z-10 w-12 h-12 rounded-full bg-white border-2 border-neutral-300 flex items-center justify-center shrink-0">
-                  <a.icon className="w-5 h-5 text-neutral-300" />
-                </div>
-                <div className="flex-1 md:hidden">
-                  <span className="text-[10px] font-mono text-emerald-400">{a.year}</span>
-                  <h3 className="text-sm font-bold text-black mt-1">{a.title}</h3>
-                  <p className="text-xs text-neutral-400 mt-1">{a.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+            <h2 className="text-3xl md:text-5xl font-bold mt-4">Achievements & Recognition</h2>
+            <p className="text-sm text-neutral-400 mt-2 max-w-xl mx-auto">Scroll down or swipe to explore our journey</p>
           </div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="mt-16 p-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-2xl text-center"
+          <div className="flex-1 flex items-center overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            <ShieldCheck className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-black">DPIIT Recognized Startup</h3>
-            <p className="text-sm text-neutral-400 mt-1">Officially recognized by the Department for Promotion of Industry and Internal Trade</p>
+            <div ref={highlightsScrollRef}
+              className="flex gap-6 md:gap-10 px-6 md:px-16 will-change-transform"
+            >
+              {achievements.map((a, i) => (
+                <div key={`${a.year}-${i}`}
+                  className={`hscroll-card flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] p-8 md:p-10 rounded-3xl border transition-all duration-500 ${
+                    i === activeCard
+                      ? 'border-neutral-300 bg-neutral-50 shadow-md'
+                      : 'border-neutral-200 bg-white'
+                  }`}
+                >
+                  <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center mb-6">
+                    <a.icon className="w-6 h-6 text-white" />
+                  </div>
+                  <span className="text-[11px] font-mono text-emerald-600 font-bold tracking-wider">{a.year}</span>
+                  <h3 className="text-xl md:text-2xl font-bold text-black mt-2 mb-3">{a.title}</h3>
+                  <p className="text-sm text-neutral-500 leading-relaxed">{a.desc}</p>
+                  <div className="mt-6 pt-4 border-t border-neutral-100">
+                    <span className="text-[10px] font-mono text-neutral-400">
+                      {i === 0 ? 'First Milestone' : i === achievements.length - 1 ? 'Latest Achievement' : `Achievement ${i + 1}`}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-2 pb-6 md:pb-10">
+            {achievements.map((_, i) => (
+              <button key={i}
+                onClick={() => {
+                  setActiveCard(i);
+                  const container = highlightsScrollRef.current;
+                  if (container) {
+                    const card = container.querySelectorAll('.hscroll-card')[i] as HTMLElement;
+                    if (card) {
+                      container.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
+                      container.style.transform = `translateX(${-card.offsetLeft}px)`;
+                    }
+                  }
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === activeCard ? 'bg-black w-6' : 'bg-neutral-300'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 md:py-32 px-6 relative">
+        <div className="max-w-4xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="p-8 md:p-12 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl text-center"
+          >
+            <ShieldCheck className="w-10 h-10 text-emerald-600 mx-auto mb-4" />
+            <h3 className="text-xl md:text-2xl font-bold text-black">DPIIT Recognized Startup</h3>
+            <p className="text-sm text-neutral-500 mt-2 max-w-lg mx-auto">Officially recognized by the Department for Promotion of Industry and Internal Trade</p>
           </motion.div>
         </div>
       </section>
