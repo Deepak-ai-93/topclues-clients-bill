@@ -194,13 +194,14 @@ export default function TutorialPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex flex-col items-start gap-3 mb-3">
             <Image
               src="/Logo(1).png"
               alt="Logo"
-              width={44}
-              height={44}
+              width={500}
+              height={500}
               className="rounded-xl"
+              style={{ maxWidth: '100%', height: 'auto' }}
             />
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-2">

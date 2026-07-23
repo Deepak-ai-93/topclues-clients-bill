@@ -148,9 +148,10 @@ export default function LoginPage() {
           <Image
             src="/Logo(1).png"
             alt="Logo"
-            width={48}
-            height={48}
+            width={500}
+            height={500}
             className="rounded-xl"
+            style={{ maxWidth: '100%', height: 'auto' }}
           />
           <span className="text-[10px] text-neutral-400 font-mono border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
         </div>

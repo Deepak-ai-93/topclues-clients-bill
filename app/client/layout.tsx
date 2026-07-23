@@ -35,13 +35,14 @@ export default async function ClientLayout({ children }: { children: React.React
         <div>
           {/* Brand Header */}
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-            <Link href="/client" className="flex items-center gap-3">
+            <Link href="/client" className="flex flex-col items-start gap-2">
               <Image
                 src="/Logo(1).png"
                 alt="Logo"
-                width={44}
-                height={44}
+                width={500}
+                height={500}
                 className="rounded-xl"
+                style={{ maxWidth: '100%', height: 'auto' }}
               />
               <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Safe Gateway</p>
             </Link>
