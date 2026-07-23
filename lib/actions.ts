@@ -426,6 +426,187 @@ export async function downloadBillingDocument(documentId: string) {
   }
 }
 
+// ==========================================
+// ANALYTICS REPORTS ACTIONS
+// ==========================================
+
+export async function getAdminReportsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: reports, error } = await supabaseAdmin
+    .from('analytics_reports')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching reports:', error);
+    return { reports: [], clients: clients || [] };
+  }
+
+  return { reports: reports || [], clients: clients || [] };
+}
+
+export async function uploadReport(data: {
+  clientId: string;
+  title: string;
+  reportType: string;
+  reportPeriod: string;
+  platform: string;
+  notes: string;
+  pdfBase64: string;
+  pdfName: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const base64Data = data.pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+    const fileBuffer = Buffer.from(base64Data, 'base64');
+
+    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+    if (!buckets?.some(b => b.name === 'analytics-reports')) {
+      await supabaseAdmin.storage.createBucket('analytics-reports', {
+        public: false
+      });
+    }
+
+    const fileName = `${data.clientId}/${Date.now()}-${data.pdfName}`;
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('analytics-reports')
+      .upload(fileName, fileBuffer, {
+        contentType: 'application/pdf',
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (uploadError) {
+      return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+    }
+
+    const { error: dbError } = await supabaseAdmin
+      .from('analytics_reports')
+      .insert({
+        client_id: data.clientId,
+        title: data.title,
+        report_type: data.reportType,
+        report_period: data.reportPeriod,
+        platform: data.platform,
+        pdf_url: fileName,
+        pdf_name: data.pdfName,
+        notes: data.notes || null
+      });
+
+    if (dbError) {
+      await supabaseAdmin.storage.from('analytics-reports').remove([fileName]);
+      return { success: false, error: `Database insert failed: ${dbError.message}` };
+    }
+
+    revalidatePath('/admin/reports');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred during report upload.' };
+  }
+}
+
+export async function deleteReport(reportId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { data: report } = await supabaseAdmin
+      .from('analytics_reports')
+      .select('pdf_url')
+      .eq('id', reportId)
+      .single();
+
+    if (report?.pdf_url) {
+      await supabaseAdmin.storage.from('analytics-reports').remove([report.pdf_url]);
+    }
+
+    const { error } = await supabaseAdmin
+      .from('analytics_reports')
+      .delete()
+      .eq('id', reportId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/admin/reports');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred during report deletion.' };
+  }
+}
+
+export async function getClientReports() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') {
+    throw new Error('Unauthorized');
+  }
+
+  const { data: reports, error } = await supabaseAdmin
+    .from('analytics_reports')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching client reports:', error);
+    return { reports: [] };
+  }
+
+  return { reports: reports || [] };
+}
+
+export async function downloadReport(reportId: string) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { data: report, error } = await supabaseAdmin
+      .from('analytics_reports')
+      .select('*')
+      .eq('id', reportId)
+      .single();
+
+    if (error || !report) {
+      return { success: false, error: 'Report not found.' };
+    }
+
+    if (session.role === 'client' && report.client_id !== session.userId) {
+      return { success: false, error: 'Access denied.' };
+    }
+
+    const { data: signedData, error: signedError } = await supabaseAdmin.storage
+      .from('analytics-reports')
+      .createSignedUrl(report.pdf_url, 300);
+
+    if (signedError || !signedData?.signedUrl) {
+      return { success: false, error: signedError?.message || 'Could not generate download link.' };
+    }
+
+    return { success: true, url: signedData.signedUrl };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred while preparing download.' };
+  }
+}
+
 export async function getServerSession() {
   return getSession();
 }

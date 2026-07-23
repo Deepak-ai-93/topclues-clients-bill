@@ -15,7 +15,8 @@ import {
   Key,
   CheckCircle,
   ShieldCheck,
-  BookOpen
+  BookOpen,
+  BarChart3
 } from 'lucide-react';
 
 const steps = [
@@ -84,6 +85,22 @@ const steps = [
     ]
   },
   {
+    id: 'admin-reports',
+    role: 'admin',
+    title: 'Sharing Analytics Reports',
+    subtitle: 'Uploading Meta & Google Ads performance reports',
+    steps: [
+      { label: 'Navigate to Reports', detail: 'Click "Reports" in the left sidebar to open the Analytics Reports console.' },
+      { label: 'Click "Upload Report"', detail: 'A modal form opens with fields for the report details.' },
+      { label: 'Select the client and platform', detail: 'Choose the target client, then select the platform (Meta Ads, Google Ads, or both).' },
+      { label: 'Enter report details', detail: 'Fill in the report title, select the report period using the month picker, and optionally add notes with key highlights or KPIs.' },
+      { label: 'Select the PDF file', detail: 'Click the upload area and choose the analytics report PDF from your computer.' },
+      { label: 'Click "Upload Report"', detail: 'The report is uploaded to secure storage and becomes accessible to the client.' },
+      { label: 'Filter by platform', detail: 'Use the platform filter dropdown to view reports from specific ad platforms.' },
+      { label: 'Download or delete', detail: 'Use the download icon to preview a report or the trash icon to remove it.' },
+    ]
+  },
+  {
     id: 'admin-logout',
     role: 'admin',
     title: 'Admin Logout',
@@ -108,11 +125,25 @@ const steps = [
     id: 'client-dashboard',
     role: 'client',
     title: 'Client Dashboard Overview',
-    subtitle: 'Viewing your billing documents',
+    subtitle: 'Browsing billing documents and analytics reports',
     steps: [
       { label: 'View your profile', detail: 'The top bar shows your name and email for confirmation.' },
-      { label: 'Browse your documents', detail: 'The "Your Billing Documents" table lists all invoices your administrator has uploaded for you.' },
-      { label: 'Check document details', detail: 'Each entry shows the document title, billing date, and PDF file name.' },
+      { label: 'Switch between tabs', detail: 'Use the tab bar to toggle between "Analytics Reports" and "Billing Documents".' },
+      { label: 'Browse analytics reports', detail: 'The Analytics Reports tab shows monthly performance reports from Meta Ads, Google Ads, or both, published by your administrator.' },
+      { label: 'Check report details', detail: 'Each report entry shows the title, period, platform badge (color-coded), and any summary notes.' },
+      { label: 'Browse billing documents', detail: 'The Billing Documents tab lists all invoices your administrator has uploaded for you.' },
+    ]
+  },
+  {
+    id: 'client-download-report',
+    role: 'client',
+    title: 'Downloading Analytics Reports',
+    subtitle: 'Accessing your monthly performance PDFs',
+    steps: [
+      { label: 'Go to the Analytics Reports tab', detail: 'If not already selected, click "Analytics Reports" in the tab bar.' },
+      { label: 'Find the report you need', detail: 'Locate it by title, period, or platform badge.' },
+      { label: 'Click the "Download" button', detail: 'The report PDF opens in a new browser tab.' },
+      { label: 'Save or print', detail: 'Use your browser\'s save or print function to keep a copy.' },
     ]
   },
   {
