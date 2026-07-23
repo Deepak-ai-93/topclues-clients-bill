@@ -95,17 +95,17 @@ export default function AdminLoginForm() {
 
   if (pageLoading) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center p-6">
+      <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-xs text-neutral-400 font-mono tracking-wider">SECURE CONNECTION STARTING...</p>
+          <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-xs text-neutral-500 font-mono tracking-wider">SECURE CONNECTION STARTING...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="flex flex-col items-center gap-3 mb-8">
@@ -118,7 +118,7 @@ export default function AdminLoginForm() {
               className="w-20 md:w-24"
             />
           </div>
-          <span className="text-[10px] text-neutral-400 font-mono border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
+          <span className="text-[10px] text-neutral-500 font-mono border border-neutral-300 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
         </div>
 
         <div className="bg-white rounded-2xl p-8 shadow-lg">

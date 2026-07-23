@@ -181,7 +181,7 @@ export default function TutorialPage() {
   const filteredSteps = steps.filter(s => s.role === activeRole);
 
   return (
-    <div className="min-h-screen bg-neutral-50 font-sans">
+    <div className="min-h-screen bg-white font-sans">
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
         {/* Back link */}
         <Link

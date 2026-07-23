@@ -59,7 +59,7 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
           )}
         </div>
 
-        <div className="px-4 md:px-6 py-4 bg-neutral-50 border-b border-neutral-100/60 flex items-center gap-2.5">
+        <div className="px-4 md:px-6 py-4 bg-white border-b border-neutral-100 flex items-center gap-2.5">
           <div className="w-6.5 h-6.5 rounded-full bg-neutral-200 border border-neutral-300 flex items-center justify-center text-[10px] font-bold text-neutral-700">
             AD
           </div>

@@ -128,10 +128,10 @@ export default function LandingPage() {
   ];
 
   return (
-    <div ref={mainRef} className="bg-neutral-950 text-white font-sans overflow-x-hidden">
+    <div ref={mainRef} className="bg-white text-black font-sans overflow-x-hidden">
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-lg border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 shrink-0">
             <div className="bg-white rounded-lg p-0.5">
@@ -141,7 +141,7 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-1">
             {sections.map(s => (
               <button key={s.id} onClick={() => scrollTo(s.id)}
-                className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${activeSection === s.id ? 'text-white bg-white/10' : 'text-neutral-400 hover:text-white'}`}>
+                className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${activeSection === s.id ? 'text-black bg-neutral-100' : 'text-neutral-500 hover:text-black'}`}>
                 {s.label}
               </button>
             ))}
@@ -150,18 +150,18 @@ export default function LandingPage() {
             <Link href="/login" className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-white text-neutral-950 rounded-xl text-xs font-bold hover:bg-neutral-200 transition-all">
               Client Login <ArrowRight className="w-3 h-3" />
             </Link>
-            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-neutral-400 hover:text-white">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-neutral-500 hover:text-black">
               {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
         <AnimatePresence>
           {menuOpen && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden border-t border-white/5 bg-neutral-950">
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden border-t border-neutral-200 bg-white">
               <div className="px-6 py-4 space-y-1">
                 {sections.map(s => (
                   <button key={s.id} onClick={() => scrollTo(s.id)}
-                    className="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-300 hover:text-white hover:bg-white/5 rounded-lg">
+                    className="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-lg">
                     {s.label}
                   </button>
                 ))}
@@ -176,14 +176,13 @@ export default function LandingPage() {
 
       {/* ===== HERO ===== */}
       <section id="hero" data-section="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-950 via-neutral-900 to-neutral-950" />
-        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.03) 0%, transparent 50%)' }} />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 via-white to-neutral-50" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-black/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-8 hero-badge">
-            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-mono text-neutral-400">#ForDoctorsOnly</span>
-            <span className="px-3 py-1 bg-white/5 border border-white/10 rounded-full text-[10px] font-mono text-neutral-400">Est. 2015</span>
+            <span className="px-3 py-1 bg-neutral-100 border border-neutral-200 rounded-full text-[10px] font-mono text-neutral-600">#ForDoctorsOnly</span>
+            <span className="px-3 py-1 bg-neutral-100 border border-neutral-200 rounded-full text-[10px] font-mono text-neutral-600">Est. 2015</span>
           </div>
 
           <div className="flex justify-center mb-8 hero-badge">
@@ -194,7 +193,7 @@ export default function LandingPage() {
 
           <h1 ref={taglineRef} className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-6">
             Next Level of{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-neutral-300 to-neutral-500">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 via-neutral-600 to-neutral-400">
               Creativity
             </span>
             <br />
@@ -205,9 +204,9 @@ export default function LandingPage() {
             <span className="text-white">!</span>
           </h1>
 
-          <p ref={subtitleRef} className="text-base md:text-xl text-neutral-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p ref={subtitleRef} className="text-base md:text-xl text-neutral-600 max-w-2xl mx-auto mb-10 leading-relaxed">
             These Medicines Are Trusted by{' '}
-            <span className="text-white font-semibold">40+ Doctors & Hospitals</span>
+            <span className="text-black font-semibold">40+ Doctors & Hospitals</span>
           </p>
 
           <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -216,15 +215,15 @@ export default function LandingPage() {
               View Our Digital Doses
             </button>
             <button onClick={() => scrollTo('dna')}
-              className="px-8 py-3.5 border border-white/20 text-white rounded-2xl text-sm font-semibold hover:bg-white/5 transition-all">
+              className="px-8 py-3.5 border border-neutral-300 text-black rounded-2xl text-sm font-semibold hover:bg-neutral-100 transition-all">
               Discover Our Story
             </button>
           </div>
 
-          <div className="mt-16 flex items-center justify-center gap-2 text-neutral-500 text-xs font-mono">
-            <span className="w-8 h-px bg-neutral-800" />
+            <div className="mt-16 flex items-center justify-center gap-2 text-neutral-400 text-xs font-mono">
+            <span className="w-8 h-px bg-neutral-300" />
             SCROLL TO EXPLORE
-            <span className="w-8 h-px bg-neutral-800" />
+            <span className="w-8 h-px bg-neutral-300" />
           </div>
         </div>
       </section>
@@ -233,28 +232,28 @@ export default function LandingPage() {
       <section id="dna" data-section="dna" className="py-24 md:py-32 px-6 relative">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Our DNA</span>
+            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-400 uppercase">Our DNA</span>
             <h2 className="text-3xl md:text-5xl font-bold mt-4 mb-6 split-line">Marketing Medicine for Healthcare</h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 items-center reveal-up">
             <div className="space-y-6">
               <p className="text-base md:text-lg text-neutral-300 leading-relaxed">
-                <span className="text-white font-semibold">Topclues Solutions</span>, registered on 15 April 2015, is a result-driven marketing agency with a strong presence across Gujarat and an expanding PAN-India footprint.
+                <span className="text-black font-semibold">Topclues Solutions</span>, registered on 15 April 2015, is a result-driven marketing agency with a strong presence across Gujarat and an expanding PAN-India footprint.
               </p>
-              <p className="text-neutral-400 leading-relaxed">
+              <p className="text-neutral-600 leading-relaxed">
                 We specialize in healthcare digital marketing — building distinctive brand identities, shaping powerful narratives, and driving sustainable growth for doctors, hospitals, and healthcare organizations.
               </p>
               <div className="flex flex-wrap gap-3 pt-4">
                 {['Inbound Marketing', 'Outbound Marketing', 'Data-Driven Insights', 'Advanced Tools'].map(t => (
-                  <span key={t} className="px-3 py-1.5 bg-white/5 border border-white/10 rounded-full text-xs font-semibold text-neutral-300">{t}</span>
+                  <span key={t} className="px-3 py-1.5 bg-neutral-100 border border-neutral-200 rounded-full text-xs font-semibold text-neutral-600">{t}</span>
                 ))}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               {highlights.map(h => (
-                <div key={h.label} className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl scale-in text-center">
-                  <h3 className="text-3xl md:text-4xl font-bold text-white stat-number">{h.stat}</h3>
+                <div key={h.label} className="p-6 bg-neutral-50 border border-neutral-200 rounded-2xl scale-in text-center">
+                  <h3 className="text-3xl md:text-4xl font-bold text-black stat-number">{h.stat}</h3>
                   <p className="text-xs text-neutral-400 mt-1">{h.label}</p>
                 </div>
               ))}
@@ -264,7 +263,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== SERVICES ===== */}
-      <section id="services" data-section="services" className="py-24 md:py-32 px-6 relative bg-neutral-900/50">
+      <section id="services" data-section="services" className="py-24 md:py-32 px-6 relative bg-neutral-50">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
             <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">What We Do</span>
@@ -278,13 +277,13 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/[0.06] transition-all group"
+                className="p-6 bg-white border border-neutral-200 rounded-2xl hover:bg-neutral-50 transition-all group"
               >
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:bg-white/10 transition-all">
+                <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center mb-4 group-hover:bg-neutral-200 transition-all">
                   <s.icon className="w-5 h-5 text-neutral-300" />
                 </div>
                 <h3 className="text-sm font-bold text-white mb-2">{s.title}</h3>
-                <p className="text-xs text-neutral-400 leading-relaxed">{s.desc}</p>
+                <p className="text-xs text-neutral-600 leading-relaxed">{s.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -300,7 +299,7 @@ export default function LandingPage() {
           </motion.div>
 
           <div className="relative">
-            <div className="absolute left-6 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-white/10" />
+            <div className="absolute left-6 md:left-1/2 md:-translate-x-px top-0 bottom-0 w-px bg-neutral-200" />
             {achievements.map((a, i) => (
               <motion.div key={`${a.year}-${i}`}
                 initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
@@ -311,15 +310,15 @@ export default function LandingPage() {
               >
                 <div className={`flex-1 ${i % 2 === 0 ? 'md:text-right' : 'md:text-left'} hidden md:block`}>
                   <span className="text-[10px] font-mono text-emerald-400">{a.year}</span>
-                  <h3 className="text-sm font-bold text-white mt-1">{a.title}</h3>
+                  <h3 className="text-sm font-bold text-black mt-1">{a.title}</h3>
                   <p className="text-xs text-neutral-400 mt-1">{a.desc}</p>
                 </div>
-                <div className="relative z-10 w-12 h-12 rounded-full bg-neutral-900 border-2 border-white/10 flex items-center justify-center shrink-0">
+                <div className="relative z-10 w-12 h-12 rounded-full bg-white border-2 border-neutral-300 flex items-center justify-center shrink-0">
                   <a.icon className="w-5 h-5 text-neutral-300" />
                 </div>
                 <div className="flex-1 md:hidden">
                   <span className="text-[10px] font-mono text-emerald-400">{a.year}</span>
-                  <h3 className="text-sm font-bold text-white mt-1">{a.title}</h3>
+                  <h3 className="text-sm font-bold text-black mt-1">{a.title}</h3>
                   <p className="text-xs text-neutral-400 mt-1">{a.desc}</p>
                 </div>
               </motion.div>
@@ -329,18 +328,18 @@ export default function LandingPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             className="mt-16 p-8 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-2xl text-center"
           >
-            <ShieldCheck className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-white">DPIIT Recognized Startup</h3>
+            <ShieldCheck className="w-8 h-8 text-emerald-600 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-black">DPIIT Recognized Startup</h3>
             <p className="text-sm text-neutral-400 mt-1">Officially recognized by the Department for Promotion of Industry and Internal Trade</p>
           </motion.div>
         </div>
       </section>
 
       {/* ===== MISSION ===== */}
-      <section className="py-20 px-6 relative bg-neutral-900/30">
+      <section className="py-20 px-6 relative bg-neutral-50">
         <div className="max-w-4xl mx-auto text-center reveal-up">
           <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Our Mission</span>
-          <h2 className="text-2xl md:text-4xl font-bold mt-6 mb-6 leading-snug text-neutral-200">
+          <h2 className="text-2xl md:text-4xl font-bold mt-6 mb-6 leading-snug text-neutral-800">
             &ldquo;Build distinctive brand identities, shape powerful narratives, and drive sustainable growth.&rdquo;
           </h2>
           <div className="w-12 h-px bg-emerald-500/50 mx-auto" />
@@ -367,9 +366,9 @@ export default function LandingPage() {
               'Reshoots or changes may incur extra charges',
               'Package non-exclusive; same content won\'t be reused for same specialization',
             ].map((g, i) => (
-              <div key={i} className="flex items-start gap-3 p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+              <div key={i} className="flex items-start gap-3 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
                 <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span className="text-xs text-neutral-300 leading-relaxed">{g}</span>
+                <span className="text-xs text-neutral-700 leading-relaxed">{g}</span>
               </div>
             ))}
           </div>
@@ -377,7 +376,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== OFFERS ===== */}
-      <section className="py-20 px-6 relative bg-neutral-900/50">
+      <section className="py-20 px-6 relative bg-neutral-50">
         <div className="max-w-5xl mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
             <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Special Offers</span>
@@ -414,19 +413,19 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1, duration: 0.6 }}
-                className={`relative p-6 rounded-2xl border ${d.popular ? 'border-white/30 bg-white/[0.05]' : 'border-white/10 bg-white/[0.02]'} hover:bg-white/[0.05] transition-all flex flex-col`}
+                className={`relative p-6 rounded-2xl border ${d.popular ? 'border-neutral-300 bg-neutral-50' : 'border-neutral-200 bg-white'} hover:bg-neutral-50 transition-all flex flex-col`}
               >
                 {d.popular && (
                   <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-white text-neutral-950 rounded-full text-[9px] font-bold uppercase tracking-wider">Popular</span>
                 )}
-                <h3 className="text-sm font-bold text-white">{d.name}</h3>
+                <h3 className="text-sm font-bold text-black">{d.name}</h3>
                 <div className="mt-4 mb-6">
-                  <span className="text-3xl font-bold text-white">₹{d.price}</span>
+                  <span className="text-3xl font-bold text-black">₹{d.price}</span>
                   <span className="text-xs text-neutral-400 ml-1">{d.period}</span>
                 </div>
                 <ul className="space-y-3 flex-1">
                   {d.features.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-neutral-300">
+                    <li key={f} className="flex items-start gap-2 text-xs text-neutral-700">
                       <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
                       {f}
                     </li>
@@ -440,7 +439,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section id="testimonials" data-section="testimonials" className="py-24 md:py-32 px-6 relative bg-neutral-900/50">
+      <section id="testimonials" data-section="testimonials" className="py-24 md:py-32 px-6 relative bg-neutral-50">
         <div className="max-w-6xl mx-auto">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
             <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Testimonials</span>
@@ -455,12 +454,12 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.15, duration: 0.6 }}
-                className="p-6 bg-white/[0.03] border border-white/5 rounded-2xl"
+                className="p-6 bg-white border border-neutral-200 rounded-2xl"
               >
-                <Quote className="w-6 h-6 text-neutral-600 mb-4" />
-                <p className="text-sm text-neutral-300 leading-relaxed mb-6">&ldquo;{t.quote}&rdquo;</p>
+                <Quote className="w-6 h-6 text-neutral-300 mb-4" />
+                <p className="text-sm text-neutral-700 leading-relaxed mb-6">&ldquo;{t.quote}&rdquo;</p>
                 <div>
-                  <p className="text-sm font-semibold text-white">{t.name}</p>
+                  <p className="text-sm font-semibold text-black">{t.name}</p>
                   <p className="text-[10px] text-neutral-500 font-mono">{t.specialty}</p>
                 </div>
               </motion.div>
@@ -479,47 +478,47 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-2 gap-8 reveal-up">
             <div className="space-y-6">
-              <a href="https://topclues.in" target="_blank" className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-all group">
+              <a href="https://topclues.in" target="_blank" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
                 <Globe className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono">Website</p>
-                  <p className="text-sm font-semibold text-white">topclues.in</p>
+                  <p className="text-sm font-semibold text-black">topclues.in</p>
                 </div>
                 <ExternalLink className="w-4 h-4 text-neutral-600 ml-auto" />
               </a>
-              <a href="tel:+919510133057" className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-all group">
+              <a href="tel:+919510133057" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
                 <Phone className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono">Phone</p>
-                  <p className="text-sm font-semibold text-white">+91 95101 33057</p>
+                  <p className="text-sm font-semibold text-black">+91 95101 33057</p>
                 </div>
               </a>
-              <a href="mailto:marketing@topclues.in" className="flex items-center gap-4 p-4 bg-white/[0.02] border border-white/5 rounded-xl hover:bg-white/[0.05] transition-all group">
+              <a href="mailto:marketing@topclues.in" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
                 <Mail className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
                 <div>
                   <p className="text-[10px] text-neutral-500 font-mono">Email</p>
-                  <p className="text-sm font-semibold text-white">marketing@topclues.in</p>
+                  <p className="text-sm font-semibold text-black">marketing@topclues.in</p>
                 </div>
               </a>
             </div>
 
             <div className="space-y-6">
-              <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-5 h-5 text-neutral-400 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-semibold text-white">Unit 1 — Junagadh</p>
+                    <p className="text-xs font-semibold text-black">Unit 1 — Junagadh</p>
                     <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
                       Merged Office No. 365–369, 3rd Floor, Applewood City Mall, Madhuram, Moti Palace Township, Junagadh, Gujarat – 362015
                     </p>
                   </div>
                 </div>
               </div>
-              <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl">
+              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
                 <div className="flex items-start gap-4">
                   <MapPin className="w-5 h-5 text-neutral-400 shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-xs font-semibold text-white">Unit 2 — Gandhinagar</p>
+                    <p className="text-xs font-semibold text-black">Unit 2 — Gandhinagar</p>
                     <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
                       Office No. 225 A-5, Infocity Supermall-1, Gandhinagar, Gujarat – 382421
                     </p>
@@ -532,7 +531,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="py-12 px-6 border-t border-white/5">
+      <footer className="py-12 px-6 border-t border-neutral-200">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="bg-white rounded-md p-0.5">
