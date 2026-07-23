@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginUserAction, getServerSession, setupInitialAdmin, hasAdminUser } from '../../lib/actions';
 import { motion } from 'motion/react';
+import Image from 'next/image';
 import { Lock, Mail, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
 export default function AdminLoginForm() {
@@ -108,12 +109,16 @@ export default function AdminLoginForm() {
       <div className="w-full max-w-md">
         {/* Brand */}
         <div className="flex items-center gap-2 mb-8 justify-center">
-          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-black font-extrabold text-lg shadow-md">
-            T
-          </div>
+          <Image
+            src="/Logo(1).png"
+            alt="Marketing Medicine"
+            width={36}
+            height={36}
+            className="rounded-xl"
+          />
           <div>
-            <span className="font-semibold text-lg tracking-tight text-white">TOPCLUES</span>
-            <span className="text-xs text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded uppercase">Admin</span>
+            <span className="font-semibold text-lg tracking-tight text-white">MARKETING MEDICINE</span>
+            <span className="text-[10px] text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
           </div>
         </div>
 

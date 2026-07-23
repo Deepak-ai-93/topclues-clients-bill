@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginUserAction, getServerSession, setupInitialAdmin, hasAdminUser } from '../lib/actions';
 import { motion, AnimatePresence } from 'motion/react';
+import Image from 'next/image';
 import { 
   Lock, 
   Mail, 
@@ -144,12 +145,16 @@ export default function LoginPage() {
         
         {/* Brand Header */}
         <div className="relative z-10 flex items-center gap-2">
-          <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center text-black font-extrabold text-lg shadow-md">
-            T
-          </div>
+          <Image
+            src="/Logo(1).png"
+            alt="Marketing Medicine"
+            width={36}
+            height={36}
+            className="rounded-xl"
+          />
           <div>
-            <span className="font-semibold text-lg tracking-tight">TOPCLUES</span>
-            <span className="text-xs text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded uppercase">Managements</span>
+            <span className="font-semibold text-lg tracking-tight">MARKETING MEDICINE</span>
+            <span className="text-[10px] text-neutral-400 font-mono ml-2 border border-neutral-800 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
           </div>
         </div>
 
@@ -207,7 +212,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="relative z-10 pt-6 border-t border-neutral-900 flex items-center justify-between text-xs text-neutral-500">
-          <span>© 2026 TopClues Client Managements. All rights reserved.</span>
+          <span>© 2026 Marketing Medicine. All rights reserved. Powered by TopClues Solution.</span>
         </div>
       </div>
 

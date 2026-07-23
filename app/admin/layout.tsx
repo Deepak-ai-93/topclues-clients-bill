@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { getSession } from '../../lib/auth';
 import { logoutUserAction } from '../../lib/actions';
 import Link from 'next/link';
@@ -29,11 +30,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           {/* Brand Header */}
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
             <Link href="/admin" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-extrabold text-sm">
-                T
-              </div>
+              <Image
+                src="/Logo(1).png"
+                alt="Marketing Medicine"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
               <div>
-                <span className="font-semibold text-sm tracking-tight text-neutral-900">TopClues Admin</span>
+                <span className="font-semibold text-sm tracking-tight text-neutral-900">Marketing Medicine</span>
                 <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Console Mode</p>
               </div>
             </Link>

@@ -13,8 +13,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TopClues Client Managements',
-  description: 'Enterprise-grade Client & Admin Management Portal.',
+  title: 'Marketing Medicine',
+  description: 'Enterprise-grade Client & Admin Management Portal. Powered by TopClues Solution.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

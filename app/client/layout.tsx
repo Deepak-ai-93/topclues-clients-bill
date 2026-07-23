@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { getSession } from '../../lib/auth';
 import { logoutUserAction } from '../../lib/actions';
@@ -35,11 +36,15 @@ export default async function ClientLayout({ children }: { children: React.React
           {/* Brand Header */}
           <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
             <Link href="/client" className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-extrabold text-sm">
-                T
-              </div>
+              <Image
+                src="/Logo(1).png"
+                alt="Marketing Medicine"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
               <div>
-                <span className="font-semibold text-sm tracking-tight text-neutral-900">TopClues Portal</span>
+                <span className="font-semibold text-sm tracking-tight text-neutral-900">Marketing Medicine</span>
                 <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Safe Gateway</p>
               </div>
             </Link>

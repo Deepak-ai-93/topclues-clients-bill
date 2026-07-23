@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -194,11 +195,15 @@ export default function TutorialPage() {
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-2.5 mb-3">
-            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-extrabold text-sm">
-              T
-            </div>
+            <Image
+              src="/Logo(1).png"
+              alt="Marketing Medicine"
+              width={32}
+              height={32}
+              className="rounded-lg"
+            />
             <div>
-              <span className="font-semibold text-sm tracking-tight text-neutral-900">TopClues Tutorial</span>
+              <span className="font-semibold text-sm tracking-tight text-neutral-900">Marketing Medicine Tutorial</span>
             </div>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-2">
