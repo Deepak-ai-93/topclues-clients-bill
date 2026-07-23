@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
             className="flex items-center gap-2 px-4 py-2 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
-            Provision Client
+            Add Client
           </Link>
           <Link
             href="/admin/billing"

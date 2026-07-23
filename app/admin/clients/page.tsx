@@ -203,7 +203,7 @@ export default function AdminClientsPage() {
           className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <UserPlus className="w-4 h-4" />
-          Provision Client
+          Add Client
         </button>
       </div>
 
@@ -290,12 +290,12 @@ export default function AdminClientsPage() {
         )}
       </div>
 
-      {/* Provision Client Modal */}
+      {/* Add Client Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white border border-neutral-200 w-full max-w-md rounded-2xl shadow-xl overflow-hidden animate-scale-up">
             <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-neutral-900">Provision Partner Client</h2>
+              <h2 className="text-sm font-semibold text-neutral-900">Add Client</h2>
               <button 
                 onClick={() => setShowAddModal(false)}
                 className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
@@ -384,7 +384,7 @@ export default function AdminClientsPage() {
                       type="submit"
                       className="flex-1 py-2 bg-neutral-950 text-white rounded-lg text-xs font-semibold hover:bg-neutral-800 transition-all cursor-pointer"
                     >
-                      Provision Client
+                      Add Client
                     </button>
                   </div>
                 </>
