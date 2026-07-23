@@ -653,6 +653,8 @@ export async function createContentEntry(data: {
   platform: string;
   publishDate: string;
   status: string;
+  pdfBase64?: string;
+  pdfName?: string;
 }) {
   const session = await getSession();
   if (!session || session.role !== 'admin') {
@@ -660,6 +662,35 @@ export async function createContentEntry(data: {
   }
 
   try {
+    let assetUrl = '';
+    let assetName = '';
+
+    if (data.pdfBase64 && data.pdfName) {
+      const base64Data = data.pdfBase64.replace(/^data:application\/\w+;base64,/, '');
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+
+      const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+      if (!buckets?.some(b => b.name === 'content-assets')) {
+        await supabaseAdmin.storage.createBucket('content-assets', { public: false });
+      }
+
+      const fileName = `${data.clientId}/${Date.now()}-${data.pdfName}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('content-assets')
+        .upload(fileName, fileBuffer, {
+          contentType: 'application/pdf',
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+      }
+
+      assetUrl = fileName;
+      assetName = data.pdfName;
+    }
+
     const { error } = await supabaseAdmin
       .from('content_calendars')
       .insert({
@@ -668,10 +699,15 @@ export async function createContentEntry(data: {
         description: data.description,
         platform: data.platform,
         publish_date: data.publishDate,
-        status: data.status
+        status: data.status,
+        asset_url: assetUrl,
+        asset_name: assetName
       });
 
     if (error) {
+      if (assetUrl) {
+        await supabaseAdmin.storage.from('content-assets').remove([assetUrl]);
+      }
       return { success: false, error: error.message };
     }
 
@@ -688,6 +724,8 @@ export async function updateContentEntry(entryId: string, data: {
   platform: string;
   publishDate: string;
   status: string;
+  pdfBase64?: string;
+  pdfName?: string;
 }) {
   const session = await getSession();
   if (!session || session.role !== 'admin') {
@@ -695,18 +733,57 @@ export async function updateContentEntry(entryId: string, data: {
   }
 
   try {
+    let assetUrl: string | undefined;
+    let assetName: string | undefined;
+
+    if (data.pdfBase64 && data.pdfName) {
+      const base64Data = data.pdfBase64.replace(/^data:application\/\w+;base64,/, '');
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+
+      const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+      if (!buckets?.some(b => b.name === 'content-assets')) {
+        await supabaseAdmin.storage.createBucket('content-assets', { public: false });
+      }
+
+      const fileName = `entry/${entryId}/${Date.now()}-${data.pdfName}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('content-assets')
+        .upload(fileName, fileBuffer, {
+          contentType: 'application/pdf',
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+      }
+
+      assetUrl = fileName;
+      assetName = data.pdfName;
+    }
+
+    const updateData: any = {
+      title: data.title,
+      description: data.description,
+      platform: data.platform,
+      publish_date: data.publishDate,
+      status: data.status
+    };
+
+    if (assetUrl !== undefined) {
+      updateData.asset_url = assetUrl;
+      updateData.asset_name = assetName;
+    }
+
     const { error } = await supabaseAdmin
       .from('content_calendars')
-      .update({
-        title: data.title,
-        description: data.description,
-        platform: data.platform,
-        publish_date: data.publishDate,
-        status: data.status
-      })
+      .update(updateData)
       .eq('id', entryId);
 
     if (error) {
+      if (assetUrl) {
+        await supabaseAdmin.storage.from('content-assets').remove([assetUrl]);
+      }
       return { success: false, error: error.message };
     }
 
@@ -724,6 +801,16 @@ export async function deleteContentEntry(entryId: string) {
   }
 
   try {
+    const { data: entry } = await supabaseAdmin
+      .from('content_calendars')
+      .select('asset_url')
+      .eq('id', entryId)
+      .single();
+
+    if (entry?.asset_url) {
+      await supabaseAdmin.storage.from('content-assets').remove([entry.asset_url]);
+    }
+
     const { error } = await supabaseAdmin
       .from('content_calendars')
       .delete()
@@ -737,6 +824,41 @@ export async function deleteContentEntry(entryId: string) {
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || 'An error occurred during deletion.' };
+  }
+}
+
+export async function downloadContentAsset(entryId: string) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { data: entry, error } = await supabaseAdmin
+      .from('content_calendars')
+      .select('*')
+      .eq('id', entryId)
+      .single();
+
+    if (error || !entry || !entry.asset_url) {
+      return { success: false, error: 'Asset not found.' };
+    }
+
+    if (session.role === 'client' && entry.client_id !== session.userId) {
+      return { success: false, error: 'Access denied.' };
+    }
+
+    const { data: signedData, error: signedError } = await supabaseAdmin.storage
+      .from('content-assets')
+      .createSignedUrl(entry.asset_url, 300);
+
+    if (signedError || !signedData?.signedUrl) {
+      return { success: false, error: signedError?.message || 'Could not generate download link.' };
+    }
+
+    return { success: true, url: signedData.signedUrl };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
   }
 }
 
@@ -797,6 +919,8 @@ export async function createLead(data: {
   source: string;
   status: string;
   notes: string;
+  pdfBase64?: string;
+  pdfName?: string;
 }) {
   const session = await getSession();
   if (!session || session.role !== 'admin') {
@@ -804,6 +928,35 @@ export async function createLead(data: {
   }
 
   try {
+    let assetUrl = '';
+    let assetName = '';
+
+    if (data.pdfBase64 && data.pdfName) {
+      const base64Data = data.pdfBase64.replace(/^data:application\/\w+;base64,/, '');
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+
+      const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+      if (!buckets?.some(b => b.name === 'lead-documents')) {
+        await supabaseAdmin.storage.createBucket('lead-documents', { public: false });
+      }
+
+      const fileName = `${data.clientId}/${Date.now()}-${data.pdfName}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('lead-documents')
+        .upload(fileName, fileBuffer, {
+          contentType: 'application/pdf',
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+      }
+
+      assetUrl = fileName;
+      assetName = data.pdfName;
+    }
+
     const { error } = await supabaseAdmin
       .from('leads')
       .insert({
@@ -813,10 +966,15 @@ export async function createLead(data: {
         phone: data.phone,
         source: data.source,
         status: data.status,
-        notes: data.notes
+        notes: data.notes,
+        asset_url: assetUrl,
+        asset_name: assetName
       });
 
     if (error) {
+      if (assetUrl) {
+        await supabaseAdmin.storage.from('lead-documents').remove([assetUrl]);
+      }
       return { success: false, error: error.message };
     }
 
@@ -834,6 +992,8 @@ export async function updateLead(leadId: string, data: {
   source: string;
   status: string;
   notes: string;
+  pdfBase64?: string;
+  pdfName?: string;
 }) {
   const session = await getSession();
   if (!session || session.role !== 'admin') {
@@ -841,19 +1001,58 @@ export async function updateLead(leadId: string, data: {
   }
 
   try {
+    let assetUrl: string | undefined;
+    let assetName: string | undefined;
+
+    if (data.pdfBase64 && data.pdfName) {
+      const base64Data = data.pdfBase64.replace(/^data:application\/\w+;base64,/, '');
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+
+      const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+      if (!buckets?.some(b => b.name === 'lead-documents')) {
+        await supabaseAdmin.storage.createBucket('lead-documents', { public: false });
+      }
+
+      const fileName = `lead/${leadId}/${Date.now()}-${data.pdfName}`;
+      const { error: uploadError } = await supabaseAdmin.storage
+        .from('lead-documents')
+        .upload(fileName, fileBuffer, {
+          contentType: 'application/pdf',
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+      }
+
+      assetUrl = fileName;
+      assetName = data.pdfName;
+    }
+
+    const updateData: any = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      source: data.source,
+      status: data.status,
+      notes: data.notes
+    };
+
+    if (assetUrl !== undefined) {
+      updateData.asset_url = assetUrl;
+      updateData.asset_name = assetName;
+    }
+
     const { error } = await supabaseAdmin
       .from('leads')
-      .update({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        source: data.source,
-        status: data.status,
-        notes: data.notes
-      })
+      .update(updateData)
       .eq('id', leadId);
 
     if (error) {
+      if (assetUrl) {
+        await supabaseAdmin.storage.from('lead-documents').remove([assetUrl]);
+      }
       return { success: false, error: error.message };
     }
 
@@ -871,6 +1070,16 @@ export async function deleteLead(leadId: string) {
   }
 
   try {
+    const { data: lead } = await supabaseAdmin
+      .from('leads')
+      .select('asset_url')
+      .eq('id', leadId)
+      .single();
+
+    if (lead?.asset_url) {
+      await supabaseAdmin.storage.from('lead-documents').remove([lead.asset_url]);
+    }
+
     const { error } = await supabaseAdmin
       .from('leads')
       .delete()
@@ -884,6 +1093,41 @@ export async function deleteLead(leadId: string) {
     return { success: true };
   } catch (error: any) {
     return { success: false, error: error.message || 'An error occurred during lead deletion.' };
+  }
+}
+
+export async function downloadLeadDocument(leadId: string) {
+  const session = await getSession();
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+
+  try {
+    const { data: lead, error } = await supabaseAdmin
+      .from('leads')
+      .select('*')
+      .eq('id', leadId)
+      .single();
+
+    if (error || !lead || !lead.asset_url) {
+      return { success: false, error: 'Document not found.' };
+    }
+
+    if (session.role === 'client' && lead.client_id !== session.userId) {
+      return { success: false, error: 'Access denied.' };
+    }
+
+    const { data: signedData, error: signedError } = await supabaseAdmin.storage
+      .from('lead-documents')
+      .createSignedUrl(lead.asset_url, 300);
+
+    if (signedError || !signedData?.signedUrl) {
+      return { success: false, error: signedError?.message || 'Could not generate download link.' };
+    }
+
+    return { success: true, url: signedData.signedUrl };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
   }
 }
 

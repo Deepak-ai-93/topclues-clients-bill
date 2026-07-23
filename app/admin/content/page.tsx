@@ -5,7 +5,8 @@ import {
   getAdminContentData,
   createContentEntry,
   updateContentEntry,
-  deleteContentEntry
+  deleteContentEntry,
+  downloadContentAsset
 } from '../../../lib/actions';
 import {
   Search,
@@ -18,7 +19,9 @@ import {
   AlertCircle,
   FileText,
   Edit3,
-  Globe
+  Globe,
+  UploadCloud,
+  Download
 } from 'lucide-react';
 
 interface ClientEntry {
@@ -90,6 +93,7 @@ export default function AdminContentPage() {
   const [entryPlatform, setEntryPlatform] = useState('social');
   const [entryPublishDate, setEntryPublishDate] = useState('');
   const [entryStatus, setEntryStatus] = useState('draft');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   const loadData = async () => {
@@ -127,6 +131,7 @@ export default function AdminContentPage() {
     setEntryPlatform('social');
     setEntryPublishDate(new Date().toISOString().slice(0, 10));
     setEntryStatus('draft');
+    setSelectedFile(null);
     setShowModal(true);
   };
 
@@ -138,45 +143,72 @@ export default function AdminContentPage() {
     setEntryPlatform(entry.platform);
     setEntryPublishDate(entry.publish_date);
     setEntryStatus(entry.status);
+    setSelectedFile(null);
     setShowModal(true);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (editingEntry) {
-      if (!entryTitle || !entryPublishDate) {
-        triggerToast('Please fill in required fields.', true);
-        return;
-      }
-      setSaving(true);
-      try {
-        const res = await updateContentEntry(editingEntry.id, {
+    if (!entryTitle || !entryPublishDate) {
+      triggerToast('Please fill in required fields.', true);
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const readAndSave = async (action: Function, ...args: any[]) => {
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const base64String = reader.result as string;
+            const res = await action(...args, {
+              pdfBase64: base64String,
+              pdfName: selectedFile.name
+            });
+            if (res.success) {
+              loadData();
+              setShowModal(false);
+              triggerToast(editingEntry ? 'Content entry updated.' : 'Content entry created.');
+            } else {
+              triggerToast(res.error || 'Operation failed.', true);
+            }
+            setSaving(false);
+          };
+          reader.readAsDataURL(selectedFile);
+        } else {
+          const res = await action(...args, {});
+          if (res.success) {
+            loadData();
+            setShowModal(false);
+            triggerToast(editingEntry ? 'Content entry updated.' : 'Content entry created.');
+          } else {
+            triggerToast(res.error || 'Operation failed.', true);
+          }
+          setSaving(false);
+        }
+      };
+
+      if (editingEntry) {
+        await readAndSave(updateContentEntry, editingEntry.id, {
           title: entryTitle,
           description: entryDescription,
           platform: entryPlatform,
           publishDate: entryPublishDate,
           status: entryStatus
         });
-        if (res.success) {
-          loadData();
-          setShowModal(false);
-          triggerToast('Content entry updated successfully.');
-        } else {
-          triggerToast(res.error || 'Update failed.', true);
+      } else {
+        if (!selectedClientId) {
+          triggerToast('Please select a client.', true);
+          setSaving(false);
+          return;
         }
-      } catch (err: any) {
-        triggerToast(err.message || 'An error occurred.', true);
-      } finally {
-        setSaving(false);
-      }
-    } else {
-      if (!selectedClientId || !entryTitle || !entryPublishDate) {
-        triggerToast('Please fill in all required fields.', true);
-        return;
-      }
-      setSaving(true);
-      try {
-        const res = await createContentEntry({
+        await readAndSave(createContentEntry, {
           clientId: selectedClientId,
           title: entryTitle,
           description: entryDescription,
@@ -184,18 +216,23 @@ export default function AdminContentPage() {
           publishDate: entryPublishDate,
           status: entryStatus
         });
-        if (res.success) {
-          loadData();
-          setShowModal(false);
-          triggerToast('Content entry created successfully.');
-        } else {
-          triggerToast(res.error || 'Creation failed.', true);
-        }
-      } catch (err: any) {
-        triggerToast(err.message || 'An error occurred.', true);
-      } finally {
-        setSaving(false);
       }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
+      setSaving(false);
+    }
+  };
+
+  const handleDownload = async (entryId: string) => {
+    try {
+      const res = await downloadContentAsset(entryId);
+      if (res.success && res.url) {
+        window.open(res.url, '_blank');
+      } else {
+        triggerToast(res.error || 'Failed to download.', true);
+      }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
     }
   };
 
@@ -298,6 +335,7 @@ export default function AdminContentPage() {
                   <th className="py-3.5 px-6">Platform</th>
                   <th className="py-3.5 px-6">Publish Date</th>
                   <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6">File</th>
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
@@ -337,6 +375,20 @@ export default function AdminContentPage() {
                       <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border ${statusColors[entry.status] || statusColors.draft}`}>
                         {statusLabels[entry.status] || entry.status}
                       </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      {entry.asset_url ? (
+                        <button
+                          onClick={() => handleDownload(entry.id)}
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-[10px] font-semibold text-neutral-700 transition-all cursor-pointer"
+                          title="Download asset"
+                        >
+                          <Download className="w-3 h-3" />
+                          {entry.asset_name || 'Download'}
+                        </button>
+                      ) : (
+                        <span className="text-neutral-300 text-[10px]">—</span>
+                      )}
                     </td>
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -473,6 +525,23 @@ export default function AdminContentPage() {
                     onChange={(e) => setEntryPublishDate(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
                   />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-neutral-400 uppercase">Asset File (PDF / Doc)</label>
+                <div className="border border-dashed border-neutral-200 bg-neutral-50 rounded-lg p-3 text-center cursor-pointer hover:bg-neutral-100/50 transition-all relative">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <UploadCloud className="w-6 h-6 text-neutral-400 mx-auto mb-1" />
+                  <p className="text-[11px] font-semibold text-neutral-700">
+                    {selectedFile ? selectedFile.name : 'Click to upload asset file'}
+                  </p>
+                  <p className="text-[9px] text-neutral-400 mt-0.5">PDF or Document</p>
                 </div>
               </div>
 

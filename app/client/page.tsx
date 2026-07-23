@@ -9,7 +9,9 @@ import {
   downloadReport,
   getClientContent,
   getClientLeads,
-  updateClientLeadStatus
+  updateClientLeadStatus,
+  downloadContentAsset,
+  downloadLeadDocument
 } from '../../lib/actions';
 import type { SessionData } from '../../lib/auth';
 import {
@@ -216,6 +218,32 @@ export default function ClientDashboardPage() {
     }
   };
 
+  const handleDownloadContentAsset = async (entryId: string) => {
+    try {
+      const res = await downloadContentAsset(entryId);
+      if (res.success && res.url) {
+        window.open(res.url, '_blank');
+      } else {
+        triggerToast(res.error || 'Failed to download asset.', true);
+      }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
+    }
+  };
+
+  const handleDownloadLeadDoc = async (leadId: string) => {
+    try {
+      const res = await downloadLeadDocument(leadId);
+      if (res.success && res.url) {
+        window.open(res.url, '_blank');
+      } else {
+        triggerToast(res.error || 'Failed to download document.', true);
+      }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
+    }
+  };
+
   const handleUpdateLeadStatus = async (leadId: string, status: string) => {
     try {
       const res = await updateClientLeadStatus(leadId, status);
@@ -322,7 +350,7 @@ export default function ClientDashboardPage() {
       <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileText className="w-4.5 h-4.5 text-neutral-500" />
-          <h2 className="text-sm font-semibold text-neutral-950">Your Billing Documents</h2>
+          <h2 className="text-sm font-semibold text-neutral-950">Invoices, Receipts & Documents</h2>
         </div>
         <span className="text-[10px] font-mono bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded border border-neutral-200">
           SECURE ACCESS
@@ -332,8 +360,8 @@ export default function ClientDashboardPage() {
       {documents.length === 0 ? (
         <div className="py-16 text-center">
           <FileText className="w-12 h-12 text-neutral-300 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-neutral-900">No billing documents logged</h3>
-          <p className="text-xs text-neutral-400 mt-1">Contact your administrator if you believe this is an error.</p>
+            <h3 className="text-sm font-semibold text-neutral-900">No invoices available yet</h3>
+            <p className="text-xs text-neutral-400 mt-1">Your invoices, receipts, and documents will appear here once published by your administrator.</p>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -341,7 +369,7 @@ export default function ClientDashboardPage() {
             <thead>
               <tr className="border-b border-neutral-200 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
                 <th className="py-3.5 px-6">Document Title</th>
-                <th className="py-3.5 px-6">Billing Date</th>
+                <th className="py-3.5 px-6">Invoice Date</th>
                 <th className="py-3.5 px-6">File Name</th>
                 <th className="py-3.5 px-6 text-right">Actions</th>
               </tr>
@@ -402,6 +430,7 @@ export default function ClientDashboardPage() {
                 <th className="py-3.5 px-6">Platform</th>
                 <th className="py-3.5 px-6">Publish Date</th>
                 <th className="py-3.5 px-6">Status</th>
+                <th className="py-3.5 px-6 text-right">Asset</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 text-xs">
@@ -425,6 +454,19 @@ export default function ClientDashboardPage() {
                     <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border ${contentStatusColors[entry.status] || contentStatusColors.draft}`}>
                       {contentStatusLabels[entry.status] || entry.status}
                     </span>
+                  </td>
+                  <td className="py-4 px-6 text-right">
+                    {(entry as any).asset_url ? (
+                      <button
+                        onClick={() => handleDownloadContentAsset(entry.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-sm"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download
+                      </button>
+                    ) : (
+                      <span className="text-neutral-300 text-[10px]">—</span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -462,7 +504,7 @@ export default function ClientDashboardPage() {
                 <th className="py-3.5 px-6">Contact</th>
                 <th className="py-3.5 px-6">Source</th>
                 <th className="py-3.5 px-6">Status</th>
-                <th className="py-3.5 px-6 text-right">Actions</th>
+                <th className="py-3.5 px-6 text-right">Document</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-100 text-xs">
@@ -495,9 +537,19 @@ export default function ClientDashboardPage() {
                     </select>
                   </td>
                   <td className="py-4 px-6 text-right">
-                    <span className="text-[10px] text-neutral-400 font-mono">
-                      {new Date(lead.created_at).toLocaleDateString()}
-                    </span>
+                    {(lead as any).asset_url ? (
+                      <button
+                        onClick={() => handleDownloadLeadDoc(lead.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-lg text-xs font-semibold transition-all cursor-pointer shadow-sm"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download
+                      </button>
+                    ) : (
+                      <span className="text-[10px] text-neutral-400 font-mono">
+                        {new Date(lead.created_at).toLocaleDateString()}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -531,7 +583,7 @@ export default function ClientDashboardPage() {
           <h1 className="text-2xl font-bold tracking-tight text-neutral-900 mt-1">
             Welcome back, {clientProfile.name || 'Partner'}
           </h1>
-          <p className="text-sm text-neutral-500 mt-0.5">Access your reports, billing documents, content calendar, and leads.</p>
+          <p className="text-sm text-neutral-500 mt-0.5">Access your reports, invoices, content calendar, and leads.</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -567,7 +619,7 @@ export default function ClientDashboardPage() {
           }`}
         >
           <FileText className="w-3.5 h-3.5" />
-          Billing Documents
+          Invoices
         </button>
         <button
           onClick={() => setActiveTab('content')}

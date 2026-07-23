@@ -80,7 +80,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 hover:text-black hover:bg-neutral-100/60 transition-colors"
             >
               <CreditCard className="w-4.5 h-4.5 text-neutral-400" />
-              <span>Billing</span>
+              <span>Invoices</span>
             </Link>
 
             <Link 

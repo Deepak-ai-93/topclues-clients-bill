@@ -5,7 +5,8 @@ import {
   getAdminLeadsData,
   createLead,
   updateLead,
-  deleteLead
+  deleteLead,
+  downloadLeadDocument
 } from '../../../lib/actions';
 import {
   Search,
@@ -19,7 +20,9 @@ import {
   Mail,
   Phone,
   Edit3,
-  Filter
+  Filter,
+  UploadCloud,
+  FileText
 } from 'lucide-react';
 
 interface ClientEntry {
@@ -36,6 +39,8 @@ interface Lead {
   source: string;
   status: string;
   notes: string;
+  asset_url: string;
+  asset_name: string;
   created_at: string;
   client?: {
     name: string;
@@ -88,6 +93,7 @@ export default function AdminLeadsPage() {
   const [leadSource, setLeadSource] = useState('website');
   const [leadStatus, setLeadStatus] = useState('new');
   const [leadNotes, setLeadNotes] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   const loadData = async () => {
@@ -117,6 +123,12 @@ export default function AdminLeadsPage() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleOpenCreate = () => {
     setEditingLead(null);
     setSelectedClientId(clients[0]?.id || '');
@@ -126,6 +138,7 @@ export default function AdminLeadsPage() {
     setLeadSource('website');
     setLeadStatus('new');
     setLeadNotes('');
+    setSelectedFile(null);
     setShowModal(true);
   };
 
@@ -138,7 +151,21 @@ export default function AdminLeadsPage() {
     setLeadSource(lead.source);
     setLeadStatus(lead.status);
     setLeadNotes(lead.notes);
+    setSelectedFile(null);
     setShowModal(true);
+  };
+
+  const handleDownload = async (leadId: string) => {
+    try {
+      const res = await downloadLeadDocument(leadId);
+      if (res.success && res.url) {
+        window.open(res.url, '_blank');
+      } else {
+        triggerToast(res.error || 'Failed to download.', true);
+      }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -150,8 +177,40 @@ export default function AdminLeadsPage() {
 
     setSaving(true);
     try {
+      const readAndSave = async (action: Function, ...args: any[]) => {
+        if (selectedFile) {
+          const reader = new FileReader();
+          reader.onload = async () => {
+            const base64String = reader.result as string;
+            const res = await action(...args, {
+              pdfBase64: base64String,
+              pdfName: selectedFile.name
+            });
+            if (res.success) {
+              loadData();
+              setShowModal(false);
+              triggerToast(editingLead ? 'Lead updated.' : 'Lead created.');
+            } else {
+              triggerToast(res.error || 'Operation failed.', true);
+            }
+            setSaving(false);
+          };
+          reader.readAsDataURL(selectedFile);
+        } else {
+          const res = await action(...args, {});
+          if (res.success) {
+            loadData();
+            setShowModal(false);
+            triggerToast(editingLead ? 'Lead updated.' : 'Lead created.');
+          } else {
+            triggerToast(res.error || 'Operation failed.', true);
+          }
+          setSaving(false);
+        }
+      };
+
       if (editingLead) {
-        const res = await updateLead(editingLead.id, {
+        await readAndSave(updateLead, editingLead.id, {
           name: leadName,
           email: leadEmail,
           phone: leadPhone,
@@ -159,20 +218,13 @@ export default function AdminLeadsPage() {
           status: leadStatus,
           notes: leadNotes
         });
-        if (res.success) {
-          loadData();
-          setShowModal(false);
-          triggerToast('Lead updated successfully.');
-        } else {
-          triggerToast(res.error || 'Update failed.', true);
-        }
       } else {
         if (!selectedClientId) {
           triggerToast('Please select a client.', true);
           setSaving(false);
           return;
         }
-        const res = await createLead({
+        await readAndSave(createLead, {
           clientId: selectedClientId,
           name: leadName,
           email: leadEmail,
@@ -181,17 +233,9 @@ export default function AdminLeadsPage() {
           status: leadStatus,
           notes: leadNotes
         });
-        if (res.success) {
-          loadData();
-          setShowModal(false);
-          triggerToast('Lead created successfully.');
-        } else {
-          triggerToast(res.error || 'Creation failed.', true);
-        }
       }
     } catch (err: any) {
       triggerToast(err.message || 'An error occurred.', true);
-    } finally {
       setSaving(false);
     }
   };
@@ -336,6 +380,7 @@ export default function AdminLeadsPage() {
                   <th className="py-3.5 px-6">Client</th>
                   <th className="py-3.5 px-6">Source</th>
                   <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6">Document</th>
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
@@ -378,6 +423,20 @@ export default function AdminLeadsPage() {
                       <span className={`inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full border ${statusColors[lead.status] || statusColors.new}`}>
                         {statusLabels[lead.status] || lead.status}
                       </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      {lead.asset_url ? (
+                        <button
+                          onClick={() => handleDownload(lead.id)}
+                          className="inline-flex items-center gap-1 px-2 py-1 bg-neutral-100 hover:bg-neutral-200 rounded-lg text-[10px] font-semibold text-neutral-700 transition-all cursor-pointer"
+                          title="Download document"
+                        >
+                          <Download className="w-3 h-3" />
+                          {lead.asset_name || 'Download'}
+                        </button>
+                      ) : (
+                        <span className="text-neutral-300 text-[10px]">—</span>
+                      )}
                     </td>
                     <td className="py-4 px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
@@ -531,6 +590,23 @@ export default function AdminLeadsPage() {
                   rows={2}
                   className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black resize-none"
                 />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold text-neutral-400 uppercase">Document (PDF / Doc)</label>
+                <div className="border border-dashed border-neutral-200 bg-neutral-50 rounded-lg p-3 text-center cursor-pointer hover:bg-neutral-100/50 transition-all relative">
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  <UploadCloud className="w-6 h-6 text-neutral-400 mx-auto mb-1" />
+                  <p className="text-[11px] font-semibold text-neutral-700">
+                    {selectedFile ? selectedFile.name : 'Click to upload document'}
+                  </p>
+                  <p className="text-[9px] text-neutral-400 mt-0.5">PDF or Document</p>
+                </div>
               </div>
 
               <div className="pt-2 flex gap-3">

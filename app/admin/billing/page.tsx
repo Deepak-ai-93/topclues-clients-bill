@@ -39,7 +39,7 @@ interface BillingDocument {
   };
 }
 
-export default function AdminBillingPage() {
+export default function AdminInvoicesPage() {
   const [clients, setClients] = useState<ClientEntry[]>([]);
   const [documents, setDocuments] = useState<BillingDocument[]>([]);
   const [loading, setLoading] = useState(true);
@@ -108,7 +108,7 @@ export default function AdminBillingPage() {
 
   const handleUploadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedClientId || !billingTitle || !billingDate || !selectedFile) {
+      if (!selectedClientId || !billingTitle || !billingDate || !selectedFile) {
       triggerToast('Please fill in all fields and select a PDF file.', true);
       return;
     }
@@ -129,7 +129,7 @@ export default function AdminBillingPage() {
         if (res.success) {
           loadData();
           setShowUploadModal(false);
-          triggerToast('Billing PDF successfully uploaded and linked to client.');
+          triggerToast('Invoice successfully uploaded and linked to client.');
         } else {
           triggerToast(res.error || 'Upload failed.', true);
         }
@@ -143,7 +143,7 @@ export default function AdminBillingPage() {
   };
 
   const handleDelete = async (docId: string, title: string) => {
-    if (!confirm(`Are you sure you want to permanently delete the billing document "${title}"? This cannot be undone.`)) {
+      if (!confirm(`Are you sure you want to permanently delete "${title}"? This cannot be undone.`)) {
       return;
     }
 
@@ -151,7 +151,7 @@ export default function AdminBillingPage() {
       const res = await deleteBillingDocument(docId);
       if (res.success) {
         loadData();
-        triggerToast('Billing document permanently deleted.');
+        triggerToast('Invoice permanently deleted.');
       } else {
         triggerToast(res.error || 'Failed to delete billing document.', true);
       }
@@ -200,8 +200,8 @@ export default function AdminBillingPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Billing Console</h1>
-          <p className="text-sm text-neutral-500 mt-1">Publish client invoices, manage payment archives, and view billing document history.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Invoices</h1>
+          <p className="text-sm text-neutral-500 mt-1">Upload and manage invoices, receipts, and billing documents for your clients.</p>
         </div>
 
         <button
@@ -209,7 +209,7 @@ export default function AdminBillingPage() {
           className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <UploadCloud className="w-4 h-4" />
-          Upload Billing PDF
+          Upload Invoice
         </button>
       </div>
 
@@ -219,7 +219,7 @@ export default function AdminBillingPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
           <input
             type="text"
-            placeholder="Search by billing title, client name, or email address..."
+            placeholder="Search by invoice title, client name, or email address..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black transition-all"
@@ -237,18 +237,18 @@ export default function AdminBillingPage() {
         ) : filteredDocuments.length === 0 ? (
           <div className="py-16 text-center">
             <FileText className="w-12 h-12 text-neutral-300 mx-auto mb-3" />
-            <h3 className="text-sm font-semibold text-neutral-900">No billing documents logged</h3>
-            <p className="text-xs text-neutral-400 mt-1">Upload a billing document for one of your clients.</p>
+            <h3 className="text-sm font-semibold text-neutral-900">No invoices uploaded yet</h3>
+            <p className="text-xs text-neutral-400 mt-1">Upload an invoice, receipt, or billing document for one of your clients.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-neutral-200 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                  <th className="py-3.5 px-6">Billing Title</th>
+                  <th className="py-3.5 px-6">Invoice Title</th>
                   <th className="py-3.5 px-6">Client Name</th>
-                  <th className="py-3.5 px-6">Billing Date</th>
-                  <th className="py-3.5 px-6">PDF File Name</th>
+                  <th className="py-3.5 px-6">Invoice Date</th>
+                  <th className="py-3.5 px-6">File Name</th>
                   <th className="py-3.5 px-6 text-right">Actions</th>
                 </tr>
               </thead>
@@ -304,7 +304,7 @@ export default function AdminBillingPage() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-white border border-neutral-200 w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
             <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-neutral-900">Upload Billing PDF</h2>
+              <h2 className="text-sm font-semibold text-neutral-900">Upload Invoice</h2>
               <button 
                 onClick={() => setShowUploadModal(false)}
                 className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
@@ -334,7 +334,7 @@ export default function AdminBillingPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase">Billing Document Title</label>
+                <label className="text-[10px] font-bold text-neutral-400 uppercase">Invoice Title</label>
                 <div className="relative">
                   <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   <input
@@ -349,7 +349,7 @@ export default function AdminBillingPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase">Billing Date</label>
+                <label className="text-[10px] font-bold text-neutral-400 uppercase">Invoice Date</label>
                 <div className="relative">
                   <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                   <input
@@ -363,7 +363,7 @@ export default function AdminBillingPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-bold text-neutral-400 uppercase">Billing PDF File</label>
+                <label className="text-[10px] font-bold text-neutral-400 uppercase">PDF File</label>
                 <div className="border border-dashed border-neutral-200 bg-neutral-50 rounded-lg p-4 text-center cursor-pointer hover:bg-neutral-100/50 transition-all relative">
                   <input
                     type="file"
@@ -374,7 +374,7 @@ export default function AdminBillingPage() {
                   />
                   <UploadCloud className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
                   <p className="text-xs font-semibold text-neutral-700">
-                    {selectedFile ? selectedFile.name : 'Click to select or drag billing PDF'}
+                    {selectedFile ? selectedFile.name : 'Click to select or drag invoice PDF'}
                   </p>
                   <p className="text-[9px] text-neutral-400 mt-0.5">PDF Documents Only</p>
                 </div>
