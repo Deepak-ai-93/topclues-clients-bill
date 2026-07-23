@@ -134,7 +134,9 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-neutral-950/80 backdrop-blur-lg border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 shrink-0">
-            <Image src="/Logo(1).png" alt="Logo" width={36} height={36} className="rounded-lg" />
+            <div className="bg-white rounded-lg p-0.5">
+              <Image src="/Logo(1).png" alt="Logo" width={36} height={36} className="rounded" />
+            </div>
           </button>
           <div className="hidden md:flex items-center gap-1">
             {sections.map(s => (
@@ -185,7 +187,9 @@ export default function LandingPage() {
           </div>
 
           <div className="flex justify-center mb-8 hero-badge">
-            <Image src="/Logo(1).png" alt="Topclues Solutions" width={120} height={120} className="rounded-2xl w-24 md:w-28 lg:w-32" />
+            <div className="bg-white p-3 rounded-2xl">
+              <Image src="/Logo(1).png" alt="Topclues Solutions" width={120} height={120} className="w-20 md:w-24 lg:w-28" />
+            </div>
           </div>
 
           <h1 ref={taglineRef} className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-6">
@@ -531,7 +535,9 @@ export default function LandingPage() {
       <footer className="py-12 px-6 border-t border-white/5">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded-md" />
+            <div className="bg-white rounded-md p-0.5">
+              <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded" />
+            </div>
             <span className="text-xs text-neutral-500">© 2026 Topclues Solutions. All rights reserved.</span>
           </div>
           <div className="flex items-center gap-2 text-[10px] text-neutral-600 font-mono">

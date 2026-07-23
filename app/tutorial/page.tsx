@@ -195,14 +195,15 @@ export default function TutorialPage() {
         {/* Header */}
         <div className="mb-10">
           <div className="flex flex-col items-start gap-3 mb-3">
-            <Image
-              src="/Logo(1).png"
-              alt="Logo"
-              width={500}
-              height={500}
-              className="rounded-xl"
-              style={{ maxWidth: '100%', height: 'auto' }}
-            />
+            <div className="bg-white p-2 rounded-xl">
+              <Image
+                src="/Logo(1).png"
+                alt="Logo"
+                width={120}
+                height={120}
+                className="w-16 md:w-20"
+              />
+            </div>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-2">
             How to Use the Portal

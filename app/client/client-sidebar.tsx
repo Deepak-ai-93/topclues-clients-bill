@@ -28,13 +28,15 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
       <div>
         <div className="p-4 md:p-6 border-b border-neutral-100 flex items-center justify-between">
           <Link href="/client" className="flex flex-col items-start gap-2">
-            <Image
-              src="/Logo(1).png"
-              alt="Logo"
-              width={120}
-              height={120}
-              className="rounded-xl w-20 md:w-28"
-            />
+            <div className="bg-white p-2 rounded-xl">
+              <Image
+                src="/Logo(1).png"
+                alt="Logo"
+                width={120}
+                height={120}
+                className="w-16 md:w-20"
+              />
+            </div>
             <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Safe Gateway</p>
           </Link>
           {isMobile && (
@@ -87,7 +89,9 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
           <button onClick={() => setSidebarOpen(true)} className="p-1 text-neutral-400 hover:text-neutral-600">
             <Menu className="w-5 h-5" />
           </button>
-          <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded-md" />
+          <div className="bg-white rounded-md p-0.5">
+            <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded" />
+          </div>
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
           </div>
