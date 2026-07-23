@@ -15,7 +15,8 @@ import {
   ShieldCheck, 
   Key, 
   HelpCircle,
-  AlertCircle
+  AlertCircle,
+  BookOpen
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -395,6 +396,10 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t border-neutral-100 flex flex-col items-center gap-3 text-neutral-400 text-xs">
             <a href="/admin" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium">
               Admin Portal Login →
+            </a>
+            <a href="/tutorial" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium flex items-center gap-1">
+              <BookOpen className="w-3 h-3" />
+              View Step-by-Step Tutorial
             </a>
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-neutral-500 shrink-0" />
