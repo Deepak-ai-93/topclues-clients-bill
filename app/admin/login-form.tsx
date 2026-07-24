@@ -279,9 +279,9 @@ export default function AdminLoginForm() {
               </form>
 
               <div className="mt-6 pt-4 border-t border-neutral-100 text-center">
-                <a href="/" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium">
+                <Link href="/client/login" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium">
                   Client Portal Login →
-                </a>
+                </Link>
               </div>
             </>
           )}

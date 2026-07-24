@@ -7,7 +7,7 @@ export default async function ClientLayout({ children }: { children: React.React
   const session = await getSession();
 
   if (!session || session.role !== 'client') {
-    redirect('/');
+    redirect('/client/login');
   }
 
   const { data: profile } = await supabaseAdmin
