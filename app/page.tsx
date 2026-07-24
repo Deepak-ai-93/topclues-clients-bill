@@ -9,8 +9,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles, Target, Users, Globe, TrendingUp, Award, ChevronDown,
   Quote, Mail, Phone, MapPin, CheckCircle, Star, Play, ExternalLink,
-  Menu, X, ArrowRight, ShieldCheck
+  Menu, X, ArrowRight, ShieldCheck, Dna, BarChart3, CreditCard, MessageSquare
 } from 'lucide-react';
+import DockFooter from '@/components/DockFooter';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -185,51 +186,44 @@ export default function LandingPage() {
   ];
 
   return (
-    <div ref={mainRef} className="bg-white text-black font-sans overflow-x-hidden">
+    <><div ref={mainRef} className="bg-white text-black font-sans">
 
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-neutral-200">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <button onClick={() => scrollTo('hero')} className="flex items-center gap-2 shrink-0">
-            <div className="bg-white rounded-lg p-0.5">
-              <Image src="/Logo(1).png" alt="Logo" width={36} height={36} className="rounded" />
-            </div>
-          </button>
-          <div className="hidden md:flex items-center gap-1">
-            {sections.map(s => (
-              <button key={s.id} onClick={() => scrollTo(s.id)}
-                className={`px-3 py-2 text-xs font-semibold rounded-lg transition-all ${activeSection === s.id ? 'text-black bg-neutral-100' : 'text-neutral-500 hover:text-black'}`}>
-                {s.label}
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-40 md:hidden bg-black/50"
+            onClick={() => setMenuOpen(false)}
+          >
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-0 top-0 bottom-0 w-72 max-w-[85vw] bg-white border-l border-neutral-200 p-6 pt-16"
+            >
+              <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-black">
+                <X className="w-5 h-5" />
               </button>
-            ))}
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login" className="hidden md:inline-flex items-center gap-2 px-4 py-2 bg-white text-neutral-950 rounded-xl text-xs font-bold hover:bg-neutral-200 transition-all">
-              Client Login <ArrowRight className="w-3 h-3" />
-            </Link>
-            <button onClick={() => setMenuOpen(!menuOpen)} className="md:hidden p-2 text-neutral-500 hover:text-black">
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="md:hidden border-t border-neutral-200 bg-white">
-              <div className="px-6 py-4 space-y-1">
+              <div className="space-y-1">
                 {sections.map(s => (
                   <button key={s.id} onClick={() => scrollTo(s.id)}
                     className="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-lg">
                     {s.label}
                   </button>
                 ))}
-                <Link href="/login" className="block w-full text-center px-3 py-2.5 mt-2 bg-white text-neutral-950 rounded-xl text-sm font-bold">
+                <Link href="/login" className="block w-full text-center px-3 py-2.5 mt-4 bg-neutral-900 text-white rounded-xl text-sm font-bold hover:bg-neutral-800">
                   Client Login
                 </Link>
               </div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ===== HERO ===== */}
       <section id="hero" data-section="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
@@ -617,22 +611,23 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="py-12 px-6 border-t border-neutral-200">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="bg-white rounded-md p-0.5">
-              <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded" />
-            </div>
-            <span className="text-xs text-neutral-500">© 2026 Topclues Solutions. All rights reserved.</span>
-          </div>
-          <div className="flex items-center gap-2 text-[10px] text-neutral-600 font-mono">
-            <ShieldCheck className="w-3 h-3" />
-            Drugs and Magic Remedies Act, 1954 Compliant
-          </div>
-        </div>
-      </footer>
+      {/* Dock Footer */}
+      <div className="pb-20 sm:pb-24" />
 
     </div>
+
+      <DockFooter
+        variant="landing"
+        items={[
+          { icon: Dna, label: 'DNA', onClick: () => scrollTo('dna'), isActive: activeSection === 'dna' },
+          { icon: Target, label: 'Services', onClick: () => scrollTo('services'), isActive: activeSection === 'services' },
+          { icon: Award, label: 'Highlights', onClick: () => scrollTo('highlights'), isActive: activeSection === 'highlights' },
+          { icon: CreditCard, label: 'Pricing', onClick: () => scrollTo('doses'), isActive: activeSection === 'doses' },
+          { icon: MessageSquare, label: 'Testimonials', onClick: () => scrollTo('testimonials'), isActive: activeSection === 'testimonials' },
+          { icon: Mail, label: 'Contact', onClick: () => scrollTo('contact'), isActive: activeSection === 'contact' },
+          { icon: Users, label: 'Login', href: '/login' },
+        ]}
+      /></>
+
   );
 }

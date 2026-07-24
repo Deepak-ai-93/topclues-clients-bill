@@ -10,13 +10,11 @@ import {
   BarChart3,
   Calendar,
   UserPlus,
-  LogOut,
-  ShieldCheck,
   Menu,
   X
 } from 'lucide-react';
+import DockFooter from '@/components/DockFooter';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { logoutUserAction } from '@/lib/actions';
 
 interface AdminSidebarProps {
   email: string;
@@ -84,36 +82,11 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
         </nav>
       </div>
 
-      <div className="p-4 border-t border-neutral-100">
-        <form action={logoutUserAction}>
-          <button
-            type="submit"
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50/50 transition-colors cursor-pointer"
-          >
-            <LogOut className="w-4.5 h-4.5" />
-            <span>Logout Admin</span>
-          </button>
-        </form>
-      </div>
     </>
   );
 
   return (
     <>
-      {isMobile && (
-        <header className="h-14 bg-white border-b border-neutral-200 px-4 flex items-center justify-between shrink-0 print:hidden">
-          <button onClick={() => setSidebarOpen(true)} className="p-1 text-neutral-400 hover:text-neutral-600">
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="bg-white rounded-md p-0.5">
-            <Image src="/Logo(1).png" alt="Logo" width={28} height={28} className="rounded" />
-          </div>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          </div>
-        </header>
-      )}
-
       {isMobile ? (
         <>
           {sidebarOpen && (
@@ -132,23 +105,21 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
       )}
 
       <main className="flex-1 min-w-0 flex flex-col">
-        {!isMobile && (
-          <header className="h-14 bg-white border-b border-neutral-200 px-6 flex items-center justify-between shrink-0 print:hidden">
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-neutral-400 font-mono uppercase tracking-widest bg-neutral-50 px-2 py-0.5 rounded border border-neutral-200">
-                Role: Admin
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span className="text-xs font-semibold text-neutral-700">Audit Protocol Online</span>
-              </div>
-            </div>
-          </header>
-        )}
-        <div className="flex-1 overflow-auto">{children}</div>
+        <div className="flex-1 overflow-auto pb-20 sm:pb-24">{children}</div>
       </main>
+
+      <DockFooter
+        variant="admin"
+        items={[
+          { href: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
+          { href: '/admin/clients', icon: Users, label: 'Clients' },
+          { href: '/admin/billing', icon: CreditCard, label: 'Invoices' },
+          { href: '/admin/reports', icon: BarChart3, label: 'Reports' },
+          { href: '/admin/content', icon: Calendar, label: 'Content' },
+          { href: '/admin/leads', icon: UserPlus, label: 'Leads' },
+          { href: 'logout', icon: Users, label: 'Logout' },
+        ]}
+      />
     </>
   );
 }
