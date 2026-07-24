@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { loginUserAction, getServerSession, setupInitialAdmin, hasAdminUser } from '../../lib/actions';
 import { motion } from 'motion/react';
 import Image from 'next/image';
