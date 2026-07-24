@@ -216,7 +216,7 @@ export default function LandingPage() {
                     {s.label}
                   </button>
                 ))}
-                <Link href="/login" className="block w-full text-center px-3 py-2.5 mt-4 bg-neutral-900 text-white rounded-xl text-sm font-bold hover:bg-neutral-800">
+                <Link href="/admin" className="block w-full text-center px-3 py-2.5 mt-4 bg-neutral-900 text-white rounded-xl text-sm font-bold hover:bg-neutral-800">
                   Client Login
                 </Link>
               </div>
@@ -625,7 +625,7 @@ export default function LandingPage() {
           { icon: CreditCard, label: 'Pricing', onClick: () => scrollTo('doses'), isActive: activeSection === 'doses' },
           { icon: MessageSquare, label: 'Testimonials', onClick: () => scrollTo('testimonials'), isActive: activeSection === 'testimonials' },
           { icon: Mail, label: 'Contact', onClick: () => scrollTo('contact'), isActive: activeSection === 'contact' },
-          { icon: Users, label: 'Login', href: '/login' },
+          { icon: Users, label: 'Login', href: '/admin' },
         ]}
       /></>
 
