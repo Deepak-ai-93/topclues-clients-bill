@@ -625,7 +625,8 @@ export default function LandingPage() {
           { icon: CreditCard, label: 'Pricing', onClick: () => scrollTo('doses'), isActive: activeSection === 'doses' },
           { icon: MessageSquare, label: 'Testimonials', onClick: () => scrollTo('testimonials'), isActive: activeSection === 'testimonials' },
           { icon: Mail, label: 'Contact', onClick: () => scrollTo('contact'), isActive: activeSection === 'contact' },
-          { icon: Users, label: 'Login', href: '/admin' },
+          { icon: Users, label: 'Client', href: '/client/login' },
+          { icon: ShieldCheck, label: 'Admin', href: '/admin/login' },
         ]}
       /></>
 
