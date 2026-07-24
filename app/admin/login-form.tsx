@@ -81,7 +81,8 @@ export default function AdminLoginForm() {
         if (res.role === 'admin') {
           router.push('/admin');
         } else {
-          router.push('/client');
+          setError('Access denied. This portal is for administrators only.');
+          setLoading(false);
         }
       } else {
         setError(res.error || 'Authentication failed.');
