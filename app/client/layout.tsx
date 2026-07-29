@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { getSession } from '../../lib/auth';
 import { supabaseAdmin } from '../../lib/supabase';
 import ClientSidebar from './client-sidebar';
@@ -6,8 +5,9 @@ import ClientSidebar from './client-sidebar';
 export default async function ClientLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
+  // If there's no session or non-client user, render child page without sidebar (e.g. login page)
   if (!session || session.role !== 'client') {
-    redirect('/client/login');
+    return <>{children}</>;
   }
 
   const { data: profile } = await supabaseAdmin

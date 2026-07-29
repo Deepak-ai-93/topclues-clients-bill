@@ -25,18 +25,22 @@ export default function AdminLoginForm() {
 
   useEffect(() => {
     async function checkAuth() {
-      const session = await getServerSession();
-      if (session) {
-        if (session.role === 'admin') {
-          router.push('/admin');
-        } else {
-          router.push('/client');
+      try {
+        const session = await getServerSession();
+        if (session) {
+          if (session.role === 'admin') {
+            router.push('/admin');
+            return;
+          } else {
+            router.push('/client');
+            return;
+          }
         }
-        return;
+      } catch (e) {
+        console.error('Session check error:', e);
+      } finally {
+        setPageLoading(false);
       }
-      const { hasAdmin } = await hasAdminUser();
-      setNeedsSetup(!hasAdmin);
-      setPageLoading(false);
     }
     checkAuth();
   }, [router]);

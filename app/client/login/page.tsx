@@ -19,15 +19,20 @@ export default function ClientLoginPage() {
 
   useEffect(() => {
     async function checkAuth() {
-      const session = await getServerSession();
-      if (session) {
-        if (session.role === 'client') {
-          router.push('/client');
-        } else {
-          router.push('/admin');
+      try {
+        const session = await getServerSession();
+        if (session) {
+          if (session.role === 'client') {
+            router.push('/client');
+          } else {
+            router.push('/admin');
+          }
         }
+      } catch (e) {
+        console.error('Session check error:', e);
+      } finally {
+        setPageLoading(false);
       }
-      setPageLoading(false);
     }
     checkAuth();
   }, [router]);

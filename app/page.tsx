@@ -1,634 +1,389 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { motion, AnimatePresence } from 'motion/react';
-import {
-  Sparkles, Target, Users, Globe, TrendingUp, Award, ChevronDown,
-  Quote, Mail, Phone, MapPin, CheckCircle, Star, Play, ExternalLink,
-  Menu, X, ArrowRight, ShieldCheck, Dna, BarChart3, CreditCard, MessageSquare
+import { 
+  ArrowRight, Menu, X, Check, Shield, Zap, FileText, 
+  Users, BarChart3, Calendar, CheckSquare, MessageSquare, 
+  HelpCircle, ArrowUpRight, Activity
 } from 'lucide-react';
-import DockFooter from '@/components/DockFooter';
+import { motion } from 'motion/react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const sections = [
-  { id: 'dna', label: 'Our DNA' },
-  { id: 'services', label: 'Services' },
-  { id: 'highlights', label: 'Highlights' },
-  { id: 'doses', label: 'Pricing' },
-  { id: 'testimonials', label: 'Testimonials' },
-  { id: 'contact', label: 'Contact' },
-];
-
-export default function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('hero');
-  const heroRef = useRef<HTMLDivElement>(null);
-  const taglineRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-  const mainRef = useRef<HTMLDivElement>(null);
-  const highlightsRef = useRef<HTMLDivElement>(null);
-  const highlightsScrollRef = useRef<HTMLDivElement>(null);
-  const [activeCard, setActiveCard] = useState(0);
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-      tl.fromTo(taglineRef.current, { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2 })
-        .fromTo(subtitleRef.current, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, '-=0.6')
-        .fromTo(ctaRef.current, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6 }, '-=0.4')
-        .fromTo('.hero-badge', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, stagger: 0.15 }, '-=0.2');
-
-      gsap.utils.toArray<HTMLElement>('.reveal-up').forEach(el => {
-        gsap.fromTo(el, { y: 60, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 1, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.scale-in').forEach(el => {
-        gsap.fromTo(el, { scale: 0.8, opacity: 0 }, {
-          scale: 1, opacity: 1, duration: 0.8, ease: 'back.out(1.7)',
-          scrollTrigger: { trigger: el, start: 'top 80%', toggleActions: 'play none none none' }
-        });
-      });
-
-      gsap.utils.toArray<HTMLElement>('.split-line').forEach(el => {
-        const text = el.textContent || '';
-        el.innerHTML = text.split(' ').map(w => `<span class="inline-block overflow-hidden"><span class="inline-block translate-y-full opacity-0 word-anim">${w}</span></span>`).join(' ');
-        gsap.to(el.querySelectorAll('.word-anim'), {
-          y: 0, opacity: 1, duration: 0.8, stagger: 0.04, ease: 'power3.out',
-          scrollTrigger: { trigger: el, start: 'top 80%', toggleActions: 'play none none none' }
-        });
-      });
-
-      const statNumbers = document.querySelectorAll('.stat-number');
-      statNumbers.forEach(el => {
-        const finalVal = parseInt(el.textContent || '0');
-        gsap.fromTo(el, { textContent: 0 }, {
-          textContent: finalVal, duration: 2, ease: 'power1.out',
-          snap: { textContent: 1 },
-          scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }
-        });
-      });
-
-      const sections_ = gsap.utils.toArray<HTMLElement>('[data-section]');
-      sections_.forEach(s => {
-        ScrollTrigger.create({
-          trigger: s,
-          start: 'top 45%',
-          end: 'bottom 45%',
-          onToggle: self => { if (self.isActive) setActiveSection(s.dataset.section || ''); }
-        });
-      });
-
-    }, mainRef);
-
-    // Horizontal scroll for achievements (outside gsap.context, uses refs directly)
-    const hScroll = highlightsScrollRef.current;
-    const hSection = highlightsRef.current;
-    if (hScroll && hSection) {
-      const cards = gsap.utils.toArray<HTMLElement>('.hscroll-card');
-      const totalWidth = hScroll.scrollWidth - hSection.offsetWidth;
-      if (totalWidth > 0) {
-        ScrollTrigger.create({
-          trigger: hSection,
-          pin: true,
-          start: 'top top',
-          end: () => `+=${totalWidth}`,
-          scrub: 1.5,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const idx = Math.round(progress * (cards.length - 1));
-            setActiveCard(Math.min(idx, cards.length - 1));
-          }
-        });
-        gsap.to(hScroll, {
-          x: () => -totalWidth,
-          ease: 'none'
-        });
-      }
-    }
-
-    return () => ctx.revert();
-  }, []);
-
-  const scrollTo = (id: string) => {
-    setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    touchEndX.current = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 50) {
-      const next = diff > 0
-        ? Math.min(activeCard + 1, achievements.length - 1)
-        : Math.max(activeCard - 1, 0);
-      const scrollContainer = highlightsScrollRef.current;
-      if (scrollContainer) {
-        const card = scrollContainer.querySelectorAll('.hscroll-card')[next] as HTMLElement;
-        if (card) {
-          scrollContainer.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
-          const offset = -(card.offsetLeft);
-          scrollContainer.style.transform = `translateX(${offset}px)`;
-          setActiveCard(next);
-        }
-      }
-    }
-  };
-
-  const services = [
-    { icon: Target, title: 'Doctor Brand Building', desc: 'Strategic personal branding for healthcare professionals to establish authority and trust.' },
-    { icon: Users, title: 'Digital Patient Reach', desc: 'Targeted digital campaigns connecting doctors with the right patients through data-driven outreach.' },
-    { icon: Globe, title: 'Online Medical Presence', desc: 'Website development, SEO, and Google Business optimization for healthcare practices.' },
-    { icon: TrendingUp, title: 'Healthcare Digital Growth', desc: 'Comprehensive growth strategies combining content, ads, and analytics for measurable results.' },
-  ];
-
-  const highlights = [
-    { stat: '100+', label: 'Clients Served', icon: Users },
-    { stat: '30+', label: 'Creative Professionals', icon: Sparkles },
-    { stat: '7', label: 'Industries Covered', icon: Globe },
-    { stat: '10+', label: 'Years of Excellence', icon: Award },
-  ];
-
-  const achievements = [
-    { year: '2022', title: 'GPBS Business Expo', desc: 'Showcased at Surat', icon: Award },
-    { year: '2024', title: 'GPBS Business Expo', desc: 'Showcased at Rajkot', icon: Award },
-    { year: '2022', title: 'Health Dept. Punjab', desc: 'Designed official logo for Health Department of Punjab', icon: Star },
-    { year: '2026', title: 'Vibrant Gujarat Conference', desc: 'Managed social media for Regional Conference (Dept. of Fisheries)', icon: Globe },
-    { year: '2025', title: 'Collector Recognition', desc: 'Honored by Shri Mihir Patel for social media work during Bhadarvi Poonam Mela', icon: Award },
-  ];
-
-  const doses = [
-    { name: 'Starter Dose', price: '10,000', period: '/month', color: 'from-emerald-500 to-teal-600', features: ['10 Creative Posts', '1 Animated Reel with Voiceover', 'Regular Posting on All Social Media', 'Meta Ads for Reach'], note: 'PPC Budget excluded' },
-    { name: 'Growth Dose', price: '10,000', period: '/month', color: 'from-blue-500 to-indigo-600', features: ['Lead Capturing Ad Campaign Setup', 'Ad Creation & Management', '5 Creative Ad Posts', 'Result Tracking & Optimization'], note: 'PPC Budget excluded', popular: true },
-    { name: 'Digital Surgery', price: '30,000', period: ' One-Time', color: 'from-purple-500 to-violet-600', features: ['Fully Functional Responsive Website', 'Online Appointment Booking', 'Google Business Profile Setup', 'Google Analytics & Facebook Pixel Setup'], note: 'Domain & Hosting excluded' },
-    { name: 'Premium Visibility Therapy', price: '15,000', period: '/month', color: 'from-rose-500 to-pink-600', features: ['4 Creative Posts/month', '1 Animated Reel with Voiceover', '2 Videos (Shooting, Editing & Posting)', 'Regular Posting on All Social Media'] },
-  ];
-
-  const testimonials = [
-    { quote: 'Their approach to digital marketing transformed our practice. Patients now find us online effortlessly.', name: 'Dr. Anish Desai', specialty: 'Cardiologist' },
-    { quote: 'The team understands healthcare marketing uniquely. Our online presence has grown tremendously.', name: 'Dr. Priya Sharma', specialty: 'Dermatologist' },
-    { quote: 'Professional, creative, and results-driven. Highly recommend for any healthcare practice.', name: 'Dr. Rajesh Mehta', specialty: 'Orthopedic Surgeon' },
-  ];
+export default function DoctorHubLandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <><div ref={mainRef} className="bg-white text-black font-sans">
+    <div className="min-h-screen bg-white text-black font-sans antialiased selection:bg-black selection:text-white border-t-2 border-black">
+      {/* Navigation */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/10">
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+          <Link href="/" className="text-xl font-bold tracking-tighter uppercase border-2 border-black px-3 py-1 flex items-center gap-2">
+            <span>Topclues Doctor Hub</span>
+          </Link>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 md:hidden bg-black/50"
-            onClick={() => setMenuOpen(false)}
-          >
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              onClick={(e) => e.stopPropagation()}
-              className="absolute right-0 top-0 bottom-0 w-72 max-w-[85vw] bg-white border-l border-neutral-200 p-6 pt-16"
+          <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-tight">
+            <a href="#features" className="hover:underline underline-offset-4 decoration-2 transition-all">Portal Modules</a>
+            <a href="#workflow" className="hover:underline underline-offset-4 decoration-2 transition-all">Workflows</a>
+            <a href="#packages" className="hover:underline underline-offset-4 decoration-2 transition-all">Growth Plans</a>
+            <a href="#faq" className="hover:underline underline-offset-4 decoration-2 transition-all">FAQ</a>
+          </nav>
+
+          <div className="hidden md:flex items-center space-x-3">
+            <Link 
+              href="/login" 
+              className="text-sm font-medium px-4 py-2 hover:underline underline-offset-4"
             >
-              <button onClick={() => setMenuOpen(false)} className="absolute top-4 right-4 p-2 text-neutral-500 hover:text-black">
-                <X className="w-5 h-5" />
-              </button>
-              <div className="space-y-1">
-                {sections.map(s => (
-                  <button key={s.id} onClick={() => scrollTo(s.id)}
-                    className="block w-full text-left px-3 py-2.5 text-sm font-medium text-neutral-600 hover:text-black hover:bg-neutral-100 rounded-lg">
-                    {s.label}
-                  </button>
-                ))}
-                <Link href="/admin" className="block w-full text-center px-3 py-2.5 mt-4 bg-neutral-900 text-white rounded-xl text-sm font-bold hover:bg-neutral-800">
-                  Client Login
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
+              Doctor Sign In
+            </Link>
+            <Link 
+              href="/admin/login" 
+              className="text-xs font-mono uppercase px-3 py-1.5 border border-black hover:bg-black hover:text-white transition-colors"
+            >
+              Agency Login
+            </Link>
+            <Link 
+              href="/client" 
+              className="text-sm font-medium px-5 py-2.5 bg-black text-white hover:bg-neutral-800 transition-colors border border-black"
+            >
+              Client Dashboard
+            </Link>
+          </div>
+
+          <button 
+            className="md:hidden p-2 border border-black"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-b border-black bg-white px-6 py-6 space-y-4">
+            <a href="#features" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Portal Modules</a>
+            <a href="#workflow" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Workflows</a>
+            <a href="#packages" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Growth Plans</a>
+            <a href="#faq" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
+            <div className="pt-4 border-t border-black/10 flex flex-col space-y-3">
+              <Link href="/login" className="text-center py-2 text-sm font-medium border border-black">Doctor Sign In</Link>
+              <Link href="/admin/login" className="text-center py-2 text-sm font-medium border border-black">Agency Login</Link>
+              <Link href="/client" className="text-center py-2.5 text-sm font-medium bg-black text-white">Client Dashboard</Link>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
+      </header>
 
-      {/* ===== HERO ===== */}
-      <section id="hero" data-section="hero" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-50 via-white to-neutral-50" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-black/5 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8 hero-badge">
-            <span className="px-3 py-1 bg-neutral-100 border border-neutral-200 rounded-full text-[10px] font-mono text-neutral-600">#ForDoctorsOnly</span>
-            <span className="px-3 py-1 bg-neutral-100 border border-neutral-200 rounded-full text-[10px] font-mono text-neutral-600">Est. 2015</span>
-          </div>
-
-          <div className="flex justify-center mb-8 hero-badge">
-            <div className="bg-white p-3 rounded-2xl">
-              <Image src="/Logo(1).png" alt="Topclues Solutions" width={120} height={120} className="w-20 md:w-24 lg:w-28" />
+      {/* Hero Section */}
+      <section className="pt-36 pb-24 md:pt-48 md:pb-32 px-6 max-w-6xl mx-auto border-b border-black/10">
+        <div className="max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex items-center gap-2 mb-6">
+              <span className="border border-black px-3 py-1 text-xs font-mono tracking-widest uppercase">
+                Topclues Solutions
+              </span>
+              <span className="border border-black bg-black text-white px-3 py-1 text-xs font-mono tracking-widest uppercase">
+                Doctor Hub 1.0
+              </span>
             </div>
-          </div>
+            
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[0.95] mb-8">
+              Your complete digital growth dashboard.
+            </h1>
+            
+            <p className="text-lg md:text-xl text-neutral-600 max-w-2xl font-light leading-relaxed mb-10">
+              Designed specifically for doctors and clinic teams. Track marketing performance, review leads, approve content calendars, and access performance reports in one centralized portal.
+            </p>
 
-          <h1 ref={taglineRef} className="text-4xl md:text-7xl lg:text-8xl font-bold tracking-tight leading-[1.05] mb-6">
-            Next Level of{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-neutral-900 via-neutral-600 to-neutral-400">
-              Creativity
-            </span>
-            <br />
-            is{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
-              Simplicity
-            </span>
-            <span className="text-white">!</span>
-          </h1>
-
-          <p ref={subtitleRef} className="text-base md:text-xl text-neutral-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-            These Medicines Are Trusted by{' '}
-            <span className="text-black font-semibold">40+ Doctors & Hospitals</span>
-          </p>
-
-          <div ref={ctaRef} className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button onClick={() => scrollTo('doses')}
-              className="px-8 py-3.5 bg-white text-neutral-950 rounded-2xl text-sm font-bold hover:bg-neutral-200 transition-all shadow-2xl shadow-white/10">
-              View Our Digital Doses
-            </button>
-            <button onClick={() => scrollTo('dna')}
-              className="px-8 py-3.5 border border-neutral-300 text-black rounded-2xl text-sm font-semibold hover:bg-neutral-100 transition-all">
-              Discover Our Story
-            </button>
-          </div>
-
-            <div className="mt-16 flex items-center justify-center gap-2 text-neutral-400 text-xs font-mono">
-            <span className="w-8 h-px bg-neutral-300" />
-            SCROLL TO EXPLORE
-            <span className="w-8 h-px bg-neutral-300" />
-          </div>
-        </div>
-      </section>
-
-      {/* ===== OUR DNA ===== */}
-      <section id="dna" data-section="dna" className="py-24 md:py-32 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-400 uppercase">Our DNA</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 mb-6 split-line">Marketing Medicine for Healthcare</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8 items-center reveal-up">
-            <div className="space-y-6">
-              <p className="text-base md:text-lg text-neutral-300 leading-relaxed">
-                <span className="text-black font-semibold">Topclues Solutions</span>, registered on 15 April 2015, is a result-driven marketing agency with a strong presence across Gujarat and an expanding PAN-India footprint.
-              </p>
-              <p className="text-neutral-600 leading-relaxed">
-                We specialize in healthcare digital marketing — building distinctive brand identities, shaping powerful narratives, and driving sustainable growth for doctors, hospitals, and healthcare organizations.
-              </p>
-              <div className="flex flex-wrap gap-3 pt-4">
-                {['Inbound Marketing', 'Outbound Marketing', 'Data-Driven Insights', 'Advanced Tools'].map(t => (
-                  <span key={t} className="px-3 py-1.5 bg-neutral-100 border border-neutral-200 rounded-full text-xs font-semibold text-neutral-600">{t}</span>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {highlights.map(h => (
-                <div key={h.label} className="p-6 bg-neutral-50 border border-neutral-200 rounded-2xl scale-in text-center">
-                  <h3 className="text-3xl md:text-4xl font-bold text-black stat-number">{h.stat}</h3>
-                  <p className="text-xs text-neutral-400 mt-1">{h.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== SERVICES ===== */}
-      <section id="services" data-section="services" className="py-24 md:py-32 px-6 relative bg-neutral-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">What We Do</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 split-line">Our Services</h2>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {services.map((s, i) => (
-              <motion.div key={s.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="p-6 bg-white border border-neutral-200 rounded-2xl hover:bg-neutral-50 transition-all group"
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <Link 
+                href="/login" 
+                className="px-8 py-4 bg-black text-white font-medium text-base hover:bg-neutral-800 transition-all text-center flex items-center justify-center gap-2 group border border-black"
               >
-                <div className="w-10 h-10 rounded-xl bg-neutral-100 flex items-center justify-center mb-4 group-hover:bg-neutral-200 transition-all">
-                  <s.icon className="w-5 h-5 text-neutral-300" />
-                </div>
-                <h3 className="text-sm font-bold text-white mb-2">{s.title}</h3>
-                <p className="text-xs text-neutral-600 leading-relaxed">{s.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== HORIZONTAL SCROLL: ACHIEVEMENTS ===== */}
-      <section id="highlights" data-section="highlights" ref={highlightsRef} className="relative bg-white overflow-hidden">
-        <div className="h-screen flex flex-col justify-center">
-          <div className="px-6 md:px-16 text-center mb-8 md:mb-12">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Milestones</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4">Achievements & Recognition</h2>
-            <p className="text-sm text-neutral-400 mt-2 max-w-xl mx-auto">Scroll down or swipe to explore our journey</p>
-          </div>
-
-          <div className="flex-1 flex items-center overflow-hidden"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <div ref={highlightsScrollRef}
-              className="flex gap-6 md:gap-10 px-6 md:px-16 will-change-transform"
-            >
-              {achievements.map((a, i) => (
-                <div key={`${a.year}-${i}`}
-                  className={`hscroll-card flex-shrink-0 w-[85vw] md:w-[45vw] lg:w-[35vw] xl:w-[28vw] p-8 md:p-10 rounded-3xl border transition-all duration-500 ${
-                    i === activeCard
-                      ? 'border-neutral-300 bg-neutral-50 shadow-md'
-                      : 'border-neutral-200 bg-white'
-                  }`}
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-black flex items-center justify-center mb-6">
-                    <a.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <span className="text-[11px] font-mono text-emerald-600 font-bold tracking-wider">{a.year}</span>
-                  <h3 className="text-xl md:text-2xl font-bold text-black mt-2 mb-3">{a.title}</h3>
-                  <p className="text-sm text-neutral-500 leading-relaxed">{a.desc}</p>
-                  <div className="mt-6 pt-4 border-t border-neutral-100">
-                    <span className="text-[10px] font-mono text-neutral-400">
-                      {i === 0 ? 'First Milestone' : i === achievements.length - 1 ? 'Latest Achievement' : `Achievement ${i + 1}`}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                Access Doctor Portal
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                href="/admin/login" 
+                className="px-8 py-4 bg-white text-black font-medium text-base hover:bg-neutral-100 transition-all text-center border border-black"
+              >
+                Agency Team Sign In
+              </Link>
             </div>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 pb-6 md:pb-10">
-            {achievements.map((_, i) => (
-              <button key={i}
-                onClick={() => {
-                  setActiveCard(i);
-                  const container = highlightsScrollRef.current;
-                  if (container) {
-                    const card = container.querySelectorAll('.hscroll-card')[i] as HTMLElement;
-                    if (card) {
-                      container.style.transition = 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)';
-                      container.style.transform = `translateX(${-card.offsetLeft}px)`;
-                    }
-                  }
-                }}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  i === activeCard ? 'bg-black w-6' : 'bg-neutral-300'
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 md:py-32 px-6 relative">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="p-8 md:p-12 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 rounded-3xl text-center"
-          >
-            <ShieldCheck className="w-10 h-10 text-emerald-600 mx-auto mb-4" />
-            <h3 className="text-xl md:text-2xl font-bold text-black">DPIIT Recognized Startup</h3>
-            <p className="text-sm text-neutral-500 mt-2 max-w-lg mx-auto">Officially recognized by the Department for Promotion of Industry and Internal Trade</p>
           </motion.div>
         </div>
       </section>
 
-      {/* ===== MISSION ===== */}
-      <section className="py-20 px-6 relative bg-neutral-50">
-        <div className="max-w-4xl mx-auto text-center reveal-up">
-          <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Our Mission</span>
-          <h2 className="text-2xl md:text-4xl font-bold mt-6 mb-6 leading-snug text-neutral-800">
-            &ldquo;Build distinctive brand identities, shape powerful narratives, and drive sustainable growth.&rdquo;
+      {/* Overview Stats Bar */}
+      <section className="py-14 border-b border-black/10 bg-neutral-50/50">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <div className="text-3xl md:text-4xl font-bold tracking-tight mb-1">100%</div>
+            <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Transparent Reports</div>
+          </div>
+          <div>
+            <div className="text-3xl md:text-4xl font-bold tracking-tight mb-1">1-Click</div>
+            <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Content Approvals</div>
+          </div>
+          <div>
+            <div className="text-3xl md:text-4xl font-bold tracking-tight mb-1">Real-time</div>
+            <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Patient Lead Tracking</div>
+          </div>
+          <div>
+            <div className="text-3xl md:text-4xl font-bold tracking-tight mb-1">24/7</div>
+            <div className="text-xs font-mono uppercase tracking-widest text-neutral-500">Account Team Access</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Portal Modules / Features */}
+      <section id="features" className="py-24 md:py-32 px-6 max-w-6xl mx-auto border-b border-black/10">
+        <div className="mb-16">
+          <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-3">// Architecture</span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Built for clinic growth & transparency.</h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Module 1 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <Users className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Lead Management</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                View patient inquiries, track follow-up statuses, record appointment outcomes, and export leads effortlessly.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 01 / LEADS</div>
+          </div>
+
+          {/* Module 2 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <CheckSquare className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Content Approvals</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Review graphics, videos, posts, and marketing creatives. Approve with a single click or request quick edits.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 02 / APPROVALS</div>
+          </div>
+
+          {/* Module 3 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <BarChart3 className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Reports & Performance</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Access monthly performance summaries, SEO progress reports, ad campaign metrics, and downloadable PDFs.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 03 / ANALYTICS</div>
+          </div>
+
+          {/* Module 4 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <Calendar className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Content Calendar</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Stay updated on planned social media schedules, upcoming reels, health awareness days, and campaign dates.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 04 / CALENDAR</div>
+          </div>
+
+          {/* Module 5 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <FileText className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Billing & Invoices</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Download tax invoices, review active service packages, track payment receipts, and monitor contract renewals.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 05 / BILLING</div>
+          </div>
+
+          {/* Module 6 */}
+          <div className="border border-black p-8 flex flex-col justify-between hover:border-black/50 transition-colors">
+            <div>
+              <div className="w-12 h-12 border border-black flex items-center justify-center mb-6">
+                <HelpCircle className="w-6 h-6 stroke-[1.5]" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 tracking-tight">Dedicated Support</h3>
+              <p className="text-neutral-600 text-sm leading-relaxed">
+                Direct ticketing system with your assigned Topclues account manager for rapid resolutions without clutter.
+              </p>
+            </div>
+            <div className="mt-8 pt-4 border-t border-black/10 text-xs font-mono text-neutral-400">MODULE 06 / SUPPORT</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Workflow Section */}
+      <section id="workflow" className="py-24 md:py-32 px-6 max-w-6xl mx-auto border-b border-black/10">
+        <div className="mb-16">
+          <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-3">// Seamless Process</span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">How Topclues Doctor Hub works.</h2>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-6">
+          <div className="border border-black p-6">
+            <div className="text-xs font-mono uppercase tracking-widest mb-4">Step 01</div>
+            <h4 className="text-lg font-bold mb-2">Secure Sign In</h4>
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Log in with credentials or OTP to access your personalized clinic growth dashboard.
+            </p>
+          </div>
+
+          <div className="border border-black p-6">
+            <div className="text-xs font-mono uppercase tracking-widest mb-4">Step 02</div>
+            <h4 className="text-lg font-bold mb-2">Review & Approve</h4>
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Check creative assets, reels, and posts submitted by Topclues design team.
+            </p>
+          </div>
+
+          <div className="border border-black p-6">
+            <div className="text-xs font-mono uppercase tracking-widest mb-4">Step 03</div>
+            <h4 className="text-lg font-bold mb-2">Track Patient Leads</h4>
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Receive patient leads generated through ad campaigns and update appointment statuses.
+            </p>
+          </div>
+
+          <div className="border border-black p-6">
+            <div className="text-xs font-mono uppercase tracking-widest mb-4">Step 04</div>
+            <h4 className="text-lg font-bold mb-2">Download Reports</h4>
+            <p className="text-xs text-neutral-600 leading-relaxed">
+              Get monthly ROI breakdowns, download invoices, and request service enhancements.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Growth Plans / Packages */}
+      <section id="packages" className="py-24 md:py-32 px-6 max-w-6xl mx-auto border-b border-black/10">
+        <div className="mb-16">
+          <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-3">// Marketing Packages</span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Digital growth solutions.</h2>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
+          {/* Clinic Standard Plan */}
+          <div className="border border-black p-8 md:p-10 flex flex-col justify-between">
+            <div>
+              <div className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-2">Essential Growth</div>
+              <h3 className="text-2xl font-bold mb-4">Clinic Growth Package</h3>
+              <p className="text-xs text-neutral-600 mb-6">Designed for growing clinics establishing local digital presence.</p>
+              <ul className="space-y-3.5 mb-8 text-sm">
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-black shrink-0" />
+                  <span>Social Media Management & Creative Posts</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-black shrink-0" />
+                  <span>Google My Business Profile Optimization</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-black shrink-0" />
+                  <span>Monthly Performance & Lead Summary</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-black shrink-0" />
+                  <span>Portal Access & Content Approval Suite</span>
+                </li>
+              </ul>
+            </div>
+            <Link href="/login" className="w-full py-3 border border-black text-center font-medium hover:bg-black hover:text-white transition-colors">
+              Access Portal
+            </Link>
+          </div>
+
+          {/* Premium Hospital & Specialist Plan */}
+          <div className="border-2 border-black p-8 md:p-10 flex flex-col justify-between bg-black text-white relative">
+            <span className="absolute -top-3 right-6 bg-white text-black border border-black px-3 py-0.5 text-xs font-mono font-bold uppercase">
+              Recommended
+            </span>
+            <div>
+              <div className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-2">Comprehensive</div>
+              <h3 className="text-2xl font-bold mb-4">Specialist & Hospital Package</h3>
+              <p className="text-xs text-neutral-400 mb-6">Complete digital transformation, video production, and high-volume ad campaigns.</p>
+              <ul className="space-y-3.5 mb-8 text-sm text-neutral-300">
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-white shrink-0" />
+                  <span>High-converting Patient Lead Campaigns</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-white shrink-0" />
+                  <span>Professional Video Shoot & Doctor Reels</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-white shrink-0" />
+                  <span>Advanced SEO & Website Management</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-4 h-4 text-white shrink-0" />
+                  <span>Dedicated Account Manager & Priority Support</span>
+                </li>
+              </ul>
+            </div>
+            <Link href="/login" className="w-full py-3 bg-white text-black text-center font-medium hover:bg-neutral-200 transition-colors">
+              Access Portal
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 md:py-32 px-6 max-w-6xl mx-auto">
+        <div className="border-2 border-black p-10 md:p-16 text-center max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+            Streamline your clinic growth today.
           </h2>
-          <div className="w-12 h-px bg-emerald-500/50 mx-auto" />
-        </div>
-      </section>
-
-      {/* ===== Rx GUIDELINES ===== */}
-      <section className="py-20 px-6 relative">
-        <div className="max-w-4xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Rx Guidelines</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-4 split-line">Prescription for Partnership</h2>
-          </motion.div>
-          <div className="grid sm:grid-cols-2 gap-4 reveal-up">
-            {[
-              'All content complies with Drugs and Magic Remedies Act, 1954',
-              'Third-party payments are excluded',
-              'White-label content is excluded',
-              'One-month prior notice required for termination',
-              'Additional content creation chargeable with prior approval',
-              'Advance payment and work order mandatory',
-              'One free revision after design/video delivery',
-              'Min. 4 videos per shoot, considered final',
-              'Reshoots or changes may incur extra charges',
-              'Package non-exclusive; same content won\'t be reused for same specialization',
-            ].map((g, i) => (
-              <div key={i} className="flex items-start gap-3 p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-                <CheckCircle className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                <span className="text-xs text-neutral-700 leading-relaxed">{g}</span>
-              </div>
-            ))}
+          <p className="text-neutral-600 max-w-xl mx-auto mb-8 text-base md:text-lg">
+            Login to Topclues Doctor Hub to manage your marketing assets, leads, and monthly performance.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link 
+              href="/login" 
+              className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white font-medium text-base hover:bg-neutral-800 transition-colors"
+            >
+              Sign In to Doctor Hub
+              <ArrowUpRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* ===== OFFERS ===== */}
-      <section className="py-20 px-6 relative bg-neutral-50">
-        <div className="max-w-5xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-12">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Special Offers</span>
-            <h2 className="text-2xl md:text-4xl font-bold mt-4 split-line">Save More with Advance Commitment</h2>
-          </motion.div>
-          <div className="grid sm:grid-cols-2 gap-6 reveal-up">
-            <div className="p-8 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 rounded-2xl">
-              <h3 className="text-lg font-bold text-white">Package A & B</h3>
-              <p className="text-3xl font-bold text-emerald-400 mt-3">15% OFF</p>
-              <p className="text-xs text-neutral-400 mt-2">with 6-month advance payment</p>
-            </div>
-            <div className="p-8 bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 rounded-2xl">
-              <h3 className="text-lg font-bold text-white">Package D</h3>
-              <p className="text-sm font-semibold text-purple-400 mt-3">Get 1 extra professionally shot & edited video every month</p>
-              <p className="text-xs text-neutral-400 mt-2">with 6-month advance payment</p>
-            </div>
+      {/* Footer */}
+      <footer className="border-t border-black py-12 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-neutral-500">
+          <div className="flex items-center space-x-2">
+            <span className="font-bold text-black text-sm tracking-tighter uppercase border border-black px-2 py-0.5">Topclues Solutions</span>
+            <span>© {new Date().getFullYear()} Doctor Hub. All rights reserved.</span>
+          </div>
+          <div className="flex items-center space-x-6">
+            <Link href="/login" className="hover:text-black transition-colors">Doctor Login</Link>
+            <Link href="/admin/login" className="hover:text-black transition-colors">Agency Login</Link>
+            <Link href="/client" className="hover:text-black transition-colors">Dashboard</Link>
           </div>
         </div>
-      </section>
-
-      {/* ===== DIGITAL DOSES ===== */}
-      <section id="doses" data-section="doses" className="py-24 md:py-32 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Our Digital Doses</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 split-line">Choose Your Treatment Plan</h2>
-            <p className="text-sm text-neutral-400 mt-4 max-w-xl mx-auto">Each plan is carefully formulated to address specific marketing needs for your practice.</p>
-          </motion.div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {doses.map((d, i) => (
-              <motion.div key={d.name}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className={`relative p-6 rounded-2xl border ${d.popular ? 'border-neutral-300 bg-neutral-50' : 'border-neutral-200 bg-white'} hover:bg-neutral-50 transition-all flex flex-col`}
-              >
-                {d.popular && (
-                  <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-white text-neutral-950 rounded-full text-[9px] font-bold uppercase tracking-wider">Popular</span>
-                )}
-                <h3 className="text-sm font-bold text-black">{d.name}</h3>
-                <div className="mt-4 mb-6">
-                  <span className="text-3xl font-bold text-black">₹{d.price}</span>
-                  <span className="text-xs text-neutral-400 ml-1">{d.period}</span>
-                </div>
-                <ul className="space-y-3 flex-1">
-                  {d.features.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-xs text-neutral-700">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                {d.note && <p className="text-[10px] text-neutral-500 mt-4 italic">{d.note}</p>}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== TESTIMONIALS ===== */}
-      <section id="testimonials" data-section="testimonials" className="py-24 md:py-32 px-6 relative bg-neutral-50">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Testimonials</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 split-line">What Doctors Say</h2>
-            <p className="text-sm text-neutral-400 mt-4">Doctors Who Tried Our Marketing Medicine Are Sharing Their Experience.</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <motion.div key={t.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.15, duration: 0.6 }}
-                className="p-6 bg-white border border-neutral-200 rounded-2xl"
-              >
-                <Quote className="w-6 h-6 text-neutral-300 mb-4" />
-                <p className="text-sm text-neutral-700 leading-relaxed mb-6">&ldquo;{t.quote}&rdquo;</p>
-                <div>
-                  <p className="text-sm font-semibold text-black">{t.name}</p>
-                  <p className="text-[10px] text-neutral-500 font-mono">{t.specialty}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== CONTACT ===== */}
-      <section id="contact" data-section="contact" className="py-24 md:py-32 px-6 relative">
-        <div className="max-w-6xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="text-center mb-16">
-            <span className="text-[10px] font-mono tracking-[0.3em] text-neutral-500 uppercase">Get In Touch</span>
-            <h2 className="text-3xl md:text-5xl font-bold mt-4 split-line">Let&rsquo;s Start Your Journey</h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8 reveal-up">
-            <div className="space-y-6">
-              <a href="https://topclues.in" target="_blank" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
-                <Globe className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
-                <div>
-                  <p className="text-[10px] text-neutral-500 font-mono">Website</p>
-                  <p className="text-sm font-semibold text-black">topclues.in</p>
-                </div>
-                <ExternalLink className="w-4 h-4 text-neutral-600 ml-auto" />
-              </a>
-              <a href="tel:+919510133057" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
-                <Phone className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
-                <div>
-                  <p className="text-[10px] text-neutral-500 font-mono">Phone</p>
-                  <p className="text-sm font-semibold text-black">+91 95101 33057</p>
-                </div>
-              </a>
-              <a href="mailto:marketing@topclues.in" className="flex items-center gap-4 p-4 bg-neutral-50 border border-neutral-200 rounded-xl hover:bg-neutral-100 transition-all group">
-                <Mail className="w-5 h-5 text-neutral-400 group-hover:text-emerald-400 transition-colors" />
-                <div>
-                  <p className="text-[10px] text-neutral-500 font-mono">Email</p>
-                  <p className="text-sm font-semibold text-black">marketing@topclues.in</p>
-                </div>
-              </a>
-            </div>
-
-            <div className="space-y-6">
-              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-                <div className="flex items-start gap-4">
-                  <MapPin className="w-5 h-5 text-neutral-400 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-black">Unit 1 — Junagadh</p>
-                    <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                      Merged Office No. 365–369, 3rd Floor, Applewood City Mall, Madhuram, Moti Palace Township, Junagadh, Gujarat – 362015
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 bg-neutral-50 border border-neutral-200 rounded-xl">
-                <div className="flex items-start gap-4">
-                  <MapPin className="w-5 h-5 text-neutral-400 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-black">Unit 2 — Gandhinagar</p>
-                    <p className="text-xs text-neutral-400 mt-1 leading-relaxed">
-                      Office No. 225 A-5, Infocity Supermall-1, Gandhinagar, Gujarat – 382421
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Dock Footer */}
-      <div className="pb-20 sm:pb-24" />
-
+      </footer>
     </div>
-
-      <DockFooter
-        variant="landing"
-        items={[
-          { icon: Dna, label: 'DNA', onClick: () => scrollTo('dna'), isActive: activeSection === 'dna' },
-          { icon: Target, label: 'Services', onClick: () => scrollTo('services'), isActive: activeSection === 'services' },
-          { icon: Award, label: 'Highlights', onClick: () => scrollTo('highlights'), isActive: activeSection === 'highlights' },
-          { icon: CreditCard, label: 'Pricing', onClick: () => scrollTo('doses'), isActive: activeSection === 'doses' },
-          { icon: MessageSquare, label: 'Testimonials', onClick: () => scrollTo('testimonials'), isActive: activeSection === 'testimonials' },
-          { icon: Mail, label: 'Contact', onClick: () => scrollTo('contact'), isActive: activeSection === 'contact' },
-          { icon: Users, label: 'Client', href: '/client/login' },
-          { icon: ShieldCheck, label: 'Admin', href: '/admin/login' },
-        ]}
-      /></>
-
   );
 }

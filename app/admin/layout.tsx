@@ -1,12 +1,12 @@
-import { redirect } from 'next/navigation';
 import { getSession } from '../../lib/auth';
 import AdminSidebar from './admin-sidebar';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
+  // If there's no session or non-admin user, render child page without sidebar (e.g. login page)
   if (!session || session.role !== 'admin') {
-    redirect('/admin/login');
+    return <>{children}</>;
   }
 
   return (
