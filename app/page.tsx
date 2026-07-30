@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   ArrowRight, Menu, X, Check, Shield, Zap, FileText, 
   Users, BarChart3, Calendar, CheckSquare, MessageSquare, 
@@ -17,8 +18,8 @@ export default function DoctorHubLandingPage() {
       {/* Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/10">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold tracking-tighter uppercase border-2 border-black px-3 py-1 flex items-center gap-2">
-            <span>Topclues Doctor Hub</span>
+          <Link href="/" className="flex items-center">
+            <Image src="/Logo(1).png" alt="TopClues" width={140} height={48} className="h-12 w-auto object-contain" priority />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-tight">
@@ -356,14 +357,14 @@ export default function DoctorHubLandingPage() {
             Streamline your clinic growth today.
           </h2>
           <p className="text-neutral-600 max-w-xl mx-auto mb-8 text-base md:text-lg">
-            Login to Topclues Doctor Hub to manage your marketing assets, leads, and monthly performance.
+            Login to TopClues to manage your marketing assets, leads, and monthly performance.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
               href="/login" 
               className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white font-medium text-base hover:bg-neutral-800 transition-colors"
             >
-              Sign In to Doctor Hub
+              Sign In to TopClues
               <ArrowUpRight className="w-5 h-5" />
             </Link>
           </div>
@@ -373,9 +374,9 @@ export default function DoctorHubLandingPage() {
       {/* Footer */}
       <footer className="border-t border-black py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-neutral-500">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-black text-sm tracking-tighter uppercase border border-black px-2 py-0.5">Topclues Solutions</span>
-            <span>© {new Date().getFullYear()} Doctor Hub. All rights reserved.</span>
+          <div className="flex items-center space-x-4">
+            <Image src="/Logo(1).png" alt="TopClues" width={100} height={32} className="h-8 w-auto object-contain" />
+            <span>© {new Date().getFullYear()} TopClues. All rights reserved.</span>
           </div>
           <div className="flex items-center space-x-6">
             <Link href="/login" className="hover:text-black transition-colors">Doctor Login</Link>

@@ -73,14 +73,15 @@ export default function DoctorProfilePage() {
       {/* Top Header */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0F6CBD] to-[#12B981] flex items-center justify-center text-white font-bold text-xl shadow-md">
-              TC
-            </div>
-            <div>
-              <span className="font-bold text-lg text-slate-900 tracking-tight">TopClues</span>
-              <span className="text-xs text-[#0F6CBD] block font-semibold -mt-1">DOCTOR HUB</span>
-            </div>
+          <div className="flex items-center">
+            <Image
+              src="/Logo(1).png"
+              alt="TopClues"
+              width={160}
+              height={48}
+              className="h-8 sm:h-9 md:h-10 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] object-contain"
+              priority
+            />
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
             <a href="#about" className="hover:text-[#0F6CBD] transition-colors">About</a>
