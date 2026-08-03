@@ -9,6 +9,8 @@ import {
   HelpCircle, ArrowUpRight, Activity
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { getFeaturedDoctors } from '@/lib/doctors-data';
+import DoctorCard from '@/app/doctors/_components/DoctorCard';
 
 export default function DoctorHubLandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,6 +27,7 @@ export default function DoctorHubLandingPage() {
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-tight">
             <a href="#features" className="hover:underline underline-offset-4 decoration-2 transition-all">Portal Modules</a>
             <a href="#workflow" className="hover:underline underline-offset-4 decoration-2 transition-all">Workflows</a>
+            <Link href="/doctors" className="hover:underline underline-offset-4 decoration-2 transition-all font-bold">Find Doctors</Link>
             <a href="#packages" className="hover:underline underline-offset-4 decoration-2 transition-all">Growth Plans</a>
             <a href="#faq" className="hover:underline underline-offset-4 decoration-2 transition-all">FAQ</a>
           </nav>
@@ -64,6 +67,7 @@ export default function DoctorHubLandingPage() {
           <div className="md:hidden border-b border-black bg-white px-6 py-6 space-y-4">
             <a href="#features" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Portal Modules</a>
             <a href="#workflow" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Workflows</a>
+            <Link href="/doctors" className="block text-base font-medium font-bold" onClick={() => setMobileMenuOpen(false)}>Find Doctors</Link>
             <a href="#packages" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>Growth Plans</a>
             <a href="#faq" className="block text-base font-medium" onClick={() => setMobileMenuOpen(false)}>FAQ</a>
             <div className="pt-4 border-t border-black/10 flex flex-col space-y-3">
@@ -277,6 +281,32 @@ export default function DoctorHubLandingPage() {
         </div>
       </section>
 
+      {/* Featured Doctors Section */}
+      <section id="doctors" className="py-24 md:py-32 px-6 max-w-6xl mx-auto border-b border-black/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-3">// Verified Topclues Clients</span>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">Doctors we grow.</h2>
+            <p className="text-neutral-600 text-sm md:text-base mt-3 max-w-xl">
+              Leading doctors and clinics across Gujarat & Mumbai trust Topclues for digital marketing, patient leads, and brand growth.
+            </p>
+          </div>
+          <Link
+            href="/doctors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white text-xs font-mono uppercase font-bold hover:bg-neutral-800 transition-colors border border-black shrink-0 self-start md:self-auto"
+          >
+            <span>View All Doctors</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {getFeaturedDoctors().map(doctor => (
+            <DoctorCard key={doctor.id} doctor={doctor} variant="featured" />
+          ))}
+        </div>
+      </section>
+
       {/* Growth Plans / Packages */}
       <section id="packages" className="py-24 md:py-32 px-6 max-w-6xl mx-auto border-b border-black/10">
         <div className="mb-16">
@@ -379,6 +409,7 @@ export default function DoctorHubLandingPage() {
             <span>© {new Date().getFullYear()} TopClues. All rights reserved.</span>
           </div>
           <div className="flex items-center space-x-6">
+            <Link href="/doctors" className="hover:text-black transition-colors font-bold">Find Doctors</Link>
             <Link href="/login" className="hover:text-black transition-colors">Doctor Login</Link>
             <Link href="/admin/login" className="hover:text-black transition-colors">Agency Login</Link>
             <Link href="/client" className="hover:text-black transition-colors">Dashboard</Link>

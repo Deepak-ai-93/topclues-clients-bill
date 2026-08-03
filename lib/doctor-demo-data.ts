@@ -1,4 +1,8 @@
 export interface DoctorProfile {
+  city: string;
+  specialtyTag: string;
+  featured?: boolean;
+  contactWhatsApp?: string;
   id: string;
   slug: string;
   name: string;
@@ -119,6 +123,10 @@ export interface DoctorProfile {
 }
 
 export const demoDoctorProfile: DoctorProfile = {
+  city: "Ahmedabad",
+  specialtyTag: "Oncology",
+  featured: true,
+  contactWhatsApp: "+919876543210",
   id: "doc-101",
   slug: "dr-rajesh-sharma",
   name: "Dr. Rajesh Sharma",

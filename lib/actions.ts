@@ -882,6 +882,18 @@ export async function getClientContent() {
   return { entries: entries || [] };
 }
 
+export async function updateContentStatus(contentId: string, status: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+  const { error } = await supabaseAdmin
+    .from('content_calendars')
+    .update({ status })
+    .eq('id', contentId)
+    .eq('client_id', session.userId);
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
 // ==========================================
 // LEAD MANAGEMENT ACTIONS
 // ==========================================
