@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getServerSession } from '@/lib/actions';
+import { getServerSession, getClientProfileData, updateClientProfile, uploadProfileAvatar, downloadProfileAvatar } from '@/lib/actions';
 import type { SessionData } from '@/lib/auth';
 import {
   User,
@@ -69,8 +69,24 @@ export default function ProfilePage() {
       try {
         const s = await getServerSession();
         setSession(s);
-        if (s?.email) {
-          setProfileData(prev => ({ ...prev, email: s.email }));
+
+        const data = await getClientProfileData();
+        const p = data.profile as any;
+        if (p) {
+          setProfileData(prev => ({
+            ...prev,
+            email: p.email || s?.email || '',
+            doctorName: p.name || prev.doctorName,
+            mobile: p.phone || prev.mobile,
+            clinicName: p.clinic_name || prev.clinicName,
+            specialization: p.specialization || prev.specialization,
+          }));
+          if (p.avatar_url) {
+            const avatar = await downloadProfileAvatar();
+            if (avatar.success && avatar.url) setPhotoPreview(avatar.url);
+          }
+        } else if (s?.email) {
+          setProfileData(prev => ({ ...prev, email: s.email as string }));
         }
       } catch (err) {
         console.error(err);
@@ -95,18 +111,45 @@ export default function ProfilePage() {
     setProfileData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    triggerToast('Profile saved successfully');
+    try {
+      const res = await updateClientProfile({
+        name: profileData.doctorName,
+        phone: profileData.mobile,
+        clinicName: profileData.clinicName,
+        specialization: profileData.specialization,
+      });
+      if (res.success) {
+        triggerToast('Profile saved successfully');
+      } else {
+        triggerToast(res.error || 'Failed to save profile.', true);
+      }
+    } catch (err: any) {
+      triggerToast(err.message || 'An error occurred.', true);
+    }
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setPhotoPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64 = reader.result as string;
+      setPhotoPreview(base64);
+      try {
+        const res = await uploadProfileAvatar(file.name, base64);
+        if (res.success) {
+          triggerToast('Profile photo updated.');
+        } else {
+          triggerToast(res.error || 'Upload failed.', true);
+          setPhotoPreview(null);
+        }
+      } catch (err: any) {
+        triggerToast(err.message || 'An error occurred.', true);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

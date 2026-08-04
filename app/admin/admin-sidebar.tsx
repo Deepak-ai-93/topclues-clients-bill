@@ -11,7 +11,13 @@ import {
   Calendar,
   UserPlus,
   Menu,
-  X
+  X,
+  Tag,
+  Star,
+  Video,
+  FileText,
+  Bell,
+  HelpCircle
 } from 'lucide-react';
 import DockFooter from '@/components/DockFooter';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -32,6 +38,12 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
     { href: '/admin/reports', label: 'Reports', icon: BarChart3 },
     { href: '/admin/content', label: 'Content', icon: Calendar },
     { href: '/admin/leads', label: 'Leads', icon: UserPlus },
+    { href: '/admin/offers', label: 'Offers', icon: Tag },
+    { href: '/admin/reviews', label: 'Reviews', icon: Star },
+    { href: '/admin/meetings', label: 'Meetings', icon: Video },
+    { href: '/admin/documents', label: 'Documents', icon: FileText },
+    { href: '/admin/notifications', label: 'Notifications', icon: Bell },
+    { href: '/admin/tickets', label: 'Tickets', icon: HelpCircle },
   ];
 
   const sidebarContent = (
@@ -117,6 +129,7 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
           { href: '/admin/reports', icon: BarChart3, label: 'Reports' },
           { href: '/admin/content', icon: Calendar, label: 'Content' },
           { href: '/admin/leads', icon: UserPlus, label: 'Leads' },
+          { href: '/admin/tickets', icon: HelpCircle, label: 'Tickets' },
           { href: 'logout', icon: Users, label: 'Logout' },
         ]}
       />

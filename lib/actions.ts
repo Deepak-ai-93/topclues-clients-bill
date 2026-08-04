@@ -1207,3 +1207,992 @@ export async function logoutUserAction() {
   await logoutUser();
   redirect('/');
 }
+
+// ==========================================
+// PROFILE ACTIONS
+// ==========================================
+
+export async function getClientProfileData() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: profile, error } = await supabaseAdmin
+    .from('profiles')
+    .select('*, package:packages(*)')
+    .eq('id', session.userId)
+    .single();
+
+  if (error) return { profile: null, error: error.message };
+  return { profile: profile || null };
+}
+
+export async function updateClientProfile(data: {
+  name: string;
+  phone: string;
+  clinicName: string;
+  specialization: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('profiles')
+    .update({
+      name: data.name,
+      phone: data.phone,
+      clinic_name: data.clinicName,
+      specialization: data.specialization,
+    })
+    .eq('id', session.userId);
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function uploadProfileAvatar(fileName: string, fileBase64: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  try {
+    const base64Data = fileBase64.replace(/^data:image\/\w+;base64,/, '');
+    const fileBuffer = Buffer.from(base64Data, 'base64');
+
+    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+    if (!buckets?.some(b => b.name === 'avatars')) {
+      await supabaseAdmin.storage.createBucket('avatars', { public: false });
+    }
+
+    const path = `${session.userId}/${Date.now()}-${fileName}`;
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('avatars')
+      .upload(path, fileBuffer, { contentType: 'image/*', cacheControl: '3600', upsert: false });
+
+    if (uploadError) return { success: false, error: uploadError.message };
+
+    const { error: dbError } = await supabaseAdmin
+      .from('profiles')
+      .update({ avatar_url: path })
+      .eq('id', session.userId);
+
+    if (dbError) {
+      await supabaseAdmin.storage.from('avatars').remove([path]);
+      return { success: false, error: dbError.message };
+    }
+    return { success: true, path };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
+  }
+}
+
+export async function downloadProfileAvatar() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('avatar_url')
+    .eq('id', session.userId)
+    .single();
+
+  if (!profile?.avatar_url) return { success: false, error: 'No avatar uploaded.' };
+
+  const { data: signedData, error } = await supabaseAdmin.storage
+    .from('avatars')
+    .createSignedUrl(profile.avatar_url, 300);
+
+  if (error || !signedData?.signedUrl) return { success: false, error: 'Could not load avatar.' };
+  return { success: true, url: signedData.signedUrl };
+}
+
+// ==========================================
+// PACKAGE ACTIONS
+// ==========================================
+
+export async function getClientPackageData() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('package_id, package:packages(*)')
+    .eq('id', session.userId)
+    .single();
+
+  const currentPeriod = new Date().toISOString().slice(0, 7); // YYYY-MM
+  const { data: usage } = await supabaseAdmin
+    .from('package_usage')
+    .select('*')
+    .eq('client_id', session.userId)
+    .eq('period', currentPeriod)
+    .order('service');
+
+  const packageData = profile?.package || null;
+
+  // Renewal = end of current billing month (+1 month), derived from validity
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const renewalDate = nextMonth.toISOString().slice(0, 10);
+
+  return {
+    package: packageData,
+    usage: usage || [],
+    renewalDate,
+    accountManager: 'Rina Topclues',
+    accountManagerEmail: 'rina@topclues.in',
+    accountManagerPhone: '+91 90000 12345',
+  };
+}
+
+// ==========================================
+// CONTENT COMMENTS
+// ==========================================
+
+export async function getContentComments(contentId: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: comments, error } = await supabaseAdmin
+    .from('content_comments')
+    .select('*')
+    .eq('content_id', contentId)
+    .order('created_at', { ascending: true });
+
+  if (error) return { comments: [] };
+  return { comments: comments || [] };
+}
+
+export async function addContentComment(contentId: string, message: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: entry } = await supabaseAdmin
+    .from('content_calendars')
+    .select('client_id')
+    .eq('id', contentId)
+    .single();
+
+  if (!entry) return { success: false, error: 'Content item not found.' };
+  if (session.role === 'client' && entry.client_id !== session.userId) {
+    return { success: false, error: 'Access denied.' };
+  }
+
+  const { error } = await supabaseAdmin.from('content_comments').insert({
+    content_id: contentId,
+    author_name: session.role === 'admin' ? 'Topclues Team' : 'Client',
+    author_role: session.role,
+    message,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ==========================================
+// BILLING / INVOICES
+// ==========================================
+
+export async function getClientBillingDocuments() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: documents, error } = await supabaseAdmin
+    .from('billing_documents')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('billing_date', { ascending: false });
+
+  if (error) return { documents: [] };
+  return { documents: documents || [] };
+}
+
+// ==========================================
+// CAMPAIGNS
+// ==========================================
+
+export async function getClientCampaigns() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: campaigns, error } = await supabaseAdmin
+    .from('campaigns')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) return { campaigns: [] };
+  return { campaigns: campaigns || [] };
+}
+
+// ==========================================
+// SOCIAL MEDIA
+// ==========================================
+
+export async function getClientSocialSnapshots() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: snapshots, error } = await supabaseAdmin
+    .from('social_snapshots')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('platform');
+
+  if (error) return { snapshots: [] };
+  return { snapshots: snapshots || [] };
+}
+
+// ==========================================
+// DOCUMENTS
+// ==========================================
+
+export async function getClientDocuments() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: documents, error } = await supabaseAdmin
+    .from('documents')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) return { documents: [] };
+  return { documents: documents || [] };
+}
+
+export async function downloadDocument(documentId: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: doc, error } = await supabaseAdmin
+    .from('documents')
+    .select('*')
+    .eq('id', documentId)
+    .single();
+
+  if (error || !doc || !doc.file_url) return { success: false, error: 'Document not found.' };
+  if (session.role === 'client' && doc.client_id !== session.userId) {
+    return { success: false, error: 'Access denied.' };
+  }
+
+  const { data: signedData, error: signedError } = await supabaseAdmin.storage
+    .from('documents')
+    .createSignedUrl(doc.file_url, 300);
+
+  if (signedError || !signedData?.signedUrl) {
+    return { success: false, error: signedError?.message || 'Could not generate download link.' };
+  }
+  return { success: true, url: signedData.signedUrl, name: doc.file_name || doc.name };
+}
+
+// ==========================================
+// REVIEWS & FEEDBACK
+// ==========================================
+
+export async function getClientReviews() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: reviews, error } = await supabaseAdmin
+    .from('reviews_feedback')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) return { reviews: [] };
+  return { reviews: reviews || [] };
+}
+
+export async function submitClientReview(data: {
+  rating: number;
+  title: string;
+  message: string;
+  service: string;
+  publishConsent: boolean;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  if (!data.rating || data.rating < 1 || data.rating > 5) {
+    return { success: false, error: 'Please select a rating between 1 and 5.' };
+  }
+
+  const { error } = await supabaseAdmin.from('reviews_feedback').insert({
+    client_id: session.userId,
+    rating: data.rating,
+    title: data.title,
+    message: data.message,
+    service: data.service,
+    publish_consent: data.publishConsent,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ==========================================
+// MEETINGS
+// ==========================================
+
+export async function getClientMeetings() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: meetings, error } = await supabaseAdmin
+    .from('meetings')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('meeting_date', { ascending: true });
+
+  if (error) return { meetings: [] };
+  return { meetings: meetings || [] };
+}
+
+// ==========================================
+// NOTIFICATIONS
+// ==========================================
+
+export async function getClientNotifications() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: notifications, error } = await supabaseAdmin
+    .from('notifications')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  if (error) return { notifications: [] };
+  return { notifications: notifications || [] };
+}
+
+export async function markNotificationRead(notificationId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('notifications')
+    .update({ read: true })
+    .eq('id', notificationId)
+    .eq('client_id', session.userId);
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function markAllNotificationsRead() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('notifications')
+    .update({ read: true })
+    .eq('client_id', session.userId);
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ==========================================
+// LEADS (client side follow-ups)
+// ==========================================
+
+export async function getLeadFollowups(leadId: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: followups, error } = await supabaseAdmin
+    .from('lead_followups')
+    .select('*')
+    .eq('lead_id', leadId)
+    .order('created_at', { ascending: false });
+
+  if (error) return { followups: [] };
+  return { followups: followups || [] };
+}
+
+export async function addLeadFollowup(leadId: string, note: string, nextFollowupDate?: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: lead } = await supabaseAdmin
+    .from('leads')
+    .select('client_id')
+    .eq('id', leadId)
+    .single();
+
+  if (!lead) return { success: false, error: 'Lead not found.' };
+  if (session.role === 'client' && lead.client_id !== session.userId) {
+    return { success: false, error: 'Access denied.' };
+  }
+
+  const { error } = await supabaseAdmin.from('lead_followups').insert({
+    lead_id: leadId,
+    note,
+    next_followup_date: nextFollowupDate || null,
+    created_by: session.role === 'admin' ? 'Topclues Team' : 'Client',
+  });
+
+  if (error) return { success: false, error: error.message };
+
+  if (nextFollowupDate) {
+    await supabaseAdmin
+      .from('leads')
+      .update({ next_followup_date: nextFollowupDate })
+      .eq('id', leadId);
+  }
+
+  return { success: true };
+}
+
+// ==========================================
+// OFFERS (client)
+// ==========================================
+
+export async function getClientOffers() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: offers, error } = await supabaseAdmin
+    .from('special_offers')
+    .select('*')
+    .eq('client_id', session.userId)
+    .eq('status', 'active')
+    .order('valid_until', { ascending: true });
+
+  const { data: claims } = await supabaseAdmin
+    .from('offer_claims')
+    .select('*')
+    .eq('client_id', session.userId);
+
+  if (error) return { offers: [], claims: claims || [] };
+  return { offers: offers || [], claims: claims || [] };
+}
+
+export async function claimOffer(offerId: string, notes: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: offer } = await supabaseAdmin
+    .from('special_offers')
+    .select('client_id')
+    .eq('id', offerId)
+    .single();
+
+  if (!offer) return { success: false, error: 'Offer not found.' };
+  if (offer.client_id !== session.userId) return { success: false, error: 'Access denied.' };
+
+  const { error } = await supabaseAdmin.from('offer_claims').insert({
+    offer_id: offerId,
+    client_id: session.userId,
+    notes,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ==========================================
+// SUPPORT TICKETS (client)
+// ==========================================
+
+export async function getClientTickets() {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: tickets, error } = await supabaseAdmin
+    .from('support_tickets')
+    .select('*')
+    .eq('client_id', session.userId)
+    .order('created_at', { ascending: false });
+
+  if (error) return { tickets: [] };
+  return { tickets: tickets || [] };
+}
+
+export async function getTicketReplies(ticketId: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: replies, error } = await supabaseAdmin
+    .from('ticket_replies')
+    .select('*')
+    .eq('ticket_id', ticketId)
+    .order('created_at', { ascending: true });
+
+  if (error) return { replies: [] };
+  return { replies: replies || [] };
+}
+
+export async function createClientTicket(data: {
+  subject: string;
+  category: string;
+  priority: string;
+  message: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('name')
+    .eq('id', session.userId)
+    .single();
+
+  const { error } = await supabaseAdmin.from('support_tickets').insert({
+    client_id: session.userId,
+    company_name: profile?.name || 'Client',
+    subject: data.subject,
+    message: data.message,
+    category: data.category,
+    priority: data.priority,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+export async function addTicketReply(ticketId: string, message: string) {
+  const session = await getSession();
+  if (!session) throw new Error('Unauthorized');
+
+  const { data: ticket } = await supabaseAdmin
+    .from('support_tickets')
+    .select('client_id')
+    .eq('id', ticketId)
+    .single();
+
+  if (!ticket) return { success: false, error: 'Ticket not found.' };
+  if (session.role === 'client' && ticket.client_id !== session.userId) {
+    return { success: false, error: 'Access denied.' };
+  }
+
+  const { error } = await supabaseAdmin.from('ticket_replies').insert({
+    ticket_id: ticketId,
+    sender: session.role,
+    sender_name: session.role === 'admin' ? 'Topclues Team' : 'Client',
+    message,
+  });
+
+  if (error) return { success: false, error: error.message };
+  return { success: true };
+}
+
+// ==========================================
+// SETTINGS
+// ==========================================
+
+export async function changeClientPassword(currentPassword: string, newPassword: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'client') throw new Error('Unauthorized');
+
+  try {
+    if (newPassword.length < 6) {
+      return { success: false, error: 'New password must be at least 6 characters.' };
+    }
+
+    // Verify the current password first
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: session.email,
+      password: currentPassword,
+    });
+
+    if (signInError) {
+      return { success: false, error: 'Current password is incorrect.' };
+    }
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(session.userId, {
+      password: newPassword,
+    });
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
+  }
+}
+
+// ==========================================
+// ADMIN: OFFERS
+// ==========================================
+
+export async function getAdminOffersData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: offers, error } = await supabaseAdmin
+    .from('special_offers')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) return { offers: [], clients: clients || [] };
+  return { offers: offers || [], clients: clients || [] };
+}
+
+export async function createOffer(data: {
+  clientId: string;
+  title: string;
+  description: string;
+  price: string;
+  offerPrice: string;
+  validUntil: string;
+  eligibility: string;
+  terms: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('special_offers').insert({
+    client_id: data.clientId,
+    title: data.title,
+    description: data.description,
+    price: parseFloat(data.price) || 0,
+    offer_price: parseFloat(data.offerPrice) || 0,
+    discount_pct: parseFloat(data.price) > 0
+      ? Math.round(((parseFloat(data.price) - (parseFloat(data.offerPrice) || 0)) / parseFloat(data.price)) * 100)
+      : 0,
+    valid_until: data.validUntil || null,
+    eligibility: data.eligibility,
+    terms: data.terms,
+  });
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/offers');
+  return { success: true };
+}
+
+export async function updateOfferStatus(offerId: string, status: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('special_offers')
+    .update({ status })
+    .eq('id', offerId);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/offers');
+  return { success: true };
+}
+
+export async function deleteOffer(offerId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('special_offers').delete().eq('id', offerId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/offers');
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN: REVIEWS
+// ==========================================
+
+export async function getAdminReviewsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: reviews, error } = await supabaseAdmin
+    .from('reviews_feedback')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) return { reviews: [] };
+  return { reviews: reviews || [] };
+}
+
+export async function updateReviewStatus(reviewId: string, status: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('reviews_feedback')
+    .update({ status })
+    .eq('id', reviewId);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/reviews');
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN: MEETINGS
+// ==========================================
+
+export async function getAdminMeetingsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: meetings, error } = await supabaseAdmin
+    .from('meetings')
+    .select('*, client:profiles(name, email)')
+    .order('meeting_date', { ascending: false });
+
+  if (error) return { meetings: [], clients: clients || [] };
+  return { meetings: meetings || [], clients: clients || [] };
+}
+
+export async function createMeeting(data: {
+  clientId: string;
+  title: string;
+  meetingDate: string;
+  meetingType: string;
+  link: string;
+  agenda: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('meetings').insert({
+    client_id: data.clientId,
+    title: data.title,
+    meeting_date: data.meetingDate,
+    meeting_type: data.meetingType,
+    link: data.link,
+    agenda: data.agenda,
+  });
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/meetings');
+  return { success: true };
+}
+
+export async function updateMeetingStatus(meetingId: string, status: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('meetings').update({ status }).eq('id', meetingId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/meetings');
+  return { success: true };
+}
+
+export async function deleteMeeting(meetingId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('meetings').delete().eq('id', meetingId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/meetings');
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN: DOCUMENTS
+// ==========================================
+
+export async function getAdminDocumentsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: documents, error } = await supabaseAdmin
+    .from('documents')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) return { documents: [], clients: clients || [] };
+  return { documents: documents || [], clients: clients || [] };
+}
+
+export async function uploadDocument(data: {
+  clientId: string;
+  name: string;
+  category: string;
+  expiryDate?: string;
+  fileBase64: string;
+  fileName: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  try {
+    const base64Data = data.fileBase64.replace(/^data:[^;]+;base64,/, '');
+    const fileBuffer = Buffer.from(base64Data, 'base64');
+
+    const { data: buckets } = await supabaseAdmin.storage.listBuckets();
+    if (!buckets?.some(b => b.name === 'documents')) {
+      await supabaseAdmin.storage.createBucket('documents', { public: false });
+    }
+
+    const fileUrl = `${data.clientId}/${Date.now()}-${data.fileName}`;
+    const { error: uploadError } = await supabaseAdmin.storage
+      .from('documents')
+      .upload(fileUrl, fileBuffer, { cacheControl: '3600', upsert: false });
+
+    if (uploadError) return { success: false, error: `Storage upload failed: ${uploadError.message}` };
+
+    const { error: dbError } = await supabaseAdmin.from('documents').insert({
+      client_id: data.clientId,
+      name: data.name,
+      category: data.category,
+      file_url: fileUrl,
+      file_name: data.fileName,
+      file_size: fileBuffer.length,
+      expiry_date: data.expiryDate || null,
+    });
+
+    if (dbError) {
+      await supabaseAdmin.storage.from('documents').remove([fileUrl]);
+      return { success: false, error: `Database insert failed: ${dbError.message}` };
+    }
+
+    revalidatePath('/admin/documents');
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message || 'An error occurred.' };
+  }
+}
+
+export async function deleteDocument(documentId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: doc } = await supabaseAdmin
+    .from('documents')
+    .select('file_url')
+    .eq('id', documentId)
+    .single();
+
+  if (doc?.file_url) {
+    await supabaseAdmin.storage.from('documents').remove([doc.file_url]);
+  }
+
+  const { error } = await supabaseAdmin.from('documents').delete().eq('id', documentId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/documents');
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN: NOTIFICATIONS
+// ==========================================
+
+export async function getAdminNotificationsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: clients } = await supabaseAdmin
+    .from('profiles')
+    .select('id, name, email')
+    .eq('role', 'client')
+    .order('name');
+
+  const { data: notifications, error } = await supabaseAdmin
+    .from('notifications')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) return { notifications: [], clients: clients || [] };
+  return { notifications: notifications || [], clients: clients || [] };
+}
+
+export async function sendNotification(data: {
+  clientId: string;
+  title: string;
+  message: string;
+  type: string;
+  link: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('notifications').insert({
+    client_id: data.clientId,
+    title: data.title,
+    message: data.message,
+    type: data.type,
+    link: data.link,
+  });
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/notifications');
+  return { success: true };
+}
+
+export async function deleteNotification(notificationId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin
+    .from('notifications')
+    .delete()
+    .eq('id', notificationId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/notifications');
+  return { success: true };
+}
+
+// ==========================================
+// ADMIN: SUPPORT TICKETS
+// ==========================================
+
+export async function getAdminTicketsData() {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { data: tickets, error } = await supabaseAdmin
+    .from('support_tickets')
+    .select('*, client:profiles(name, email)')
+    .order('created_at', { ascending: false });
+
+  if (error) return { tickets: [] };
+  return { tickets: tickets || [] };
+}
+
+export async function updateTicket(ticketId: string, data: {
+  status?: string;
+  priority?: string;
+  assignedTo?: string;
+}) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const updateData: any = {};
+  if (data.status !== undefined) {
+    updateData.status = data.status;
+    if (data.status === 'resolved' || data.status === 'closed') {
+      updateData.resolved_at = new Date().toISOString();
+    }
+  }
+  if (data.priority !== undefined) updateData.priority = data.priority;
+  if (data.assignedTo !== undefined) updateData.assigned_to = data.assignedTo;
+
+  const { error } = await supabaseAdmin
+    .from('support_tickets')
+    .update(updateData)
+    .eq('id', ticketId);
+
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/tickets');
+  return { success: true };
+}
+
+export async function deleteTicket(ticketId: string) {
+  const session = await getSession();
+  if (!session || session.role !== 'admin') throw new Error('Unauthorized');
+
+  const { error } = await supabaseAdmin.from('support_tickets').delete().eq('id', ticketId);
+  if (error) return { success: false, error: error.message };
+  revalidatePath('/admin/tickets');
+  return { success: true };
+}
