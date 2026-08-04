@@ -4,31 +4,31 @@
 
 -- 1) Extend support_tickets with spec fields
 ALTER TABLE support_tickets
-  ADD COLUMN category TEXT NOT NULL DEFAULT 'Other',
-  ADD COLUMN priority TEXT NOT NULL DEFAULT 'normal'
+  ADD COLUMN IF NOT EXISTS category TEXT NOT NULL DEFAULT 'Other',
+  ADD COLUMN IF NOT EXISTS priority TEXT NOT NULL DEFAULT 'normal'
     CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
-  ADD COLUMN assigned_to TEXT NOT NULL DEFAULT '',
-  ADD COLUMN expected_response TEXT NOT NULL DEFAULT '',
-  ADD COLUMN resolved_at TIMESTAMPTZ;
+  ADD COLUMN IF NOT EXISTS assigned_to TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS expected_response TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS resolved_at TIMESTAMPTZ;
 
 -- 2) Extend leads with spec fields
 ALTER TABLE leads
-  ADD COLUMN interested_service TEXT NOT NULL DEFAULT '',
-  ADD COLUMN location TEXT NOT NULL DEFAULT '',
-  ADD COLUMN campaign_name TEXT NOT NULL DEFAULT '',
-  ADD COLUMN assigned_staff TEXT NOT NULL DEFAULT '',
-  ADD COLUMN next_followup_date DATE;
+  ADD COLUMN IF NOT EXISTS interested_service TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS location TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS campaign_name TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS assigned_staff TEXT NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS next_followup_date DATE;
 
 -- 3) Extend content_calendars with spec fields
 ALTER TABLE content_calendars
-  ADD COLUMN content_type TEXT NOT NULL DEFAULT 'post',
-  ADD COLUMN language TEXT NOT NULL DEFAULT 'English',
-  ADD COLUMN approval_deadline DATE,
-  ADD COLUMN version INTEGER NOT NULL DEFAULT 1,
-  ADD COLUMN published_url TEXT NOT NULL DEFAULT '';
+  ADD COLUMN IF NOT EXISTS content_type TEXT NOT NULL DEFAULT 'post',
+  ADD COLUMN IF NOT EXISTS language TEXT NOT NULL DEFAULT 'English',
+  ADD COLUMN IF NOT EXISTS approval_deadline DATE,
+  ADD COLUMN IF NOT EXISTS version INTEGER NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS published_url TEXT NOT NULL DEFAULT '';
 
 -- 4) Content comments (approval threads)
-CREATE TABLE content_comments (
+CREATE TABLE IF NOT EXISTS content_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   content_id UUID NOT NULL REFERENCES content_calendars(id) ON DELETE CASCADE,
   author_name TEXT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE content_comments (
 );
 
 -- 5) Package usage tracker
-CREATE TABLE package_usage (
+CREATE TABLE IF NOT EXISTS package_usage (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   service TEXT NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE package_usage (
 );
 
 -- 6) Special offers
-CREATE TABLE special_offers (
+CREATE TABLE IF NOT EXISTS special_offers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE special_offers (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE offer_claims (
+CREATE TABLE IF NOT EXISTS offer_claims (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   offer_id UUID NOT NULL REFERENCES special_offers(id) ON DELETE CASCADE,
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -76,7 +76,7 @@ CREATE TABLE offer_claims (
 );
 
 -- 7) Reviews & feedback
-CREATE TABLE reviews_feedback (
+CREATE TABLE IF NOT EXISTS reviews_feedback (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
@@ -89,7 +89,7 @@ CREATE TABLE reviews_feedback (
 );
 
 -- 8) Meetings
-CREATE TABLE meetings (
+CREATE TABLE IF NOT EXISTS meetings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE meetings (
 );
 
 -- 9) Notifications (in-portal)
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
@@ -116,7 +116,7 @@ CREATE TABLE notifications (
 );
 
 -- 10) Campaigns
-CREATE TABLE campaigns (
+CREATE TABLE IF NOT EXISTS campaigns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE campaigns (
 );
 
 -- 11) Social media snapshots (manually maintained / periodically imported)
-CREATE TABLE social_snapshots (
+CREATE TABLE IF NOT EXISTS social_snapshots (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   platform TEXT NOT NULL
@@ -154,7 +154,7 @@ CREATE TABLE social_snapshots (
 );
 
 -- 12) Document library
-CREATE TABLE documents (
+CREATE TABLE IF NOT EXISTS documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   client_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
@@ -169,7 +169,7 @@ CREATE TABLE documents (
 );
 
 -- 13) Lead follow-up notes
-CREATE TABLE lead_followups (
+CREATE TABLE IF NOT EXISTS lead_followups (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   lead_id UUID NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
   note TEXT NOT NULL,
@@ -193,62 +193,84 @@ ALTER TABLE social_snapshots ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE lead_followups ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "content_comments_admin_all" ON content_comments;
 CREATE POLICY "content_comments_admin_all" ON content_comments FOR ALL USING (public.is_admin());
+DROP POLICY IF EXISTS "content_comments_select_own" ON content_comments;
 CREATE POLICY "content_comments_select_own" ON content_comments
   FOR SELECT USING (EXISTS (
     SELECT 1 FROM content_calendars c WHERE c.id = content_comments.content_id AND c.client_id = auth.uid()
   ));
 
+DROP POLICY IF EXISTS "package_usage_select_own" ON package_usage;
 CREATE POLICY "package_usage_select_own" ON package_usage FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "package_usage_admin_all" ON package_usage;
 CREATE POLICY "package_usage_admin_all" ON package_usage FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "special_offers_select_own" ON special_offers;
 CREATE POLICY "special_offers_select_own" ON special_offers FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "special_offers_admin_all" ON special_offers;
 CREATE POLICY "special_offers_admin_all" ON special_offers FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "offer_claims_select_own" ON offer_claims;
 CREATE POLICY "offer_claims_select_own" ON offer_claims FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "offer_claims_admin_all" ON offer_claims;
 CREATE POLICY "offer_claims_admin_all" ON offer_claims FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "reviews_feedback_select_own" ON reviews_feedback;
 CREATE POLICY "reviews_feedback_select_own" ON reviews_feedback FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "reviews_feedback_admin_all" ON reviews_feedback;
 CREATE POLICY "reviews_feedback_admin_all" ON reviews_feedback FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "meetings_select_own" ON meetings;
 CREATE POLICY "meetings_select_own" ON meetings FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "meetings_admin_all" ON meetings;
 CREATE POLICY "meetings_admin_all" ON meetings FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "notifications_select_own" ON notifications;
 CREATE POLICY "notifications_select_own" ON notifications FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "notifications_admin_all" ON notifications;
 CREATE POLICY "notifications_admin_all" ON notifications FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "campaigns_select_own" ON campaigns;
 CREATE POLICY "campaigns_select_own" ON campaigns FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "campaigns_admin_all" ON campaigns;
 CREATE POLICY "campaigns_admin_all" ON campaigns FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "social_snapshots_select_own" ON social_snapshots;
 CREATE POLICY "social_snapshots_select_own" ON social_snapshots FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "social_snapshots_admin_all" ON social_snapshots;
 CREATE POLICY "social_snapshots_admin_all" ON social_snapshots FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "documents_select_own" ON documents;
 CREATE POLICY "documents_select_own" ON documents FOR SELECT USING (auth.uid() = client_id);
+DROP POLICY IF EXISTS "documents_admin_all" ON documents;
 CREATE POLICY "documents_admin_all" ON documents FOR ALL USING (public.is_admin());
 
+DROP POLICY IF EXISTS "lead_followups_select_own" ON lead_followups;
 CREATE POLICY "lead_followups_select_own" ON lead_followups
   FOR SELECT USING (EXISTS (
     SELECT 1 FROM leads l WHERE l.id = lead_followups.lead_id AND l.client_id = auth.uid()
   ));
+DROP POLICY IF EXISTS "lead_followups_admin_all" ON lead_followups;
 CREATE POLICY "lead_followups_admin_all" ON lead_followups FOR ALL USING (public.is_admin());
 
 -- ---------------------------------------------------------------
 -- Indexes
 -- ---------------------------------------------------------------
-CREATE INDEX idx_content_comments_content_id ON content_comments(content_id);
-CREATE INDEX idx_package_usage_client_id ON package_usage(client_id);
-CREATE INDEX idx_special_offers_client_id ON special_offers(client_id);
-CREATE INDEX idx_special_offers_status ON special_offers(status);
-CREATE INDEX idx_offer_claims_client_id ON offer_claims(client_id);
-CREATE INDEX idx_reviews_feedback_client_id ON reviews_feedback(client_id);
-CREATE INDEX idx_meetings_client_id ON meetings(client_id);
-CREATE INDEX idx_meetings_meeting_date ON meetings(meeting_date);
-CREATE INDEX idx_notifications_client_id ON notifications(client_id);
-CREATE INDEX idx_notifications_read ON notifications(read);
-CREATE INDEX idx_campaigns_client_id ON campaigns(client_id);
-CREATE INDEX idx_social_snapshots_client_id ON social_snapshots(client_id);
-CREATE INDEX idx_documents_client_id ON documents(client_id);
-CREATE INDEX idx_lead_followups_lead_id ON lead_followups(lead_id);
+CREATE INDEX IF NOT EXISTS idx_content_comments_content_id ON content_comments(content_id);
+CREATE INDEX IF NOT EXISTS idx_package_usage_client_id ON package_usage(client_id);
+CREATE INDEX IF NOT EXISTS idx_special_offers_client_id ON special_offers(client_id);
+CREATE INDEX IF NOT EXISTS idx_special_offers_status ON special_offers(status);
+CREATE INDEX IF NOT EXISTS idx_offer_claims_client_id ON offer_claims(client_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_feedback_client_id ON reviews_feedback(client_id);
+CREATE INDEX IF NOT EXISTS idx_meetings_client_id ON meetings(client_id);
+CREATE INDEX IF NOT EXISTS idx_meetings_meeting_date ON meetings(meeting_date);
+CREATE INDEX IF NOT EXISTS idx_notifications_client_id ON notifications(client_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_read ON notifications(read);
+CREATE INDEX IF NOT EXISTS idx_campaigns_client_id ON campaigns(client_id);
+CREATE INDEX IF NOT EXISTS idx_social_snapshots_client_id ON social_snapshots(client_id);
+CREATE INDEX IF NOT EXISTS idx_documents_client_id ON documents(client_id);
+CREATE INDEX IF NOT EXISTS idx_lead_followups_lead_id ON lead_followups(lead_id);
 
 -- ---------------------------------------------------------------
 -- Storage buckets
