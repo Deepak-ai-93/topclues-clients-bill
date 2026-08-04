@@ -51,7 +51,7 @@ const platformLabels: Record<string, string> = {
 };
 
 const platformColors: Record<string, string> = {
-  meta: 'bg-blue-50 text-blue-700 border-blue-200',
+  meta: 'bg-primary-50 text-primary-700 border-primary-200',
   google: 'bg-green-50 text-green-700 border-green-200',
   both: 'bg-purple-50 text-purple-700 border-purple-200',
   other: 'bg-neutral-50 text-neutral-700 border-neutral-200'
@@ -210,8 +210,8 @@ export default function AdminReportsPage() {
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 font-sans">
 
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -231,7 +231,7 @@ export default function AdminReportsPage() {
 
         <button
           onClick={handleOpenUploadModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <UploadCloud className="w-4 h-4" />
           Upload Report
@@ -246,7 +246,7 @@ export default function AdminReportsPage() {
             placeholder="Search by title, client, or period..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -254,7 +254,7 @@ export default function AdminReportsPage() {
           <select
             value={platformFilter}
             onChange={(e) => setPlatformFilter(e.target.value)}
-            className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+            className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
           >
             <option value="all">All Platforms</option>
             <option value="meta">Meta Ads</option>
@@ -268,7 +268,7 @@ export default function AdminReportsPage() {
       <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="py-16 text-center">
-            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
             <p className="text-xs text-neutral-400 font-mono">LOADING REPORT ARCHIVES...</p>
           </div>
         ) : filteredReports.length === 0 ? (
@@ -324,7 +324,7 @@ export default function AdminReportsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleDownload(report.id)}
-                          className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded-lg transition-all"
+                          className="p-1.5 text-neutral-500 hover:text-primary hover:bg-neutral-100 rounded-lg transition-all"
                           title="Download PDF"
                         >
                           <Download className="w-4 h-4" />
@@ -353,7 +353,7 @@ export default function AdminReportsPage() {
               <h2 className="text-sm font-semibold text-neutral-900">Upload Analytics Report</h2>
               <button
                 onClick={() => setShowUploadModal(false)}
-                className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
+                className="p-1 text-neutral-400 hover:text-primary rounded-lg hover:bg-neutral-50"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -369,7 +369,7 @@ export default function AdminReportsPage() {
                     required
                     value={selectedClientId}
                     onChange={(e) => setSelectedClientId(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     {clients.length === 0 && <option value="">No clients registered</option>}
                     {clients.map(c => (
@@ -386,7 +386,7 @@ export default function AdminReportsPage() {
                     required
                     value={platform}
                     onChange={(e) => setPlatform(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     <option value="meta">Meta Ads</option>
                     <option value="google">Google Ads</option>
@@ -401,7 +401,7 @@ export default function AdminReportsPage() {
                     required
                     value={reportType}
                     onChange={(e) => setReportType(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     <option value="monthly">Monthly</option>
                     <option value="quarterly">Quarterly</option>
@@ -420,7 +420,7 @@ export default function AdminReportsPage() {
                     placeholder="e.g. July 2026 Meta Performance Report"
                     value={reportTitle}
                     onChange={(e) => setReportTitle(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -434,7 +434,7 @@ export default function AdminReportsPage() {
                     required
                     value={reportPeriod}
                     onChange={(e) => setReportPeriod(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -446,7 +446,7 @@ export default function AdminReportsPage() {
                   onChange={(e) => setNotes(e.target.value)}
                   placeholder="Key highlights, KPIs, or summary notes..."
                   rows={2}
-                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black resize-none"
+                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary resize-none"
                 />
               </div>
 
@@ -480,7 +480,7 @@ export default function AdminReportsPage() {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 py-2 bg-neutral-950 text-white rounded-lg text-xs font-semibold hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary-700 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {uploading ? (
                     <>

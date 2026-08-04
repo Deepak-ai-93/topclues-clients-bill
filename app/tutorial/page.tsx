@@ -170,8 +170,8 @@ const steps = [
 ];
 
 const roles = [
-  { id: 'admin', label: 'Admin Guide', icon: ShieldCheck, color: 'bg-neutral-950 text-white' },
-  { id: 'client', label: 'Client Guide', icon: Users, color: 'bg-neutral-800 text-white' },
+  { id: 'admin', label: 'Admin Guide', icon: ShieldCheck, color: 'bg-primary text-white' },
+  { id: 'client', label: 'Client Guide', icon: Users, color: 'bg-primary text-white' },
 ];
 
 export default function TutorialPage() {
@@ -242,7 +242,7 @@ export default function TutorialPage() {
                     Step {sectionIdx + 1}
                   </span>
                   {section.role === 'admin' ? (
-                    <span className="text-[9px] font-bold bg-neutral-900 text-white px-1.5 py-0.5 rounded font-mono uppercase">Admin</span>
+                    <span className="text-[9px] font-bold bg-primary text-white px-1.5 py-0.5 rounded font-mono uppercase">Admin</span>
                   ) : (
                     <span className="text-[9px] font-bold bg-neutral-700 text-white px-1.5 py-0.5 rounded font-mono uppercase">Client</span>
                   )}

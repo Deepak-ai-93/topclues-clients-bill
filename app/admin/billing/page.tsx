@@ -184,8 +184,8 @@ export default function AdminInvoicesPage() {
       
       {/* Toast notifications */}
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -206,7 +206,7 @@ export default function AdminInvoicesPage() {
 
         <button
           onClick={handleOpenUploadModal}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <UploadCloud className="w-4 h-4" />
           Upload Invoice
@@ -222,7 +222,7 @@ export default function AdminInvoicesPage() {
             placeholder="Search by invoice title, client name, or email address..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
       </div>
@@ -231,7 +231,7 @@ export default function AdminInvoicesPage() {
       <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="py-16 text-center">
-            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
             <p className="text-xs text-neutral-400 font-mono">SYNCHRONIZING DOCUMENT ARCHIVES...</p>
           </div>
         ) : filteredDocuments.length === 0 ? (
@@ -277,7 +277,7 @@ export default function AdminInvoicesPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleDownload(doc.id)}
-                          className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded-lg transition-all"
+                          className="p-1.5 text-neutral-500 hover:text-primary hover:bg-neutral-100 rounded-lg transition-all"
                           title="Download PDF"
                         >
                           <Download className="w-4 h-4" />
@@ -307,7 +307,7 @@ export default function AdminInvoicesPage() {
               <h2 className="text-sm font-semibold text-neutral-900">Upload Invoice</h2>
               <button 
                 onClick={() => setShowUploadModal(false)}
-                className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
+                className="p-1 text-neutral-400 hover:text-primary rounded-lg hover:bg-neutral-50"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -323,7 +323,7 @@ export default function AdminInvoicesPage() {
                     required
                     value={selectedClientId}
                     onChange={(e) => setSelectedClientId(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     {clients.length === 0 && <option value="">No clients registered</option>}
                     {clients.map(c => (
@@ -343,7 +343,7 @@ export default function AdminInvoicesPage() {
                     placeholder="e.g. July 2026 Consultancy Invoice"
                     value={billingTitle}
                     onChange={(e) => setBillingTitle(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -357,7 +357,7 @@ export default function AdminInvoicesPage() {
                     required
                     value={billingDate}
                     onChange={(e) => setBillingDate(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -392,7 +392,7 @@ export default function AdminInvoicesPage() {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 py-2 bg-neutral-950 text-white rounded-lg text-xs font-semibold hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary-700 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {uploading ? (
                     <>

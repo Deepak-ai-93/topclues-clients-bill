@@ -63,7 +63,7 @@ export default function AdminDashboardPage() {
     return (
       <div className="p-8 max-w-7xl mx-auto space-y-6 flex items-center justify-center min-h-[50vh]">
         <div className="text-center">
-          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-xs text-neutral-400 font-mono tracking-widest">LOADING SECURE METRICS...</p>
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
         <div className="flex gap-3">
           <Link
             href="/admin/clients"
-            className="flex items-center gap-2 px-4 py-2 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm"
           >
             <Plus className="w-3.5 h-3.5" />
             Add Client

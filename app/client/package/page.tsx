@@ -37,16 +37,16 @@ export default function MyPackagePage() {
       </div>
 
       {/* Hero Card */}
-      <div className="border-2 border-black p-6 rounded-xl bg-white space-y-6 shadow-sm">
+      <div className="border-2 border-primary p-6 rounded-xl bg-white space-y-6 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-black text-white flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shrink-0">
               <Package className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold text-neutral-900">{packageInfo.name}</h2>
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-accent-100 text-accent-800 border border-accent-300">
                   ACTIVE
                 </span>
               </div>
@@ -85,7 +85,7 @@ export default function MyPackagePage() {
       </div>
 
       {/* Deliverables Usage Tracker Table */}
-      <div className="border border-black rounded-xl bg-white overflow-hidden space-y-4 p-6">
+      <div className="border border-primary rounded-xl bg-white overflow-hidden space-y-4 p-6">
         <div>
           <h2 className="text-lg font-bold text-neutral-900">Current Month Deliverables Tracker</h2>
           <p className="text-xs text-neutral-500 font-mono">Real-time status of your package items for the current billing cycle</p>
@@ -94,7 +94,7 @@ export default function MyPackagePage() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-black bg-neutral-50 text-[10px] font-mono font-bold text-neutral-600 uppercase tracking-wider">
+              <tr className="border-b border-primary bg-neutral-50 text-[10px] font-mono font-bold text-neutral-600 uppercase tracking-wider">
                 <th className="py-3 px-4">Service / Deliverable</th>
                 <th className="py-3 px-4 text-center">Included</th>
                 <th className="py-3 px-4 text-center">Completed</th>
@@ -113,19 +113,19 @@ export default function MyPackagePage() {
                   <tr key={item.name} className="hover:bg-neutral-50/50 transition-colors">
                     <td className="py-3.5 px-4 font-bold text-neutral-900">{item.name}</td>
                     <td className="py-3.5 px-4 text-center font-mono font-semibold">{item.included}</td>
-                    <td className="py-3.5 px-4 text-center font-mono text-emerald-700 font-bold">{item.completed}</td>
+                    <td className="py-3.5 px-4 text-center font-mono text-accent-700 font-bold">{item.completed}</td>
                     <td className="py-3.5 px-4 text-center font-mono text-amber-600 font-bold">{item.inProgress}</td>
                     <td className="py-3.5 px-4 text-center font-mono text-neutral-500 font-semibold">{remaining}</td>
                     <td className="py-3.5 px-4 w-48">
                       <div className="space-y-1">
                         <div className="flex justify-between text-[10px] font-mono">
-                          <span className={isComplete ? 'text-emerald-700 font-bold' : 'text-neutral-500'}>
+                          <span className={isComplete ? 'text-accent-700 font-bold' : 'text-neutral-500'}>
                             {pct}% {isComplete ? 'Complete' : 'In Progress'}
                           </span>
                         </div>
                         <div className="w-full h-2 bg-neutral-100 rounded-full border border-neutral-300 overflow-hidden">
                           <div
-                            className={`h-full transition-all duration-300 ${isComplete ? 'bg-emerald-600' : 'bg-amber-500'}`}
+                            className={`h-full transition-all duration-300 ${isComplete ? 'bg-accent-600' : 'bg-amber-500'}`}
                             style={{ width: `${pct}%` }}
                           />
                         </div>
@@ -140,7 +140,7 @@ export default function MyPackagePage() {
       </div>
 
       {/* Included Features List */}
-      <div className="border border-black p-6 rounded-xl bg-white space-y-4">
+      <div className="border border-primary p-6 rounded-xl bg-white space-y-4">
         <h2 className="text-lg font-bold text-neutral-900">Included Services & Benefits</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {[
@@ -155,7 +155,7 @@ export default function MyPackagePage() {
             "SEO Blog Posts & Articles"
           ].map((feature) => (
             <div key={feature} className="flex items-center gap-2.5 p-3 rounded-lg border border-neutral-200 bg-neutral-50 text-xs font-semibold text-neutral-800">
-              <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle className="w-4 h-4 text-accent-600 shrink-0" />
               <span>{feature}</span>
             </div>
           ))}
@@ -163,7 +163,7 @@ export default function MyPackagePage() {
       </div>
 
       {/* Renewal CTA Card */}
-      <div className="border border-black p-6 rounded-xl bg-neutral-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="border border-primary p-6 rounded-xl bg-primary text-white flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div>
           <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">Plan Renewal</span>
           <h3 className="text-xl font-bold mt-0.5">Upgrade or Modify Your Growth Package</h3>

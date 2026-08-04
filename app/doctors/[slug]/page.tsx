@@ -136,11 +136,11 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
       />
 
       {/* Breadcrumb Navigation */}
-      <div className="border-b border-black/10 bg-neutral-50 px-6 py-3">
+      <div className="border-b border-primary/10 bg-neutral-50 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center gap-2 text-xs font-mono text-neutral-500">
-          <Link href="/" className="hover:text-black">Home</Link>
+          <Link href="/" className="hover:text-primary">Home</Link>
           <span>/</span>
-          <Link href="/doctors" className="hover:text-black">Doctors</Link>
+          <Link href="/doctors" className="hover:text-primary">Doctors</Link>
           <span>/</span>
           <span className="text-black font-bold truncate">{doctor.name}</span>
         </div>
@@ -149,12 +149,12 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
       <div className="max-w-6xl mx-auto px-6 pt-8 pb-12">
 
         {/* Hero Section */}
-        <section className="border border-black p-6 md:p-8 bg-white mb-10 relative">
+        <section className="border border-primary p-6 md:p-8 bg-white mb-10 relative">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
             
             {/* Photo Column */}
             <div className="md:col-span-4 flex flex-col items-center">
-              <div className="relative w-48 h-48 md:w-56 md:h-56 border border-black bg-neutral-100 overflow-hidden shrink-0">
+              <div className="relative w-48 h-48 md:w-56 md:h-56 border border-primary bg-neutral-100 overflow-hidden shrink-0">
                 <Image
                   src={doctor.photo || "/doctor-demo.jpg"}
                   alt={doctor.name}
@@ -162,17 +162,17 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   className="object-cover"
                   priority
                 />
-                <div className="absolute top-3 left-3 bg-black text-white text-[10px] font-mono px-2 py-0.5 uppercase tracking-wider">
+                <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-mono px-2 py-0.5 uppercase tracking-wider">
                   Topclues Client
                 </div>
               </div>
 
               <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs font-mono">
-                <span className="border border-black px-2.5 py-1 flex items-center gap-1.5">
+                <span className="border border-primary px-2.5 py-1 flex items-center gap-1.5">
                   <Stethoscope className="w-3.5 h-3.5" />
                   {doctor.registrationNumber}
                 </span>
-                <span className="border border-black bg-black text-white px-2.5 py-1">
+                <span className="border border-primary bg-primary text-white px-2.5 py-1">
                   {doctor.specialtyTag}
                 </span>
               </div>
@@ -196,7 +196,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                 </p>
 
                 {/* Rating & Stats Bar */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 border border-black bg-neutral-50 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 border border-primary bg-neutral-50 mb-6">
                   <div>
                     <div className="flex items-center gap-1 font-bold text-base">
                       <Star className="w-4 h-4 fill-black text-black" />
@@ -207,12 +207,12 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                     </span>
                   </div>
 
-                  <div className="border-l border-black/20 pl-3">
+                  <div className="border-l border-primary/20 pl-3">
                     <span className="text-base font-bold">{doctor.experienceYears}+ Yrs</span>
                     <div className="text-[11px] font-mono text-neutral-500">Experience</div>
                   </div>
 
-                  <div className="border-l border-black/20 pl-3">
+                  <div className="border-l border-primary/20 pl-3">
                     <span className="text-base font-bold">
                       {doctor.statistics.surgeriesCompleted > 0
                         ? `${doctor.statistics.surgeriesCompleted.toLocaleString()}+`
@@ -223,7 +223,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                     </div>
                   </div>
 
-                  <div className="border-l border-black/20 pl-3">
+                  <div className="border-l border-primary/20 pl-3">
                     <span className="text-base font-bold">{doctor.statistics.recommendationRate}%</span>
                     <div className="text-[11px] font-mono text-neutral-500">Recommended</div>
                   </div>
@@ -250,10 +250,10 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-black/10">
+              <div className="mt-6 flex flex-wrap items-center gap-3 pt-4 border-t border-primary/10">
                 <a
                   href={`tel:${doctor.clinic.emergencyNumber}`}
-                  className="px-6 py-3 bg-black text-white text-xs font-mono uppercase font-bold flex items-center gap-2 hover:bg-neutral-800 transition-colors border border-black"
+                  className="px-6 py-3 bg-primary text-white text-xs font-mono uppercase font-bold flex items-center gap-2 hover:bg-primary-700 transition-colors border border-primary"
                 >
                   <Phone className="w-4 h-4" />
                   Call Clinic: {doctor.clinic.emergencyNumber}
@@ -262,7 +262,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-6 py-3 bg-white text-black text-xs font-mono uppercase font-bold flex items-center gap-2 hover:bg-neutral-100 transition-colors border border-black"
+                  className="px-6 py-3 bg-white text-black text-xs font-mono uppercase font-bold flex items-center gap-2 hover:bg-neutral-100 transition-colors border border-primary"
                 >
                   <MessageCircle className="w-4 h-4" />
                   WhatsApp Consult
@@ -280,8 +280,8 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
           <div className="md:col-span-8 space-y-8">
 
             {/* About Doctor */}
-            <section id="about" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="about" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <UserCheck className="w-5 h-5 text-black" />
                 About {doctor.name}
               </h2>
@@ -292,7 +292,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
 
               {/* Philosophy Callout */}
               {doctor.bio.philosophy && (
-                <div className="p-4 border border-black bg-neutral-50 mb-6">
+                <div className="p-4 border border-primary bg-neutral-50 mb-6">
                   <span className="text-xs font-mono uppercase font-bold text-neutral-500 block mb-1">
                     // Treatment Philosophy
                   </span>
@@ -319,8 +319,8 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Specializations & Conditions Treated */}
-            <section id="expertise" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="expertise" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <HeartPulse className="w-5 h-5 text-black" />
                 Conditions Treated & Expertise
               </h2>
@@ -329,9 +329,9 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                 {doctor.conditions.map((cond, idx) => (
                   <div
                     key={idx}
-                    className="p-3 border border-black/20 bg-neutral-50 flex items-center gap-2 text-xs font-medium"
+                    className="p-3 border border-primary/20 bg-neutral-50 flex items-center gap-2 text-xs font-medium"
                   >
-                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-primary rounded-full" />
                     <span>{cond}</span>
                   </div>
                 ))}
@@ -339,21 +339,21 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Services & Procedures Offered */}
-            <section id="services" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="services" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <Stethoscope className="w-5 h-5 text-black" />
                 Services & Procedures
               </h2>
 
               <div className="space-y-4">
                 {doctor.services.map((srv) => (
-                  <div key={srv.id} className="p-4 border border-black/20 bg-neutral-50">
+                  <div key={srv.id} className="p-4 border border-primary/20 bg-neutral-50">
                     <div className="flex items-center justify-between gap-2 mb-1">
                       <h3 className="font-bold text-sm text-black">{srv.title}</h3>
                       <span className="text-xs font-mono font-bold">₹{srv.fee}</span>
                     </div>
                     <p className="text-xs text-neutral-600 mb-3">{srv.description}</p>
-                    <div className="flex flex-wrap gap-4 text-[11px] font-mono text-neutral-500 pt-2 border-t border-black/10">
+                    <div className="flex flex-wrap gap-4 text-[11px] font-mono text-neutral-500 pt-2 border-t border-primary/10">
                       <span>Duration: {srv.time}</span>
                       <span>•</span>
                       <span>Recovery: {srv.recovery}</span>
@@ -366,8 +366,8 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Experience & Education */}
-            <section id="experience" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="experience" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <GraduationCap className="w-5 h-5 text-black" />
                 Experience & Education
               </h2>
@@ -378,11 +378,11 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   <h3 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-4 flex items-center gap-2">
                     <Building2 className="w-3.5 h-3.5 text-black" /> Work Experience
                   </h3>
-                  <div className="space-y-4 border-l border-black pl-4">
+                  <div className="space-y-4 border-l border-primary pl-4">
                     {doctor.experience.map((exp, idx) => (
                       <div key={idx} className="relative">
-                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 bg-black" />
-                        <span className="text-[10px] font-mono uppercase border border-black px-1.5 py-0.5 bg-neutral-100">
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 bg-primary" />
+                        <span className="text-[10px] font-mono uppercase border border-primary px-1.5 py-0.5 bg-neutral-100">
                           {exp.period}
                         </span>
                         <h4 className="text-xs font-bold text-black mt-1">{exp.position}</h4>
@@ -398,11 +398,11 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   <h3 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-4 flex items-center gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-black" /> Education & Degrees
                   </h3>
-                  <div className="space-y-4 border-l border-black pl-4">
+                  <div className="space-y-4 border-l border-primary pl-4">
                     {doctor.education.map((edu, idx) => (
                       <div key={idx} className="relative">
-                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 bg-black" />
-                        <span className="text-[10px] font-mono uppercase border border-black px-1.5 py-0.5 bg-neutral-100">
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 bg-primary" />
+                        <span className="text-[10px] font-mono uppercase border border-primary px-1.5 py-0.5 bg-neutral-100">
                           {edu.year}
                         </span>
                         <h4 className="text-xs font-bold text-black mt-1">{edu.degree}</h4>
@@ -420,15 +420,15 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Awards & Certifications */}
-            <section className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <Award className="w-5 h-5 text-black" />
                 Awards & Certifications
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 {doctor.awards.map((award, idx) => (
-                  <div key={idx} className="p-3 border border-black/20 bg-neutral-50">
+                  <div key={idx} className="p-3 border border-primary/20 bg-neutral-50">
                     <span className="text-[10px] font-mono font-bold text-neutral-400 block">{award.year}</span>
                     <h3 className="text-xs font-bold text-black">{award.name}</h3>
                     <p className="text-[11px] text-neutral-600">{award.organization}</p>
@@ -437,7 +437,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
               </div>
 
               {doctor.certifications.length > 0 && (
-                <div className="pt-3 border-t border-black/10">
+                <div className="pt-3 border-t border-primary/10">
                   <h3 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-2">
                     Professional Certifications
                   </h3>
@@ -451,20 +451,20 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Patient Reviews */}
-            <section id="reviews" className="border border-black p-6 bg-white">
-              <div className="flex items-center justify-between border-b border-black/10 pb-3 mb-6">
+            <section id="reviews" className="border border-primary p-6 bg-white">
+              <div className="flex items-center justify-between border-b border-primary/10 pb-3 mb-6">
                 <h2 className="text-xl font-bold tracking-tight flex items-center gap-2">
                   <Star className="w-5 h-5 fill-black text-black" />
                   Patient Reviews ({doctor.statistics.reviewCount})
                 </h2>
-                <span className="text-xs font-mono border border-black px-2 py-1 bg-black text-white">
+                <span className="text-xs font-mono border border-primary px-2 py-1 bg-primary text-white">
                   Rating: {doctor.statistics.rating} / 5.0
                 </span>
               </div>
 
               <div className="space-y-4">
                 {doctor.reviews.map((rev) => (
-                  <div key={rev.id} className="p-4 border border-black/20 bg-neutral-50">
+                  <div key={rev.id} className="p-4 border border-primary/20 bg-neutral-50">
                     <div className="flex items-center justify-between mb-2">
                       <span className="font-bold text-xs text-black">{rev.patientName}</span>
                       <span className="text-[11px] font-mono text-neutral-400">{rev.date}</span>
@@ -488,8 +488,8 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* Clinic Info & OPD Timings */}
-            <section id="clinic" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="clinic" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <Building2 className="w-5 h-5 text-black" />
                 Clinic Details & Location
               </h2>
@@ -510,14 +510,14 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   </ul>
                 </div>
 
-                <div className="border border-black p-4 bg-neutral-50 flex flex-col justify-between">
+                <div className="border border-primary p-4 bg-neutral-50 flex flex-col justify-between">
                   <div>
                     <h4 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-2 flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-black" /> OPD Timings
                     </h4>
                     <div className="space-y-1.5 text-xs font-mono">
                       {doctor.availability.map((av, idx) => (
-                        <div key={idx} className="flex justify-between border-b border-black/10 pb-1">
+                        <div key={idx} className="flex justify-between border-b border-primary/10 pb-1">
                           <span className="font-bold">{av.day}:</span>
                           <span>{av.isClosed ? 'Closed' : av.slots.join(', ')}</span>
                         </div>
@@ -529,7 +529,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                     href={doctor.clinic.mapUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-4 w-full py-2 bg-black text-white text-center text-xs font-mono uppercase border border-black hover:bg-neutral-800"
+                    className="mt-4 w-full py-2 bg-primary text-white text-center text-xs font-mono uppercase border border-primary hover:bg-primary-700"
                   >
                     View on Google Maps
                   </a>
@@ -538,15 +538,15 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
             </section>
 
             {/* FAQ */}
-            <section id="faq" className="border border-black p-6 bg-white">
-              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-black/10 pb-3">
+            <section id="faq" className="border border-primary p-6 bg-white">
+              <h2 className="text-xl font-bold tracking-tight mb-4 flex items-center gap-2 border-b border-primary/10 pb-3">
                 <HelpCircle className="w-5 h-5 text-black" />
                 Frequently Asked Questions
               </h2>
 
               <div className="space-y-4">
                 {doctor.faq.map((item, idx) => (
-                  <div key={idx} className="border border-black/20 p-4 bg-neutral-50">
+                  <div key={idx} className="border border-primary/20 p-4 bg-neutral-50">
                     <h3 className="font-bold text-xs text-black mb-1">Q: {item.question}</h3>
                     <p className="text-xs text-neutral-600 leading-relaxed">A: {item.answer}</p>
                   </div>
@@ -559,8 +559,8 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
           {/* Right Column Sticky Contact Panel */}
           <div className="md:col-span-4 sticky top-24 space-y-6">
 
-            <div className="border-2 border-black bg-white p-6 shadow-sm">
-              <div className="border-b border-black/10 pb-4 mb-4">
+            <div className="border-2 border-primary bg-white p-6 shadow-sm">
+              <div className="border-b border-primary/10 pb-4 mb-4">
                 <span className="text-[10px] font-mono uppercase font-bold text-neutral-500">
                   TOPCLUES VERIFIED CLIENT
                 </span>
@@ -573,7 +573,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
               </div>
 
               {/* Consultation Fees */}
-              <div className="p-3 border border-black bg-neutral-50 mb-4 text-xs font-mono space-y-1">
+              <div className="p-3 border border-primary bg-neutral-50 mb-4 text-xs font-mono space-y-1">
                 <div className="flex justify-between">
                   <span>In-Clinic OPD Fee:</span>
                   <span className="font-bold text-black">₹{doctor.clinic.consultationFee}</span>
@@ -588,7 +588,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
               <div className="space-y-3 mb-6">
                 <a
                   href={`tel:${doctor.clinic.emergencyNumber}`}
-                  className="w-full py-3 bg-black text-white text-xs font-mono uppercase font-bold text-center flex items-center justify-center gap-2 hover:bg-neutral-800 transition-colors border border-black"
+                  className="w-full py-3 bg-primary text-white text-xs font-mono uppercase font-bold text-center flex items-center justify-center gap-2 hover:bg-primary-700 transition-colors border border-primary"
                 >
                   <Phone className="w-4 h-4" />
                   Call {doctor.clinic.emergencyNumber}
@@ -598,7 +598,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full py-3 bg-white text-black text-xs font-mono uppercase font-bold text-center flex items-center justify-center gap-2 hover:bg-neutral-100 transition-colors border border-black"
+                  className="w-full py-3 bg-white text-black text-xs font-mono uppercase font-bold text-center flex items-center justify-center gap-2 hover:bg-neutral-100 transition-colors border border-primary"
                 >
                   <MessageCircle className="w-4 h-4" />
                   WhatsApp Direct
@@ -607,13 +607,13 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
 
               {/* Insurance */}
               {doctor.insurance.length > 0 && (
-                <div className="border-t border-black/10 pt-4">
+                <div className="border-t border-primary/10 pt-4">
                   <h4 className="text-[11px] font-mono uppercase font-bold text-neutral-500 mb-2">
                     Accepted Health Insurance
                   </h4>
                   <div className="flex flex-wrap gap-1.5 text-[11px] font-mono">
                     {doctor.insurance.map((ins, idx) => (
-                      <span key={idx} className="border border-black px-2 py-0.5 bg-neutral-100">
+                      <span key={idx} className="border border-primary px-2 py-0.5 bg-neutral-100">
                         {ins.name}
                       </span>
                     ))}
@@ -627,7 +627,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
         </div>
 
         {/* Related Doctors Section */}
-        <section className="mt-16 pt-12 border-t border-black">
+        <section className="mt-16 pt-12 border-t border-primary">
           <div className="flex items-center justify-between mb-8">
             <div>
               <span className="text-xs font-mono uppercase text-neutral-500 block mb-1">
@@ -655,10 +655,10 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
       </div>
 
       {/* Mobile Sticky Bottom Call/WhatsApp Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black p-3 flex items-center gap-2">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-primary p-3 flex items-center gap-2">
         <a
           href={`tel:${doctor.clinic.emergencyNumber}`}
-          className="flex-1 py-3 bg-black text-white text-xs font-mono uppercase font-bold flex items-center justify-center gap-1.5 border border-black"
+          className="flex-1 py-3 bg-primary text-white text-xs font-mono uppercase font-bold flex items-center justify-center gap-1.5 border border-primary"
         >
           <Phone className="w-3.5 h-3.5" /> Call Clinic
         </a>
@@ -666,7 +666,7 @@ export default async function PublicDoctorProfilePage({ params }: DoctorProfileP
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex-1 py-3 bg-white text-black text-xs font-mono uppercase font-bold flex items-center justify-center gap-1.5 border border-black"
+          className="flex-1 py-3 bg-white text-black text-xs font-mono uppercase font-bold flex items-center justify-center gap-1.5 border border-primary"
         >
           <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
         </a>

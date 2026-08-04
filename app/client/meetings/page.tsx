@@ -83,8 +83,8 @@ export default function MeetingsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-6xl mx-auto font-sans">
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-black text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -109,13 +109,13 @@ export default function MeetingsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {upcomingMeetings.map((m) => (
-            <div key={m.id} className="border-2 border-black p-6 rounded-xl bg-white space-y-4 shadow-sm flex flex-col justify-between">
+            <div key={m.id} className="border-2 border-primary p-6 rounded-xl bg-white space-y-4 shadow-sm flex flex-col justify-between">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 bg-black text-white rounded">
+                  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 bg-primary text-white rounded">
                     {m.type}
                   </span>
-                  <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  <span className="text-xs font-mono font-bold text-accent-700 bg-accent-50 px-2 py-0.5 rounded border border-accent-200">
                     CONFIRMED
                   </span>
                 </div>
@@ -158,14 +158,14 @@ export default function MeetingsPage() {
                     href={m.meetLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 py-2.5 bg-black hover:bg-neutral-800 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                    className="flex-1 py-2.5 bg-primary hover:bg-primary text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                   >
                     <Video className="w-4 h-4" /> Join Google Meet
                   </a>
                 )}
                 <button
                   onClick={() => triggerToast(`Calendar invite copied for ${m.title}`)}
-                  className="px-3.5 py-2.5 border border-black hover:bg-neutral-100 text-neutral-900 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer"
+                  className="px-3.5 py-2.5 border border-primary hover:bg-neutral-100 text-neutral-900 rounded-lg text-xs font-bold transition-colors shrink-0 cursor-pointer"
                 >
                   Add to Calendar
                 </button>
@@ -179,7 +179,7 @@ export default function MeetingsPage() {
       {pastMeetings.length > 0 && (
         <div className="space-y-4 pt-4 border-t border-neutral-200">
           <h2 className="text-lg font-bold text-neutral-900">Past Meeting Archive</h2>
-          <div className="border border-black rounded-xl bg-white divide-y divide-neutral-200 overflow-hidden">
+          <div className="border border-primary rounded-xl bg-white divide-y divide-neutral-200 overflow-hidden">
             {pastMeetings.map(m => (
               <div key={m.id} className="p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-neutral-50/50">
                 <div className="space-y-1">
@@ -196,7 +196,7 @@ export default function MeetingsPage() {
                     </p>
                   )}
                 </div>
-                <span className="text-xs font-mono font-bold text-emerald-700 bg-emerald-100 border border-emerald-300 px-2.5 py-1 rounded self-start sm:self-auto">
+                <span className="text-xs font-mono font-bold text-accent-700 bg-accent-100 border border-accent-300 px-2.5 py-1 rounded self-start sm:self-auto">
                   Completed
                 </span>
               </div>
@@ -206,7 +206,7 @@ export default function MeetingsPage() {
       )}
 
       {/* Request a Meeting Form Card */}
-      <div className="border-2 border-black p-6 rounded-xl bg-white space-y-6">
+      <div className="border-2 border-primary p-6 rounded-xl bg-white space-y-6">
         <div>
           <h2 className="text-lg font-bold text-neutral-900">Request a Strategy Meeting</h2>
           <p className="text-xs text-neutral-500 font-mono">Need an urgent review or strategy discussion? Submit your preferred time below.</p>
@@ -222,7 +222,7 @@ export default function MeetingsPage() {
                 value={reqSubject}
                 onChange={e => setReqSubject(e.target.value)}
                 placeholder="e.g. Campaign strategy review"
-                className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
@@ -233,7 +233,7 @@ export default function MeetingsPage() {
                 required
                 value={reqDate}
                 onChange={e => setReqDate(e.target.value)}
-                className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
@@ -245,7 +245,7 @@ export default function MeetingsPage() {
                 value={reqTime}
                 onChange={e => setReqTime(e.target.value)}
                 placeholder="e.g. 11:00 AM"
-                className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
           </div>
@@ -257,14 +257,14 @@ export default function MeetingsPage() {
               value={reqNotes}
               onChange={e => setReqNotes(e.target.value)}
               placeholder="Any specific items you would like to cover in the call..."
-              className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+              className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
             />
           </div>
 
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2.5 bg-black text-white rounded-lg text-xs font-bold hover:bg-neutral-800 flex items-center gap-2 cursor-pointer shadow-sm"
+              className="px-6 py-2.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-700 flex items-center gap-2 cursor-pointer shadow-sm"
             >
               <Send className="w-3.5 h-3.5" /> Submit Meeting Request
             </button>

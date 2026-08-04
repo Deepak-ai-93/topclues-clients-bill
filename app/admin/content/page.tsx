@@ -71,7 +71,7 @@ const statusLabels: Record<string, string> = {
 const statusColors: Record<string, string> = {
   draft: 'bg-neutral-100 text-neutral-600 border-neutral-300',
   scheduled: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  published: 'bg-emerald-50 text-emerald-700 border-emerald-200'
+  published: 'bg-accent-50 text-accent-700 border-accent-200'
 };
 
 export default function AdminContentPage() {
@@ -262,8 +262,8 @@ export default function AdminContentPage() {
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 font-sans">
 
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -283,7 +283,7 @@ export default function AdminContentPage() {
 
         <button
           onClick={handleOpenCreate}
-          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           New Entry
@@ -298,13 +298,13 @@ export default function AdminContentPage() {
             placeholder="Search by title or client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+          className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
         >
           <option value="all">All Status</option>
           <option value="draft">Draft</option>
@@ -316,7 +316,7 @@ export default function AdminContentPage() {
       <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="py-16 text-center">
-            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
             <p className="text-xs text-neutral-400 font-mono">LOADING CONTENT CALENDAR...</p>
           </div>
         ) : filteredEntries.length === 0 ? (
@@ -394,7 +394,7 @@ export default function AdminContentPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(entry)}
-                          className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded-lg transition-all"
+                          className="p-1.5 text-neutral-500 hover:text-primary hover:bg-neutral-100 rounded-lg transition-all"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -425,7 +425,7 @@ export default function AdminContentPage() {
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
+                className="p-1 text-neutral-400 hover:text-primary rounded-lg hover:bg-neutral-50"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -442,7 +442,7 @@ export default function AdminContentPage() {
                       required
                       value={selectedClientId}
                       onChange={(e) => setSelectedClientId(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                     >
                       {clients.length === 0 && <option value="">No clients registered</option>}
                       {clients.map(c => (
@@ -463,7 +463,7 @@ export default function AdminContentPage() {
                     placeholder="e.g. July Newsletter"
                     value={entryTitle}
                     onChange={(e) => setEntryTitle(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -475,7 +475,7 @@ export default function AdminContentPage() {
                   onChange={(e) => setEntryDescription(e.target.value)}
                   placeholder="Brief description of the content asset..."
                   rows={2}
-                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black resize-none"
+                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary resize-none"
                 />
               </div>
 
@@ -488,7 +488,7 @@ export default function AdminContentPage() {
                       required
                       value={entryPlatform}
                       onChange={(e) => setEntryPlatform(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                     >
                       <option value="social">Social Media</option>
                       <option value="blog">Blog</option>
@@ -505,7 +505,7 @@ export default function AdminContentPage() {
                     required
                     value={entryStatus}
                     onChange={(e) => setEntryStatus(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     <option value="draft">Draft</option>
                     <option value="scheduled">Scheduled</option>
@@ -523,7 +523,7 @@ export default function AdminContentPage() {
                     required
                     value={entryPublishDate}
                     onChange={(e) => setEntryPublishDate(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -557,7 +557,7 @@ export default function AdminContentPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 py-2 bg-neutral-950 text-white rounded-lg text-xs font-semibold hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary-700 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {saving ? (
                     <>

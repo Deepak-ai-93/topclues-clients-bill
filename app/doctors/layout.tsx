@@ -8,9 +8,9 @@ export default function DoctorsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-white text-black font-sans antialiased selection:bg-black selection:text-white border-t-2 border-black flex flex-col justify-between">
+    <div className="min-h-screen bg-white text-black font-sans antialiased selection:bg-primary selection:text-white border-t-2 border-primary flex flex-col justify-between">
       {/* Shared Public Header */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-black/10">
+      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-primary/10">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image 
@@ -59,7 +59,7 @@ export default function DoctorsLayout({
             </Link>
             <Link 
               href="/admin/login" 
-              className="text-xs font-mono uppercase px-3 py-1.5 border border-black hover:bg-black hover:text-white transition-colors"
+              className="text-xs font-mono uppercase px-3 py-1.5 border border-primary hover:bg-primary hover:text-white transition-colors"
             >
               Agency Login
             </Link>
@@ -73,7 +73,7 @@ export default function DoctorsLayout({
       </main>
 
       {/* Shared Footer */}
-      <footer className="border-t border-black py-12 px-6 bg-white">
+      <footer className="border-t border-primary py-12 px-6 bg-white">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-neutral-500">
           <div className="flex items-center space-x-4">
             <Image 
@@ -86,10 +86,10 @@ export default function DoctorsLayout({
             <span>© {new Date().getFullYear()} TopClues. All rights reserved.</span>
           </div>
           <div className="flex flex-wrap items-center gap-6">
-            <Link href="/doctors" className="hover:text-black transition-colors font-bold">Find Doctors</Link>
-            <Link href="/login" className="hover:text-black transition-colors">Doctor Login</Link>
-            <Link href="/admin/login" className="hover:text-black transition-colors">Agency Login</Link>
-            <Link href="/client" className="hover:text-black transition-colors">Dashboard</Link>
+            <Link href="/doctors" className="hover:text-primary transition-colors font-bold">Find Doctors</Link>
+            <Link href="/login" className="hover:text-primary transition-colors">Doctor Login</Link>
+            <Link href="/admin/login" className="hover:text-primary transition-colors">Agency Login</Link>
+            <Link href="/client" className="hover:text-primary transition-colors">Dashboard</Link>
           </div>
         </div>
       </footer>

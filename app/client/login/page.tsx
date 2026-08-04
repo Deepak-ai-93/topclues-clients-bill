@@ -70,7 +70,7 @@ export default function ClientLoginPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-xs text-neutral-500 font-mono tracking-wider">SECURE CONNECTION STARTING...</p>
         </div>
       </div>
@@ -125,7 +125,7 @@ export default function ClientLoginPage() {
                   placeholder="client@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-sans"
+                  className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-sans"
                 />
               </div>
             </div>
@@ -143,7 +143,7 @@ export default function ClientLoginPage() {
                   placeholder="••••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-10 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-mono"
+                  className="w-full pl-10 pr-10 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-mono"
                 />
                 <button
                   type="button"
@@ -158,7 +158,7 @@ export default function ClientLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-black text-white hover:bg-neutral-800 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-2.5 px-4 bg-primary text-white hover:bg-primary-700 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
@@ -175,7 +175,7 @@ export default function ClientLoginPage() {
           </form>
 
           <div className="mt-6 pt-4 border-t border-neutral-100 text-center">
-            <Link href="/admin/login" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium">
+            <Link href="/admin/login" className="text-xs text-neutral-500 hover:text-primary transition-colors font-medium">
               Admin Portal Login →
             </Link>
           </div>

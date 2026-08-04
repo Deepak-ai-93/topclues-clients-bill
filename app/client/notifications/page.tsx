@@ -75,7 +75,7 @@ export default function NotificationsPage() {
           <div className="flex items-center gap-3 mt-1">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-900">Notifications</h1>
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-black text-white">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-primary text-white">
                 {unreadCount} UNREAD
               </span>
             )}
@@ -86,7 +86,7 @@ export default function NotificationsPage() {
         {unreadCount > 0 && (
           <button
             onClick={handleMarkAllRead}
-            className="px-4 py-2 border border-black hover:bg-black hover:text-white rounded-lg text-xs font-bold transition-colors shrink-0 self-start sm:self-auto cursor-pointer"
+            className="px-4 py-2 border border-primary hover:bg-primary hover:text-white rounded-lg text-xs font-bold transition-colors shrink-0 self-start sm:self-auto cursor-pointer"
           >
             Mark all as read
           </button>
@@ -98,7 +98,7 @@ export default function NotificationsPage() {
         <button
           onClick={() => setFilter('all')}
           className={`px-4 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-            filter === 'all' ? 'bg-black text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            filter === 'all' ? 'bg-primary text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
           All ({notifications.length})
@@ -106,7 +106,7 @@ export default function NotificationsPage() {
         <button
           onClick={() => setFilter('unread')}
           className={`px-4 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-            filter === 'unread' ? 'bg-black text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            filter === 'unread' ? 'bg-primary text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
           Unread ({unreadCount})
@@ -114,7 +114,7 @@ export default function NotificationsPage() {
         <button
           onClick={() => setFilter('read')}
           className={`px-4 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-            filter === 'read' ? 'bg-black text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+            filter === 'read' ? 'bg-primary text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
           }`}
         >
           Read ({notifications.length - unreadCount})
@@ -122,7 +122,7 @@ export default function NotificationsPage() {
       </div>
 
       {/* List */}
-      <div className="border border-black rounded-xl bg-white divide-y divide-neutral-200 overflow-hidden shadow-sm">
+      <div className="border border-primary rounded-xl bg-white divide-y divide-neutral-200 overflow-hidden shadow-sm">
         {filteredNotifications.length === 0 ? (
           <div className="p-12 text-center text-neutral-400 font-mono text-xs space-y-2">
             <Bell className="w-8 h-8 text-neutral-300 mx-auto" />
@@ -141,7 +141,7 @@ export default function NotificationsPage() {
               >
                 <div className="flex items-start gap-3.5">
                   <div className={`p-2.5 rounded-lg border shrink-0 mt-0.5 ${
-                    item.read ? 'bg-neutral-100 border-neutral-200 text-neutral-500' : 'bg-black text-white border-black'
+                    item.read ? 'bg-neutral-100 border-neutral-200 text-neutral-500' : 'bg-primary text-white border-primary'
                   }`}>
                     <Icon className="w-4 h-4" />
                   </div>
@@ -152,7 +152,7 @@ export default function NotificationsPage() {
                         {item.title}
                       </h3>
                       {!item.read && (
-                        <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
                       )}
                     </div>
                     <p className="text-xs text-neutral-600">{item.message}</p>
@@ -160,7 +160,7 @@ export default function NotificationsPage() {
                   </div>
                 </div>
 
-                <div className="shrink-0 text-xs font-mono font-bold text-neutral-400 hover:text-black">
+                <div className="shrink-0 text-xs font-mono font-bold text-neutral-400 hover:text-primary">
                   View &rarr;
                 </div>
               </div>

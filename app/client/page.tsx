@@ -168,7 +168,7 @@ export default function ClientDashboardPage() {
     return (
       <div className="p-8 text-center flex items-center justify-center min-h-[50vh]">
         <div>
-          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-xs text-neutral-400 font-mono tracking-widest uppercase">Loading Doctor Hub Portal...</p>
         </div>
       </div>
@@ -223,8 +223,8 @@ export default function ClientDashboardPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto font-sans">
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -237,7 +237,7 @@ export default function ClientDashboardPage() {
       )}
 
       {/* Section 1: Welcome Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-black text-white rounded-xl border border-black shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 bg-primary text-white rounded-xl border border-primary shadow-sm">
         <div>
           <span className="text-[10px] font-mono tracking-widest text-neutral-400 uppercase">Topclues Doctor Hub</span>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
@@ -257,24 +257,24 @@ export default function ClientDashboardPage() {
       {/* Section 2: Summary Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1 */}
-        <div className="border border-black p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="border border-primary p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono uppercase text-neutral-500 font-semibold">Active Package</span>
               <Package className="w-5 h-5 text-black" />
             </div>
             <div className="text-lg sm:text-xl font-bold text-black mt-3">Specialist Growth</div>
-            <span className="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-semibold">
+            <span className="inline-block mt-1 text-[10px] font-mono px-2 py-0.5 bg-accent-100 text-accent-800 rounded font-semibold">
               Active
             </span>
           </div>
-          <Link href="/client/package" className="text-xs text-neutral-700 hover:text-black font-semibold flex items-center gap-1 mt-4">
+          <Link href="/client/package" className="text-xs text-neutral-700 hover:text-primary font-semibold flex items-center gap-1 mt-4">
             View Package <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {/* Card 2 */}
-        <div className="border border-black p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="border border-primary p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono uppercase text-neutral-500 font-semibold">Leads This Month</span>
@@ -283,13 +283,13 @@ export default function ClientDashboardPage() {
             <div className="text-3xl font-bold text-black mt-3">{leadsThisMonthCount}</div>
             <span className="text-[10px] font-mono text-neutral-500 mt-1 block">Patient Inquiries</span>
           </div>
-          <Link href="/client/leads" className="text-xs text-neutral-700 hover:text-black font-semibold flex items-center gap-1 mt-4">
+          <Link href="/client/leads" className="text-xs text-neutral-700 hover:text-primary font-semibold flex items-center gap-1 mt-4">
             View Leads <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {/* Card 3 */}
-        <div className="border border-black p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="border border-primary p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono uppercase text-neutral-500 font-semibold">Pending Approvals</span>
@@ -298,13 +298,13 @@ export default function ClientDashboardPage() {
             <div className="text-3xl font-bold text-black mt-3">{pendingApprovalsCount}</div>
             <span className="text-[10px] font-mono text-neutral-500 mt-1 block">Content Items</span>
           </div>
-          <Link href="/client/content" className="text-xs text-neutral-700 hover:text-black font-semibold flex items-center gap-1 mt-4">
+          <Link href="/client/content" className="text-xs text-neutral-700 hover:text-primary font-semibold flex items-center gap-1 mt-4">
             Review Content <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
         {/* Card 4 */}
-        <div className="border border-black p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
+        <div className="border border-primary p-5 rounded-lg bg-white flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-mono uppercase text-neutral-500 font-semibold">Outstanding Amount</span>
@@ -313,7 +313,7 @@ export default function ClientDashboardPage() {
             <div className="text-3xl font-bold text-black mt-3">₹0.00</div>
             <span className="text-[10px] font-mono text-neutral-500 mt-1 block">All Paid Up</span>
           </div>
-          <Link href="/client/invoices" className="text-xs text-neutral-700 hover:text-black font-semibold flex items-center gap-1 mt-4">
+          <Link href="/client/invoices" className="text-xs text-neutral-700 hover:text-primary font-semibold flex items-center gap-1 mt-4">
             View Invoices <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -329,7 +329,7 @@ export default function ClientDashboardPage() {
               <Link
                 key={action.label}
                 href={action.href}
-                className="border border-black px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 hover:bg-black hover:text-white transition-colors shrink-0 bg-white"
+                className="border border-primary px-3.5 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 hover:bg-primary hover:text-white transition-colors shrink-0 bg-white"
               >
                 <Icon className="w-4 h-4 shrink-0" />
                 <span className="whitespace-nowrap">{action.label}</span>
@@ -342,7 +342,7 @@ export default function ClientDashboardPage() {
       {/* Section 4: Two Column (BarChart & Lead Status) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recharts BarChart */}
-        <div className="border border-black p-5 rounded-xl bg-white space-y-4">
+        <div className="border border-primary p-5 rounded-xl bg-white space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-neutral-900">Lead Generation Trend</h3>
@@ -355,21 +355,21 @@ export default function ClientDashboardPage() {
           <div className="h-64 w-full pt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={mockChartData}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eef3fa" />
                 <XAxis dataKey="month" tick={{ fontSize: 12, fontFamily: 'monospace' }} />
                 <YAxis tick={{ fontSize: 12, fontFamily: 'monospace' }} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#000', color: '#fff', borderRadius: '8px', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#356cb0', color: '#fff', borderRadius: '8px', fontSize: '12px' }}
                   itemStyle={{ color: '#fff' }}
                 />
-                <Bar dataKey="leads" fill="#000000" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="leads" fill="#356cb0" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Lead Status Breakdown */}
-        <div className="border border-black p-5 rounded-xl bg-white flex flex-col justify-between space-y-4">
+        <div className="border border-primary p-5 rounded-xl bg-white flex flex-col justify-between space-y-4">
           <div>
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -384,7 +384,7 @@ export default function ClientDashboardPage() {
             <div className="space-y-4">
               <div className="p-4 border border-neutral-200 rounded-lg flex items-center justify-between bg-neutral-50">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-blue-600" />
+                  <div className="w-3 h-3 rounded-full bg-primary" />
                   <div>
                     <div className="text-sm font-bold text-neutral-900">New Leads</div>
                     <div className="text-xs text-neutral-500">Requires initial contact</div>
@@ -406,7 +406,7 @@ export default function ClientDashboardPage() {
 
               <div className="p-4 border border-neutral-200 rounded-lg flex items-center justify-between bg-neutral-50">
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full bg-emerald-600" />
+                  <div className="w-3 h-3 rounded-full bg-accent-600" />
                   <div>
                     <div className="text-sm font-bold text-neutral-900">Converted / Qualified</div>
                     <div className="text-xs text-neutral-500">Appointments booked</div>
@@ -427,7 +427,7 @@ export default function ClientDashboardPage() {
       </div>
 
       {/* Section 5: Pending Content */}
-      <div className="border border-black p-5 rounded-xl bg-white space-y-4">
+      <div className="border border-primary p-5 rounded-xl bg-white space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-base font-bold text-neutral-900">Content Pending Review & Recent Posts</h3>
@@ -449,11 +449,11 @@ export default function ClientDashboardPage() {
               <div key={item.id} className="border border-neutral-300 p-4 rounded-lg flex flex-col justify-between space-y-3 bg-neutral-50/50">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono px-2 py-0.5 bg-black text-white rounded font-bold uppercase">
+                    <span className="text-[10px] font-mono px-2 py-0.5 bg-primary text-white rounded font-bold uppercase">
                       {item.platform}
                     </span>
                     <span className={`text-[10px] font-mono px-2 py-0.5 rounded border uppercase font-bold ${
-                      item.status === 'published' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-amber-100 text-amber-800 border-amber-300'
+                      item.status === 'published' ? 'bg-accent-100 text-accent-800 border-accent-300' : 'bg-amber-100 text-amber-800 border-amber-300'
                     }`}>
                       {item.status}
                     </span>
@@ -476,7 +476,7 @@ export default function ClientDashboardPage() {
       {/* Section 6: Two Column (Reports & Invoices) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Reports */}
-        <div className="border border-black p-5 rounded-xl bg-white space-y-4">
+        <div className="border border-primary p-5 rounded-xl bg-white space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-neutral-900">Recent Reports</h3>
             <Link href="/client/reports" className="text-xs font-mono font-bold text-black hover:underline">
@@ -495,7 +495,7 @@ export default function ClientDashboardPage() {
                   </div>
                   <button
                     onClick={() => handleDownloadReport(rep.id)}
-                    className="px-2.5 py-1 bg-black text-white text-[11px] font-semibold rounded hover:bg-neutral-800 flex items-center gap-1 shrink-0"
+                    className="px-2.5 py-1 bg-primary text-white text-[11px] font-semibold rounded hover:bg-primary-700 flex items-center gap-1 shrink-0"
                   >
                     <Download className="w-3 h-3" /> Download
                   </button>
@@ -506,7 +506,7 @@ export default function ClientDashboardPage() {
         </div>
 
         {/* Invoices */}
-        <div className="border border-black p-5 rounded-xl bg-white space-y-4">
+        <div className="border border-primary p-5 rounded-xl bg-white space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-bold text-neutral-900">Recent Invoices</h3>
             <Link href="/client/invoices" className="text-xs font-mono font-bold text-black hover:underline">
@@ -525,7 +525,7 @@ export default function ClientDashboardPage() {
                   </div>
                   <button
                     onClick={() => handleDownloadDoc(doc.id)}
-                    className="px-2.5 py-1 bg-black text-white text-[11px] font-semibold rounded hover:bg-neutral-800 flex items-center gap-1 shrink-0"
+                    className="px-2.5 py-1 bg-primary text-white text-[11px] font-semibold rounded hover:bg-primary-700 flex items-center gap-1 shrink-0"
                   >
                     <Download className="w-3.5 h-3.5" /> Download
                   </button>

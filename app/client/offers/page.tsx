@@ -53,8 +53,8 @@ export default function SpecialOffersPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-7xl mx-auto font-sans">
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-black text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -73,7 +73,7 @@ export default function SpecialOffersPage() {
         {demoOffers.map((offer) => (
           <div
             key={offer.id}
-            className="border-2 border-black rounded-xl p-6 bg-white flex flex-col justify-between space-y-6 relative shadow-sm hover:shadow-md transition-shadow"
+            className="border-2 border-primary rounded-xl p-6 bg-white flex flex-col justify-between space-y-6 relative shadow-sm hover:shadow-md transition-shadow"
           >
             {/* Badges top right */}
             <div className="flex items-center gap-2 justify-between">
@@ -84,7 +84,7 @@ export default function SpecialOffersPage() {
               ) : (
                 <span className="text-[10px] font-mono text-neutral-500 uppercase">{offer.eligibility}</span>
               )}
-              <span className="text-xs font-mono font-bold bg-black text-white px-2.5 py-1 rounded">
+              <span className="text-xs font-mono font-bold bg-primary text-white px-2.5 py-1 rounded">
                 SAVE {offer.discountPct}%
               </span>
             </div>
@@ -101,7 +101,7 @@ export default function SpecialOffersPage() {
               <ul className="space-y-1.5">
                 {offer.benefits.map((b) => (
                   <li key={b} className="flex items-center gap-2 text-xs font-semibold text-neutral-800">
-                    <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <Check className="w-3.5 h-3.5 text-accent-600 shrink-0" />
                     <span>{b}</span>
                   </li>
                 ))}
@@ -122,7 +122,7 @@ export default function SpecialOffersPage() {
 
               <button
                 onClick={() => handleClaim(offer.title)}
-                className="w-full py-3 bg-black hover:bg-neutral-800 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="w-full py-3 bg-primary hover:bg-primary text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
               >
                 Claim This Offer <ArrowRight className="w-4 h-4" />
               </button>

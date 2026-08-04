@@ -63,7 +63,7 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
           </div>
           <div className="overflow-hidden">
             <span className="block text-xs font-semibold truncate text-neutral-800">{email}</span>
-            <span className="block text-[9px] text-emerald-600 font-mono tracking-wider font-bold">● SYSTEM ADMIN</span>
+            <span className="block text-[9px] text-accent-600 font-mono tracking-wider font-bold">● SYSTEM ADMIN</span>
           </div>
         </div>
 
@@ -73,7 +73,7 @@ export default function AdminSidebar({ email, children }: AdminSidebarProps) {
               key={href}
               href={href}
               onClick={() => setSidebarOpen(false)}
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 hover:text-black hover:bg-neutral-100/60 transition-colors"
+              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg text-neutral-600 hover:text-primary hover:bg-neutral-100/60 transition-colors"
             >
               <Icon className="w-4.5 h-4.5 text-neutral-400" />
               <span>{label}</span>

@@ -3,4 +3,27 @@
 @theme {
   --font-sans: var(--font-sans), "Inter", sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+
+  --color-primary-50: #eef3fa;
+  --color-primary-100: #d9e6f5;
+  --color-primary-200: #b5cdeb;
+  --color-primary-300: #8cb0de;
+  --color-primary-400: #5e8dcd;
+  --color-primary-500: #356cb0;
+  --color-primary-600: #2b5a94;
+  --color-primary-700: #234a7c;
+  --color-primary-800: #1d3e66;
+  --color-primary-900: #182f4f;
+  --color-primary: #356cb0;
+
+  --color-accent-50: #eef8f0;
+  --color-accent-100: #d5efd9;
+  --color-accent-200: #aadfb3;
+  --color-accent-300: #79cb87;
+  --color-accent-400: #55b565;
+  --color-accent-500: #3a9b47;
+  --color-accent-600: #2f7f3b;
+  --color-accent-700: #276631;
+  --color-accent-800: #205228;
+  --color-accent: #3a9b47;
 }

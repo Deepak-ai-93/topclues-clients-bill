@@ -59,7 +59,7 @@ export default function DoctorProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased pb-20">
+    <div className="min-h-screen bg-white text-slate-800 font-sans antialiased pb-20">
       {/* Schema Injection */}
       <script
         type="application/ld+json"
@@ -84,19 +84,19 @@ export default function DoctorProfilePage() {
             />
           </div>
           <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <a href="#about" className="hover:text-[#0F6CBD] transition-colors">About</a>
-            <a href="#expertise" className="hover:text-[#0F6CBD] transition-colors">Expertise</a>
-            <a href="#experience" className="hover:text-[#0F6CBD] transition-colors">Experience</a>
-            <a href="#reviews" className="hover:text-[#0F6CBD] transition-colors">Reviews</a>
-            <a href="#clinic" className="hover:text-[#0F6CBD] transition-colors">Clinic & Location</a>
-            <a href="#faq" className="hover:text-[#0F6CBD] transition-colors">FAQ</a>
+            <a href="#about" className="hover:text-primary transition-colors">About</a>
+            <a href="#expertise" className="hover:text-primary transition-colors">Expertise</a>
+            <a href="#experience" className="hover:text-primary transition-colors">Experience</a>
+            <a href="#reviews" className="hover:text-primary transition-colors">Reviews</a>
+            <a href="#clinic" className="hover:text-primary transition-colors">Clinic & Location</a>
+            <a href="#faq" className="hover:text-primary transition-colors">FAQ</a>
           </div>
           <div className="flex items-center gap-3">
             <a 
               href={`tel:${doctor.clinic.emergencyNumber}`} 
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border border-slate-300 text-slate-700 hover:bg-slate-50 transition"
             >
-              <Phone className="w-4 h-4 text-[#0F6CBD]" />
+              <Phone className="w-4 h-4 text-primary" />
               <span className="hidden sm:inline">Call Clinic:</span>
               <span className="font-bold">{doctor.clinic.emergencyNumber}</span>
             </a>
@@ -104,7 +104,7 @@ export default function DoctorProfilePage() {
               href={whatsappUrl}
               target="_blank"
               rel="noreferrer"
-              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold shadow-md flex items-center gap-2 transition"
+              className="px-4 py-2 rounded-xl bg-accent-600 hover:bg-accent-700 text-white text-sm font-semibold shadow-md flex items-center gap-2 transition"
             >
               <MessageCircle className="w-4 h-4 fill-white" />
               <span>WhatsApp</span>
@@ -118,7 +118,7 @@ export default function DoctorProfilePage() {
 
         {/* Hero & Quick Specs Section */}
         <section className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 border border-slate-100 mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-50 to-emerald-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-primary-50 to-accent-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative z-10">
             
@@ -132,7 +132,7 @@ export default function DoctorProfilePage() {
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   priority
                 />
-                <div className="absolute top-3 right-3 bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                <div className="absolute top-3 right-3 bg-accent-500 text-white text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
                   <ShieldCheck className="w-3.5 h-3.5" />
                   Verified
                 </div>
@@ -141,10 +141,10 @@ export default function DoctorProfilePage() {
               {/* Badges under photo */}
               <div className="mt-4 flex flex-wrap justify-center gap-2 text-xs font-semibold text-slate-600">
                 <span className="bg-slate-100 px-3 py-1.5 rounded-full flex items-center gap-1.5">
-                  <Stethoscope className="w-3.5 h-3.5 text-[#0F6CBD]" />
+                  <Stethoscope className="w-3.5 h-3.5 text-primary" />
                   {doctor.registrationNumber}
                 </span>
-                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-full flex items-center gap-1.5">
+                <span className="bg-accent-50 text-accent-700 border border-accent-200 px-3 py-1.5 rounded-full flex items-center gap-1.5">
                   <ThumbsUp className="w-3.5 h-3.5" />
                   {doctor.statistics.recommendationRate}% Recommended
                 </span>
@@ -163,7 +163,7 @@ export default function DoctorProfilePage() {
                   </button>
                 </div>
 
-                <p className="text-base sm:text-lg text-[#0F6CBD] font-semibold mb-2">
+                <p className="text-base sm:text-lg text-primary font-semibold mb-2">
                   {doctor.designation}
                 </p>
 
@@ -230,7 +230,7 @@ export default function DoctorProfilePage() {
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <a 
                   href={`tel:${doctor.clinic.emergencyNumber}`} 
-                  className="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-[#0F6CBD] hover:bg-[#0c5999] text-white font-semibold text-sm shadow-lg shadow-[#0F6CBD]/25 flex items-center justify-center gap-2 transition"
+                  className="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-primary hover:bg-primary-700 text-white font-semibold text-sm shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition"
                 >
                   <Phone className="w-4.5 h-4.5" />
                   Call Direct: {doctor.clinic.emergencyNumber}
@@ -239,7 +239,7 @@ export default function DoctorProfilePage() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 font-semibold text-sm text-white shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2 transition"
+                  className="flex-1 sm:flex-initial px-6 py-3.5 rounded-xl bg-accent-600 hover:bg-accent-700 font-semibold text-sm text-white shadow-lg shadow-accent-600/20 flex items-center justify-center gap-2 transition"
                 >
                   <MessageCircle className="w-4.5 h-4.5" />
                   WhatsApp Us
@@ -260,7 +260,7 @@ export default function DoctorProfilePage() {
             {/* About Doctor */}
             <section id="about" className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
               <h2 className="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-blue-50 text-[#0F6CBD] flex items-center justify-center">
+                <span className="w-8 h-8 rounded-lg bg-primary-50 text-primary flex items-center justify-center">
                   <UserCheck className="w-5 h-5" />
                 </span>
                 About {doctor.name}
@@ -271,8 +271,8 @@ export default function DoctorProfilePage() {
               </p>
 
               {/* Philosophy Callout */}
-              <div className="p-4 rounded-2xl bg-gradient-to-r from-blue-50/70 to-emerald-50/70 border border-blue-100/60 mb-6">
-                <h3 className="text-sm font-bold text-[#0F6CBD] uppercase tracking-wider mb-1 flex items-center gap-2">
+              <div className="p-4 rounded-2xl bg-gradient-to-r from-primary-50/70 to-accent-50/70 border border-primary-100/60 mb-6">
+                <h3 className="text-sm font-bold text-primary uppercase tracking-wider mb-1 flex items-center gap-2">
                   <HeartHandshake className="w-4 h-4" /> Patient-First Philosophy
                 </h3>
                 <p className="text-slate-700 italic text-sm">
@@ -286,7 +286,7 @@ export default function DoctorProfilePage() {
                 <ul className="space-y-2">
                   {doctor.bio.achievements.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-2.5 text-sm text-slate-700">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      <CheckCircle2 className="w-4 h-4 text-accent-500 flex-shrink-0 mt-0.5" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -297,7 +297,7 @@ export default function DoctorProfilePage() {
             {/* Specializations & Conditions Treated */}
             <section id="expertise" className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-emerald-50 text-[#12B981] flex items-center justify-center">
+                <span className="w-8 h-8 rounded-lg bg-accent-50 text-[#12B981] flex items-center justify-center">
                   <HeartPulse className="w-5 h-5" />
                 </span>
                 Areas of Expertise & Conditions Treated
@@ -307,9 +307,9 @@ export default function DoctorProfilePage() {
                 {doctor.conditions.map((cond, idx) => (
                   <div 
                     key={idx} 
-                    className="p-4 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-100 hover:border-blue-200 transition duration-200 flex items-center gap-3"
+                    className="p-4 rounded-2xl bg-slate-50 hover:bg-primary-50/40 border border-slate-100 hover:border-primary-200 transition duration-200 flex items-center gap-3"
                   >
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#0F6CBD]" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                     <span className="font-semibold text-slate-800 text-sm">{cond}</span>
                   </div>
                 ))}
@@ -319,7 +319,7 @@ export default function DoctorProfilePage() {
             {/* Featured Treatments & Procedures */}
             <section id="treatments" className="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-100">
               <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-blue-50 text-[#0F6CBD] flex items-center justify-center">
+                <span className="w-8 h-8 rounded-lg bg-primary-50 text-primary flex items-center justify-center">
                   <Stethoscope className="w-5 h-5" />
                 </span>
                 Treatments & Surgeries Offered
@@ -333,10 +333,10 @@ export default function DoctorProfilePage() {
 
                     <div className="flex flex-wrap gap-4 text-xs font-semibold text-slate-500 pt-3 border-t border-slate-200/60">
                       <span className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-[#0F6CBD]" /> Duration: {srv.time}
+                        <Clock className="w-3.5 h-3.5 text-primary" /> Duration: {srv.time}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <HeartPulse className="w-3.5 h-3.5 text-emerald-500" /> Recovery: {srv.recovery}
+                        <HeartPulse className="w-3.5 h-3.5 text-accent-500" /> Recovery: {srv.recovery}
                       </span>
                     </div>
                   </div>
@@ -358,14 +358,14 @@ export default function DoctorProfilePage() {
                 {/* Clinical Work Experience */}
                 <div>
                   <h3 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <Building2 className="w-4 h-4 text-[#0F6CBD]" /> Clinical Work Experience
+                    <Building2 className="w-4 h-4 text-primary" /> Clinical Work Experience
                   </h3>
 
                   <div className="space-y-6 relative pl-4 border-l-2 border-slate-200">
                     {doctor.experience.map((exp, idx) => (
                       <div key={idx} className="relative group">
-                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#0F6CBD] ring-4 ring-white" />
-                        <span className="text-xs font-bold text-[#0F6CBD] bg-blue-50 px-2 py-0.5 rounded">
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-primary ring-4 ring-white" />
+                        <span className="text-xs font-bold text-primary bg-primary-50 px-2 py-0.5 rounded">
                           {exp.period}
                         </span>
                         <h4 className="text-base font-bold text-slate-900 mt-1">{exp.position}</h4>
@@ -379,14 +379,14 @@ export default function DoctorProfilePage() {
                 {/* Educational Qualifications */}
                 <div>
                   <h3 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-emerald-600" /> Qualifications & Degrees
+                    <BookOpen className="w-4 h-4 text-accent-600" /> Qualifications & Degrees
                   </h3>
 
                   <div className="space-y-6 relative pl-4 border-l-2 border-slate-200">
                     {doctor.education.map((edu, idx) => (
                       <div key={idx} className="relative">
-                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-white" />
-                        <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-accent-500 ring-4 ring-white" />
+                        <span className="text-xs font-bold text-accent-700 bg-accent-50 px-2 py-0.5 rounded">
                           {edu.year}
                         </span>
                         <h4 className="text-base font-bold text-slate-900 mt-1">{edu.degree}</h4>
@@ -469,7 +469,7 @@ export default function DoctorProfilePage() {
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-slate-900 text-sm">{rev.patientName}</span>
                         {rev.verified && (
-                          <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                          <span className="text-[10px] font-bold bg-accent-100 text-accent-800 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                             <ShieldCheck className="w-3 h-3" /> Verified Patient
                           </span>
                         )}
@@ -490,7 +490,7 @@ export default function DoctorProfilePage() {
 
                     <button 
                       onClick={() => handleHelpful(rev.id)}
-                      className="text-xs font-semibold text-slate-500 hover:text-[#0F6CBD] flex items-center gap-1 transition"
+                      className="text-xs font-semibold text-slate-500 hover:text-primary flex items-center gap-1 transition"
                     >
                       <ThumbsUp className="w-3.5 h-3.5" />
                       Helpful ({rev.helpfulCount + (helpfulCount[rev.id] || 0)})
@@ -516,11 +516,11 @@ export default function DoctorProfilePage() {
 
                   <div className="space-y-2 text-xs font-semibold text-slate-700 mb-4">
                     <p className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <CheckCircle2 className="w-4 h-4 text-accent-500" />
                       Wheelchair Accessible: {doctor.clinic.wheelchairAccess ? 'Yes' : 'No'}
                     </p>
                     <p className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                      <CheckCircle2 className="w-4 h-4 text-accent-500" />
                       Parking Available: {doctor.clinic.parkingAvailable ? 'Yes' : 'No'}
                     </p>
                   </div>
@@ -529,7 +529,7 @@ export default function DoctorProfilePage() {
                   <ul className="space-y-1.5">
                     {doctor.clinic.facilities.map((fac, idx) => (
                       <li key={idx} className="text-xs text-slate-700 flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#0F6CBD]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                         <span>{fac}</span>
                       </li>
                     ))}
@@ -538,14 +538,14 @@ export default function DoctorProfilePage() {
 
                 {/* Map Mock representation */}
                 <div className="bg-slate-100 rounded-2xl h-56 relative overflow-hidden border border-slate-200 flex flex-col items-center justify-center text-center p-4">
-                  <MapPin className="w-10 h-10 text-[#0F6CBD] mb-2 animate-bounce" />
+                  <MapPin className="w-10 h-10 text-primary mb-2 animate-bounce" />
                   <p className="text-sm font-bold text-slate-800">TopClues Health Hub - Ahmedabad</p>
                   <p className="text-xs text-slate-500">CG Road, Near Swastik Cross Roads</p>
                   <a 
                     href="https://maps.google.com" 
                     target="_blank" 
                     rel="noreferrer"
-                    className="mt-3 px-4 py-2 bg-white text-xs font-bold text-[#0F6CBD] rounded-xl shadow border border-slate-200 hover:bg-slate-50"
+                    className="mt-3 px-4 py-2 bg-white text-xs font-bold text-primary rounded-xl shadow border border-slate-200 hover:bg-slate-50"
                   >
                     Open in Google Maps
                   </a>
@@ -593,7 +593,7 @@ export default function DoctorProfilePage() {
 
             <div className="bg-white rounded-3xl p-6 shadow-xl shadow-slate-200/60 border border-slate-100">
               <div className="border-b border-slate-100 pb-4 mb-4">
-                <span className="text-xs font-bold uppercase text-[#0F6CBD]">Contact Doctor & Clinic</span>
+                <span className="text-xs font-bold uppercase text-primary">Contact Doctor & Clinic</span>
                 <h3 className="text-xl font-bold text-slate-900 mt-1">Get in Touch</h3>
                 <p className="text-xs text-slate-500 mt-1">Call directly or send a message via WhatsApp to inquire about appointments and consultations.</p>
               </div>
@@ -601,7 +601,7 @@ export default function DoctorProfilePage() {
               <div className="space-y-3 mb-6">
                 <a 
                   href={`tel:${doctor.clinic.emergencyNumber}`} 
-                  className="w-full py-3.5 rounded-xl bg-[#0F6CBD] hover:bg-[#0c5999] text-white font-bold text-sm shadow-md shadow-[#0F6CBD]/20 flex items-center justify-center gap-2.5 transition"
+                  className="w-full py-3.5 rounded-xl bg-primary hover:bg-primary-700 text-white font-bold text-sm shadow-md shadow-primary/20 flex items-center justify-center gap-2.5 transition"
                 >
                   <Phone className="w-4.5 h-4.5" />
                   Call: {doctor.clinic.emergencyNumber}
@@ -611,7 +611,7 @@ export default function DoctorProfilePage() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2.5 transition"
+                  className="w-full py-3.5 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold text-sm shadow-md shadow-accent-600/20 flex items-center justify-center gap-2.5 transition"
                 >
                   <MessageCircle className="w-4.5 h-4.5" />
                   Chat on WhatsApp
@@ -621,7 +621,7 @@ export default function DoctorProfilePage() {
               {/* Consultation OPD Timings */}
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 mb-4">
                 <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-[#0F6CBD]" /> OPD Availability Timings
+                  <Clock className="w-4 h-4 text-primary" /> OPD Availability Timings
                 </h4>
                 <div className="space-y-1.5 text-xs text-slate-600">
                   <div className="flex justify-between">
@@ -663,7 +663,7 @@ export default function DoctorProfilePage() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 flex items-center gap-2 shadow-2xl">
         <a 
           href={`tel:${doctor.clinic.emergencyNumber}`} 
-          className="flex-1 py-3 rounded-xl bg-[#0F6CBD] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
+          className="flex-1 py-3 rounded-xl bg-primary text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
         >
           <Phone className="w-4 h-4" /> Call Clinic
         </a>
@@ -671,7 +671,7 @@ export default function DoctorProfilePage() {
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="flex-1 py-3 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
+          className="flex-1 py-3 rounded-xl bg-accent-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md"
         >
           <MessageCircle className="w-4 h-4" /> WhatsApp
         </a>

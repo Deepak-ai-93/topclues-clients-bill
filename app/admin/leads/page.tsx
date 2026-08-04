@@ -66,10 +66,10 @@ const statusLabels: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  new: 'bg-blue-50 text-blue-700 border-blue-200',
+  new: 'bg-primary-50 text-primary-700 border-primary-200',
   contacted: 'bg-yellow-50 text-yellow-700 border-yellow-200',
   qualified: 'bg-purple-50 text-purple-700 border-purple-200',
-  converted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  converted: 'bg-accent-50 text-accent-700 border-accent-200',
   lost: 'bg-rose-50 text-rose-700 border-rose-200'
 };
 
@@ -291,8 +291,8 @@ export default function AdminLeadsPage() {
     <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6 font-sans">
 
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -322,7 +322,7 @@ export default function AdminLeadsPage() {
           )}
           <button
             onClick={handleOpenCreate}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-950 text-white hover:bg-neutral-800 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add Lead
@@ -338,7 +338,7 @@ export default function AdminLeadsPage() {
             placeholder="Search by name, email, or client..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black transition-all"
+            className="w-full pl-9 pr-4 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary transition-all"
           />
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -346,7 +346,7 @@ export default function AdminLeadsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+            className="px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
           >
             <option value="all">All Status</option>
             <option value="new">New</option>
@@ -361,7 +361,7 @@ export default function AdminLeadsPage() {
       <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
         {loading ? (
           <div className="py-16 text-center">
-            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
             <p className="text-xs text-neutral-400 font-mono">LOADING LEAD DATABASE...</p>
           </div>
         ) : filteredLeads.length === 0 ? (
@@ -442,7 +442,7 @@ export default function AdminLeadsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => handleOpenEdit(lead)}
-                          className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded-lg transition-all"
+                          className="p-1.5 text-neutral-500 hover:text-primary hover:bg-neutral-100 rounded-lg transition-all"
                           title="Edit"
                         >
                           <Edit3 className="w-4 h-4" />
@@ -473,7 +473,7 @@ export default function AdminLeadsPage() {
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1 text-neutral-400 hover:text-black rounded-lg hover:bg-neutral-50"
+                className="p-1 text-neutral-400 hover:text-primary rounded-lg hover:bg-neutral-50"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -490,7 +490,7 @@ export default function AdminLeadsPage() {
                       required
                       value={selectedClientId}
                       onChange={(e) => setSelectedClientId(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                     >
                       {clients.length === 0 && <option value="">No clients registered</option>}
                       {clients.map(c => (
@@ -511,7 +511,7 @@ export default function AdminLeadsPage() {
                     placeholder="e.g. John Doe"
                     value={leadName}
                     onChange={(e) => setLeadName(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                    className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                   />
                 </div>
               </div>
@@ -526,7 +526,7 @@ export default function AdminLeadsPage() {
                       placeholder="john@example.com"
                       value={leadEmail}
                       onChange={(e) => setLeadEmail(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                     />
                   </div>
                 </div>
@@ -540,7 +540,7 @@ export default function AdminLeadsPage() {
                       placeholder="+1 (555) 123-4567"
                       value={leadPhone}
                       onChange={(e) => setLeadPhone(e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black"
+                      className="w-full pl-9 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary"
                     />
                   </div>
                 </div>
@@ -553,7 +553,7 @@ export default function AdminLeadsPage() {
                     required
                     value={leadSource}
                     onChange={(e) => setLeadSource(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     <option value="website">Website</option>
                     <option value="referral">Referral</option>
@@ -570,7 +570,7 @@ export default function AdminLeadsPage() {
                     required
                     value={leadStatus}
                     onChange={(e) => setLeadStatus(e.target.value)}
-                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black appearance-none cursor-pointer"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary appearance-none cursor-pointer"
                   >
                     <option value="new">New</option>
                     <option value="contacted">Contacted</option>
@@ -588,7 +588,7 @@ export default function AdminLeadsPage() {
                   onChange={(e) => setLeadNotes(e.target.value)}
                   placeholder="Additional information about this lead..."
                   rows={2}
-                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-black resize-none"
+                  className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs focus:outline-none focus:border-primary resize-none"
                 />
               </div>
 
@@ -621,7 +621,7 @@ export default function AdminLeadsPage() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 py-2 bg-neutral-950 text-white rounded-lg text-xs font-semibold hover:bg-neutral-800 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2 bg-primary text-white rounded-lg text-xs font-semibold hover:bg-primary-700 transition-all disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   {saving ? (
                     <>

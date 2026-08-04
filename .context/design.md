@@ -8,7 +8,7 @@ The design system for **Topclues Doctor Hub** focuses on **clarity, precision, a
 
 ## 1. Color Palette
 
-### Primary Theme: High-Contrast Monochrome
+### Primary Theme: Blue & Green on White
 
 | Token | HEX / Value | Usage |
 | font | `var(--font-sans)` | Main body and heading typography |
@@ -16,8 +16,34 @@ The design system for **Topclues Doctor Hub** focuses on **clarity, precision, a
 | `--bg-subtle` | `#F9FAFB` / `bg-neutral-50` | Card backgrounds, stat blocks, inputs |
 | `--text-main` | `#000000` / `#0A0A0A` | Primary headings, prominent body text |
 | `--text-muted` | `#525252` / `text-neutral-600` | Secondary descriptions, subtext |
-| `--border-accent` | `#000000` | High-contrast borders, active states, keyframes |
-| `--border-subtle` | `rgba(0,0,0,0.1)` | Divider lines, grid borders |
+| `--color-primary` | `#356CB0` (`primary-500`) | CTAs, links, active states, borders, highlights |
+| `--color-accent` | `#3A9B47` (`accent-500`) | Success/positive indicators, growth metrics, verified badges |
+
+### Brand Scale (Tailwind v4 tokens in `app/globals.css`)
+
+| Step | Primary (blue) | Accent (green) |
+|---|---|---|
+| 50  | `#eef3fa` | `#eef8f0` |
+| 100 | `#d9e6f5` | `#d5efd9` |
+| 200 | `#b5cdeb` | `#aadfb3` |
+| 300 | `#8cb0de` | `#79cb87` |
+| 400 | `#5e8dcd` | `#55b565` |
+| 500 | `#356cb0` | `#3a9b47` |
+| 600 | `#2b5a94` | `#2f7f3b` |
+| 700 | `#234a7c` | `#276631` |
+| 800 | `#1d3e66` | `#205228` |
+| 900 | `#182f4f` | `#1a4221` |
+
+### Usage Rules
+
+- **Primary buttons / CTAs:** `bg-primary text-white hover:bg-primary-700 border border-primary`
+- **Secondary buttons:** `bg-white text-black hover:bg-neutral-100 border border-primary`
+- **Cards:** `border border-primary` (plain cards stay `bg-white`); featured cards `border-2 border-primary bg-primary text-white`
+- **Links & hover:** `hover:text-primary`, `hover:bg-primary`
+- **Success / positive pills:** `bg-accent-100 text-accent-800 border-accent-300`; solid green CTAs (WhatsApp) `bg-accent-600 hover:bg-accent-700`
+- **Status colors:** amber = attention, red = overdue/failed, grey = inactive (unchanged)
+- **Modal scrims** stay dark (`bg-black/40`–`/60`)
+- **Body text** stays near-black (`neutral-900` / `text-black`) for readability
 
 ---
 

@@ -20,16 +20,16 @@ const initialTickets: Ticket[] = [
 ];
 
 const statusColors: Record<string, string> = {
-  open: 'bg-blue-100 text-blue-800 border-blue-300',
+  open: 'bg-primary-100 text-primary-800 border-primary-300',
   in_progress: 'bg-amber-100 text-amber-800 border-amber-300',
-  resolved: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  resolved: 'bg-accent-100 text-accent-800 border-accent-300',
   closed: 'bg-neutral-100 text-neutral-700 border-neutral-300',
 };
 
 const priorityColors: Record<string, string> = {
   urgent: 'bg-rose-100 text-rose-800 border-rose-300',
   high: 'bg-amber-100 text-amber-800 border-amber-300',
-  medium: 'bg-blue-100 text-blue-800 border-blue-300',
+  medium: 'bg-primary-100 text-primary-800 border-primary-300',
   low: 'bg-neutral-100 text-neutral-700 border-neutral-300',
 };
 
@@ -75,8 +75,8 @@ export default function SupportTicketsPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-6xl mx-auto font-sans">
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-black text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -91,7 +91,7 @@ export default function SupportTicketsPage() {
 
         <button
           onClick={() => setView(view === 'list' ? 'create' : 'list')}
-          className="px-4 py-2.5 bg-black text-white rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-neutral-800 transition-colors shrink-0 self-start sm:self-auto cursor-pointer"
+          className="px-4 py-2.5 bg-primary text-white rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-primary-700 transition-colors shrink-0 self-start sm:self-auto cursor-pointer"
         >
           {view === 'list' ? (
             <>
@@ -105,7 +105,7 @@ export default function SupportTicketsPage() {
 
       {/* Main View: List or Create */}
       {view === 'create' ? (
-        <div className="border-2 border-black p-6 rounded-xl bg-white space-y-6 max-w-3xl">
+        <div className="border-2 border-primary p-6 rounded-xl bg-white space-y-6 max-w-3xl">
           <h2 className="text-lg font-bold text-neutral-900 border-b border-neutral-200 pb-3">Submit New Support Ticket</h2>
 
           <form onSubmit={handleSubmitTicket} className="space-y-4">
@@ -117,7 +117,7 @@ export default function SupportTicketsPage() {
                 value={formData.subject}
                 onChange={e => setFormData({ ...formData, subject: e.target.value })}
                 placeholder="Brief summary of your request or issue"
-                className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
@@ -127,7 +127,7 @@ export default function SupportTicketsPage() {
                 <select
                   value={formData.category}
                   onChange={e => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                  className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-black"
                 >
                   <option value="Content Change">Content Change</option>
                   <option value="Social Media">Social Media</option>
@@ -146,7 +146,7 @@ export default function SupportTicketsPage() {
                 <select
                   value={formData.priority}
                   onChange={e => setFormData({ ...formData, priority: e.target.value })}
-                  className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-black"
+                  className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold bg-white focus:outline-none focus:ring-1 focus:ring-black"
                 >
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
@@ -164,7 +164,7 @@ export default function SupportTicketsPage() {
                 value={formData.description}
                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                 placeholder="Provide detailed information regarding your inquiry..."
-                className="w-full p-2.5 border border-black rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full p-2.5 border border-primary rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-black"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function SupportTicketsPage() {
               <label className="block text-xs font-mono font-bold text-neutral-700 uppercase mb-1">Attachment (Optional)</label>
               <div className="flex items-center gap-3 p-3 border border-neutral-300 rounded-lg bg-neutral-50">
                 <Paperclip className="w-4 h-4 text-neutral-500" />
-                <input type="file" className="text-xs text-neutral-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-black file:text-white hover:file:bg-neutral-800" />
+                <input type="file" className="text-xs text-neutral-600 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-bold file:bg-primary file:text-white hover:file:bg-primary-700" />
               </div>
             </div>
 
@@ -186,7 +186,7 @@ export default function SupportTicketsPage() {
               </button>
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-black text-white rounded-lg text-xs font-bold hover:bg-neutral-800 flex items-center gap-2"
+                className="px-6 py-2.5 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-700 flex items-center gap-2"
               >
                 <Send className="w-3.5 h-3.5" /> Submit Ticket
               </button>
@@ -195,7 +195,7 @@ export default function SupportTicketsPage() {
         </div>
       ) : (
         /* Ticket List */
-        <div className="border border-black rounded-xl bg-white overflow-hidden space-y-4 p-6">
+        <div className="border border-primary rounded-xl bg-white overflow-hidden space-y-4 p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-bold text-neutral-900">Your Tickets</h2>
             <span className="text-[10px] font-mono bg-neutral-100 px-2 py-1 rounded border border-neutral-300">
@@ -206,7 +206,7 @@ export default function SupportTicketsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-black bg-neutral-50 text-[10px] font-mono font-bold text-neutral-600 uppercase tracking-wider">
+                <tr className="border-b border-primary bg-neutral-50 text-[10px] font-mono font-bold text-neutral-600 uppercase tracking-wider">
                   <th className="py-3 px-4">Ticket ID</th>
                   <th className="py-3 px-4">Subject</th>
                   <th className="py-3 px-4">Category</th>
@@ -245,9 +245,9 @@ export default function SupportTicketsPage() {
       )}
 
       {/* Account Manager Contact Card */}
-      <div className="border-2 border-black p-6 rounded-xl bg-white space-y-4">
+      <div className="border-2 border-primary p-6 rounded-xl bg-white space-y-4">
         <div className="flex items-center gap-3 border-b border-neutral-200 pb-3">
-          <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm font-mono">
+          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm font-mono">
             RM
           </div>
           <div>
@@ -285,7 +285,7 @@ export default function SupportTicketsPage() {
             href="https://wa.me/919876500001"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 p-3 bg-emerald-600 text-white rounded-lg font-bold text-xs hover:bg-emerald-700 transition-colors"
+            className="flex items-center justify-center gap-2 p-3 bg-accent-600 text-white rounded-lg font-bold text-xs hover:bg-accent-700 transition-colors"
           >
             Chat on WhatsApp
           </a>

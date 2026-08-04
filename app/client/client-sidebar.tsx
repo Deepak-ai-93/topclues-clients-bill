@@ -82,7 +82,7 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
       </div>
 
       <div className="px-4 md:px-6 py-3 bg-neutral-50/50 border-b border-neutral-100 flex items-center gap-2.5 shrink-0">
-        <div className="w-7 h-7 rounded-full bg-black flex items-center justify-center text-[10px] font-bold text-white uppercase font-mono shrink-0">
+        <div className="w-7 h-7 rounded-full bg-primary flex items-center justify-center text-[10px] font-bold text-white uppercase font-mono shrink-0">
           {clientName.substring(0, 2).toUpperCase()}
         </div>
         <div className="overflow-hidden">
@@ -102,7 +102,7 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
               onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 px-3 py-2 text-xs font-medium transition-colors ${
                 isActive
-                  ? 'bg-black text-white rounded-lg'
+                  ? 'bg-primary text-white rounded-lg'
                   : 'text-neutral-600 hover:bg-neutral-100 rounded-lg'
               }`}
             >

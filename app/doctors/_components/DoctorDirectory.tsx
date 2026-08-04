@@ -123,7 +123,7 @@ export default function DoctorDirectory({
       />
 
       {/* Hero Section */}
-      <section className="pt-12 pb-12 px-6 border-b border-black/10 bg-neutral-50/50">
+      <section className="pt-12 pb-12 px-6 border-b border-primary/10 bg-neutral-50/50">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
@@ -131,10 +131,10 @@ export default function DoctorDirectory({
             transition={{ duration: 0.4 }}
           >
             <div className="flex items-center gap-2 mb-4">
-              <span className="border border-black px-2.5 py-0.5 text-xs font-mono tracking-widest uppercase">
+              <span className="border border-primary px-2.5 py-0.5 text-xs font-mono tracking-widest uppercase">
                 Public Directory
               </span>
-              <span className="border border-black bg-black text-white px-2.5 py-0.5 text-xs font-mono tracking-widest uppercase">
+              <span className="border border-primary bg-primary text-white px-2.5 py-0.5 text-xs font-mono tracking-widest uppercase">
                 Topclues Clients
               </span>
             </div>
@@ -149,7 +149,7 @@ export default function DoctorDirectory({
 
             {/* Live Search Bar */}
             <div className="relative max-w-2xl">
-              <div className="flex items-center border-2 border-black bg-white shadow-sm">
+              <div className="flex items-center border-2 border-primary bg-white shadow-sm">
                 <Search className="w-5 h-5 text-neutral-400 ml-4 shrink-0" />
                 <input
                   type="text"
@@ -161,7 +161,7 @@ export default function DoctorDirectory({
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery('')}
-                    className="p-2 text-neutral-400 hover:text-black mr-2"
+                    className="p-2 text-neutral-400 hover:text-primary mr-2"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -178,7 +178,7 @@ export default function DoctorDirectory({
         <div className="md:hidden flex items-center justify-between gap-4 mb-6">
           <button
             onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
-            className="flex items-center gap-2 px-4 py-2.5 border border-black text-xs font-mono uppercase bg-white"
+            className="flex items-center gap-2 px-4 py-2.5 border border-primary text-xs font-mono uppercase bg-white"
           >
             <SlidersHorizontal className="w-4 h-4" />
             <span>Filters {hasActiveFilters && '(Active)'}</span>
@@ -189,7 +189,7 @@ export default function DoctorDirectory({
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value as any)}
-              className="text-xs font-mono border border-black px-2 py-2 bg-white outline-none"
+              className="text-xs font-mono border border-primary px-2 py-2 bg-white outline-none"
             >
               <option value="rating">Highest Rating</option>
               <option value="experience">Experience</option>
@@ -205,8 +205,8 @@ export default function DoctorDirectory({
               mobileFilterOpen ? 'block' : 'hidden md:block'
             }`}
           >
-            <div className="border border-black bg-white p-6 sticky top-24 space-y-6">
-              <div className="flex items-center justify-between border-b border-black/10 pb-4">
+            <div className="border border-primary bg-white p-6 sticky top-24 space-y-6">
+              <div className="flex items-center justify-between border-b border-primary/10 pb-4">
                 <div className="flex items-center gap-2">
                   <SlidersHorizontal className="w-4 h-4 text-black" />
                   <h3 className="font-bold text-sm tracking-tight uppercase font-mono">
@@ -216,7 +216,7 @@ export default function DoctorDirectory({
                 {hasActiveFilters && (
                   <button
                     onClick={clearFilters}
-                    className="text-xs font-mono underline text-neutral-500 hover:text-black flex items-center gap-1"
+                    className="text-xs font-mono underline text-neutral-500 hover:text-primary flex items-center gap-1"
                   >
                     <RotateCcw className="w-3 h-3" />
                     Reset
@@ -235,12 +235,12 @@ export default function DoctorDirectory({
                     return (
                       <label
                         key={spec}
-                        className="flex items-center gap-2.5 text-xs text-neutral-800 cursor-pointer hover:text-black select-none"
+                        className="flex items-center gap-2.5 text-xs text-neutral-800 cursor-pointer hover:text-primary select-none"
                       >
                         <div
                           onClick={() => toggleSpecialty(spec)}
-                          className={`w-4 h-4 border border-black flex items-center justify-center shrink-0 ${
-                            isChecked ? 'bg-black text-white' : 'bg-white'
+                          className={`w-4 h-4 border border-primary flex items-center justify-center shrink-0 ${
+                            isChecked ? 'bg-primary text-white' : 'bg-white'
                           }`}
                         >
                           {isChecked && <Check className="w-3 h-3" />}
@@ -253,7 +253,7 @@ export default function DoctorDirectory({
               </div>
 
               {/* City Filter */}
-              <div className="border-t border-black/10 pt-5">
+              <div className="border-t border-primary/10 pt-5">
                 <h4 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-3">
                   City
                 </h4>
@@ -263,12 +263,12 @@ export default function DoctorDirectory({
                     return (
                       <label
                         key={city}
-                        className="flex items-center gap-2.5 text-xs text-neutral-800 cursor-pointer hover:text-black select-none"
+                        className="flex items-center gap-2.5 text-xs text-neutral-800 cursor-pointer hover:text-primary select-none"
                       >
                         <div
                           onClick={() => toggleCity(city)}
-                          className={`w-4 h-4 border border-black flex items-center justify-center shrink-0 ${
-                            isChecked ? 'bg-black text-white' : 'bg-white'
+                          className={`w-4 h-4 border border-primary flex items-center justify-center shrink-0 ${
+                            isChecked ? 'bg-primary text-white' : 'bg-white'
                           }`}
                         >
                           {isChecked && <Check className="w-3 h-3" />}
@@ -281,7 +281,7 @@ export default function DoctorDirectory({
               </div>
 
               {/* Sort By Desktop */}
-              <div className="border-t border-black/10 pt-5 hidden md:block">
+              <div className="border-t border-primary/10 pt-5 hidden md:block">
                 <h4 className="text-xs font-mono uppercase font-bold text-neutral-500 mb-3">
                   Sort Doctors
                 </h4>
@@ -296,8 +296,8 @@ export default function DoctorDirectory({
                       onClick={() => setSortBy(item.id as any)}
                       className={`w-full text-left px-3 py-2 text-xs font-mono border transition-colors ${
                         sortBy === item.id
-                          ? 'border-black bg-black text-white font-bold'
-                          : 'border-black/20 text-neutral-600 hover:border-black'
+                          ? 'border-primary bg-primary text-white font-bold'
+                          : 'border-primary/20 text-neutral-600 hover:border-primary'
                       }`}
                     >
                       {item.label}
@@ -311,7 +311,7 @@ export default function DoctorDirectory({
           {/* Right Doctor Cards Grid */}
           <div className="md:col-span-8 lg:col-span-9 space-y-6">
             {/* Header info bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-primary/10 pb-4">
               <span className="text-xs font-mono uppercase text-neutral-600">
                 Showing <strong className="text-black font-bold">{filteredDoctors.length}</strong> of {doctors.length} Doctors
               </span>
@@ -320,13 +320,13 @@ export default function DoctorDirectory({
                 <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
                   <span className="text-neutral-400">Active Filters:</span>
                   {selectedSpecialties.map(s => (
-                    <span key={s} className="border border-black px-2 py-0.5 bg-neutral-100 flex items-center gap-1">
+                    <span key={s} className="border border-primary px-2 py-0.5 bg-neutral-100 flex items-center gap-1">
                       {s}
                       <X className="w-3 h-3 cursor-pointer" onClick={() => toggleSpecialty(s)} />
                     </span>
                   ))}
                   {selectedCities.map(c => (
-                    <span key={c} className="border border-black px-2 py-0.5 bg-neutral-100 flex items-center gap-1">
+                    <span key={c} className="border border-primary px-2 py-0.5 bg-neutral-100 flex items-center gap-1">
                       {c}
                       <X className="w-3 h-3 cursor-pointer" onClick={() => toggleCity(c)} />
                     </span>
@@ -344,14 +344,14 @@ export default function DoctorDirectory({
               </div>
             ) : (
               /* Empty State */
-              <div className="border border-black p-12 text-center bg-white">
+              <div className="border border-primary p-12 text-center bg-white">
                 <h3 className="text-xl font-bold tracking-tight mb-2">No doctors found</h3>
                 <p className="text-neutral-600 text-sm mb-6 max-w-md mx-auto">
                   We couldn&apos;t find any doctors matching your current filters. Try searching for a different specialty or clearing filters.
                 </p>
                 <button
                   onClick={clearFilters}
-                  className="px-6 py-2.5 bg-black text-white text-xs font-mono uppercase border border-black hover:bg-neutral-800 transition-colors"
+                  className="px-6 py-2.5 bg-primary text-white text-xs font-mono uppercase border border-primary hover:bg-primary-700 transition-colors"
                 >
                   Clear All Filters
                 </button>

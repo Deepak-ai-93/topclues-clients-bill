@@ -45,7 +45,7 @@ export default function DockFooter({ items, variant = 'landing' }: DockFooterPro
                 onClick={item.onClick}
                 className={`flex flex-col items-center gap-0.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl transition-all cursor-pointer ${
                   active
-                    ? 'bg-neutral-900 text-white'
+                    ? 'bg-primary text-white'
                     : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
                 }`}
               >
@@ -75,7 +75,7 @@ export default function DockFooter({ items, variant = 'landing' }: DockFooterPro
               href={item.href || '#'}
               className={`flex flex-col items-center gap-0.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl transition-all ${
                 active
-                  ? 'bg-neutral-900 text-white'
+                  ? 'bg-primary text-white'
                   : 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-100'
               }`}
             >

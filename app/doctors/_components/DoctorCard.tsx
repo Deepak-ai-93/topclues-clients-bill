@@ -19,10 +19,10 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
 
   if (variant === 'featured') {
     return (
-      <div className="border border-black bg-white flex flex-col justify-between hover:bg-neutral-50 transition-colors group relative">
+      <div className="border border-primary bg-white flex flex-col justify-between hover:bg-neutral-50 transition-colors group relative">
         <div>
           {/* Featured Top Bar Image */}
-          <div className="relative w-full h-52 border-b border-black overflow-hidden bg-neutral-100">
+          <div className="relative w-full h-52 border-b border-primary overflow-hidden bg-neutral-100">
             <Image
               src={doctor.photo || "/doctor-demo.jpg"}
               alt={doctor.name}
@@ -30,11 +30,11 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
               className="object-cover group-hover:scale-105 transition-transform duration-300"
             />
             <div className="absolute top-3 left-3 flex items-center gap-2">
-              <span className="bg-black text-white text-[10px] font-mono uppercase px-2 py-0.5 tracking-wider">
+              <span className="bg-primary text-white text-[10px] font-mono uppercase px-2 py-0.5 tracking-wider">
                 Topclues Client
               </span>
             </div>
-            <div className="absolute top-3 right-3 bg-white border border-black px-2 py-0.5 text-[10px] font-mono font-bold uppercase">
+            <div className="absolute top-3 right-3 bg-white border border-primary px-2 py-0.5 text-[10px] font-mono font-bold uppercase">
               {doctor.specialtyTag}
             </div>
           </div>
@@ -58,7 +58,7 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
             </p>
 
             {/* Rating */}
-            <div className="flex items-center gap-2 mb-4 bg-neutral-50 p-2 border border-black/10">
+            <div className="flex items-center gap-2 mb-4 bg-neutral-50 p-2 border border-primary/10">
               <div className="flex items-center text-black font-bold text-xs gap-1">
                 <Star className="w-3.5 h-3.5 fill-black text-black" />
                 <span>{doctor.statistics.rating}</span>
@@ -74,7 +74,7 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
         <div className="p-6 pt-0 flex items-center gap-2">
           <Link
             href={`/doctors/${doctor.slug}`}
-            className="flex-1 py-2.5 px-3 bg-black text-white text-xs font-medium text-center flex items-center justify-center gap-1 hover:bg-neutral-800 transition-colors border border-black"
+            className="flex-1 py-2.5 px-3 bg-primary text-white text-xs font-medium text-center flex items-center justify-center gap-1 hover:bg-primary-700 transition-colors border border-primary"
           >
             <span>View Profile</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -83,7 +83,7 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
             href={whatsappUrl}
             target="_blank"
             rel="noreferrer"
-            className="p-2.5 border border-black text-black hover:bg-black hover:text-white transition-colors"
+            className="p-2.5 border border-primary text-black hover:bg-primary hover:text-white transition-colors"
             title="Chat on WhatsApp"
             aria-label="Chat on WhatsApp"
           >
@@ -96,21 +96,21 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
 
   // Grid variant (horizontal layout card)
   return (
-    <div className="border border-black bg-white p-5 flex flex-col justify-between hover:bg-neutral-50 transition-colors group">
+    <div className="border border-primary bg-white p-5 flex flex-col justify-between hover:bg-neutral-50 transition-colors group">
       <div>
         {/* Top meta row */}
         <div className="flex items-center justify-between mb-4">
-          <span className="bg-black text-white text-[10px] font-mono uppercase px-2 py-0.5">
+          <span className="bg-primary text-white text-[10px] font-mono uppercase px-2 py-0.5">
             Topclues Client
           </span>
-          <span className="border border-black px-2 py-0.5 text-[10px] font-mono uppercase">
+          <span className="border border-primary px-2 py-0.5 text-[10px] font-mono uppercase">
             {doctor.specialtyTag}
           </span>
         </div>
 
         {/* Doctor Main Info Row */}
         <div className="flex items-start gap-4 mb-4">
-          <div className="relative w-16 h-16 rounded-full overflow-hidden border border-black shrink-0 bg-neutral-100">
+          <div className="relative w-16 h-16 rounded-full overflow-hidden border border-primary shrink-0 bg-neutral-100">
             <Image
               src={doctor.photo || "/doctor-demo.jpg"}
               alt={doctor.name}
@@ -139,7 +139,7 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
         </div>
 
         {/* Rating & Clinic Info */}
-        <div className="flex items-center justify-between text-xs p-2.5 bg-neutral-50 border border-black/10 mb-4">
+        <div className="flex items-center justify-between text-xs p-2.5 bg-neutral-50 border border-primary/10 mb-4">
           <div className="flex items-center gap-1 font-bold">
             <Star className="w-3.5 h-3.5 fill-black text-black" />
             <span>{doctor.statistics.rating}</span>
@@ -155,10 +155,10 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
       </div>
 
       {/* Buttons */}
-      <div className="flex items-center gap-2 pt-2 border-t border-black/10">
+      <div className="flex items-center gap-2 pt-2 border-t border-primary/10">
         <Link
           href={`/doctors/${doctor.slug}`}
-          className="flex-1 py-2 px-3 bg-black text-white text-xs font-medium text-center flex items-center justify-center gap-1 hover:bg-neutral-800 transition-colors border border-black"
+          className="flex-1 py-2 px-3 bg-primary text-white text-xs font-medium text-center flex items-center justify-center gap-1 hover:bg-primary-700 transition-colors border border-primary"
         >
           <span>View Profile</span>
           <ArrowRight className="w-3.5 h-3.5" />
@@ -167,7 +167,7 @@ export default function DoctorCard({ doctor, variant = 'grid' }: DoctorCardProps
           href={whatsappUrl}
           target="_blank"
           rel="noreferrer"
-          className="p-2 border border-black text-black hover:bg-black hover:text-white transition-colors"
+          className="p-2 border border-primary text-black hover:bg-primary hover:text-white transition-colors"
           title="Chat on WhatsApp"
           aria-label="Chat on WhatsApp"
         >

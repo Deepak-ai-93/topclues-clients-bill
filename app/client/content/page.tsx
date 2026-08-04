@@ -19,10 +19,10 @@ interface ContentEntry {
 const statusBadgeColors: Record<string, string> = {
   draft: 'bg-neutral-100 text-neutral-700 border-neutral-300',
   pending_approval: 'bg-amber-100 text-amber-800 border-amber-300',
-  approved: 'bg-blue-100 text-blue-800 border-blue-300',
+  approved: 'bg-primary-100 text-primary-800 border-primary-300',
   changes_requested: 'bg-rose-100 text-rose-800 border-rose-300',
   scheduled: 'bg-yellow-100 text-yellow-800 border-yellow-300',
-  published: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  published: 'bg-accent-100 text-accent-800 border-accent-300',
 };
 
 const statusLabels: Record<string, string> = {
@@ -134,8 +134,8 @@ export default function ContentApprovalPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-6xl mx-auto font-sans">
       {successMsg && (
-        <div className="fixed top-6 right-6 z-50 p-4 bg-neutral-900 text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-neutral-800">
-          <CheckCircle className="w-4 h-4 text-emerald-400" />
+        <div className="fixed top-6 right-6 z-50 p-4 bg-primary text-white rounded-xl shadow-lg flex items-center gap-2.5 text-xs font-semibold border border-primary-800">
+          <CheckCircle className="w-4 h-4 text-accent-400" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -157,7 +157,7 @@ export default function ContentApprovalPage() {
 
         <button
           onClick={fetchContent}
-          className="px-3.5 py-2 bg-white border border-black rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-neutral-100 transition-colors shrink-0 self-start sm:self-auto"
+          className="px-3.5 py-2 bg-white border border-primary rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-neutral-100 transition-colors shrink-0 self-start sm:self-auto"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} /> Refresh
         </button>
@@ -178,7 +178,7 @@ export default function ContentApprovalPage() {
             onClick={() => setFilterTab(tab.key)}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all whitespace-nowrap cursor-pointer ${
               filterTab === tab.key
-                ? 'bg-black text-white'
+                ? 'bg-primary text-white'
                 : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
             }`}
           >
@@ -190,7 +190,7 @@ export default function ContentApprovalPage() {
       {/* Content Cards Grid */}
       {loading ? (
         <div className="py-12 text-center">
-          <div className="w-8 h-8 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-xs font-mono text-neutral-400">Loading content calendar...</p>
         </div>
       ) : filteredEntries.length === 0 ? (
@@ -202,11 +202,11 @@ export default function ContentApprovalPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {filteredEntries.map(entry => (
-            <div key={entry.id} className="border-2 border-black rounded-xl p-5 bg-white flex flex-col justify-between space-y-4 shadow-sm">
+            <div key={entry.id} className="border-2 border-primary rounded-xl p-5 bg-white flex flex-col justify-between space-y-4 shadow-sm">
               <div className="space-y-3">
                 {/* Badges row */}
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 bg-black text-white rounded">
+                  <span className="text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 bg-primary text-white rounded">
                     {entry.platform}
                   </span>
                   <span className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded border ${
@@ -249,7 +249,7 @@ export default function ContentApprovalPage() {
                     className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors ${
                       entry.status === 'published'
                         ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200'
-                        : 'bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer shadow-sm'
+                        : 'bg-accent-600 hover:bg-accent-700 text-white cursor-pointer shadow-sm'
                     }`}
                   >
                     <Check className="w-4 h-4" /> {entry.status === 'published' ? 'Approved' : '✓ Approve'}
@@ -257,7 +257,7 @@ export default function ContentApprovalPage() {
 
                   <button
                     onClick={() => handleRequestChangesClick(entry)}
-                    className="flex-1 py-2 px-3 border border-black hover:bg-neutral-100 text-neutral-900 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                    className="flex-1 py-2 px-3 border border-primary hover:bg-neutral-100 text-neutral-900 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <X className="w-4 h-4 text-rose-600" /> ✗ Request Changes
                   </button>
@@ -271,14 +271,14 @@ export default function ContentApprovalPage() {
       {/* Comment / Request Changes Modal */}
       {isModalOpen && selectedEntry && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
-          <div className="bg-white border-2 border-black rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl">
+          <div className="bg-white border-2 border-primary rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-neutral-200 pb-3">
               <h3 className="text-base font-bold text-neutral-900 flex items-center gap-2">
                 <MessageSquare className="w-4 h-4 text-black" /> Request Content Changes
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="text-neutral-400 hover:text-black p-1"
+                className="text-neutral-400 hover:text-primary p-1"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -300,7 +300,7 @@ export default function ContentApprovalPage() {
                   value={commentText}
                   onChange={e => setCommentText(e.target.value)}
                   placeholder="Describe the changes needed (e.g., change caption text, update image color, adjust doctor name placement)..."
-                  className="w-full p-3 border border-black rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-black"
+                  className="w-full p-3 border border-primary rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-black"
                 />
               </div>
 
@@ -314,7 +314,7 @@ export default function ContentApprovalPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-black text-white rounded-lg text-xs font-bold hover:bg-neutral-800"
+                  className="px-4 py-2 bg-primary text-white rounded-lg text-xs font-bold hover:bg-primary-700"
                 >
                   Submit Revision Request
                 </button>

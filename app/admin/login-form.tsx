@@ -103,7 +103,7 @@ export default function AdminLoginForm() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center p-6">
         <div className="text-center">
-          <div className="w-10 h-10 border-4 border-black border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-xs text-neutral-500 font-mono tracking-wider">SECURE CONNECTION STARTING...</p>
         </div>
       </div>
@@ -160,7 +160,7 @@ export default function AdminLoginForm() {
                       placeholder="admin@company.com"
                       value={setupEmail}
                       onChange={(e) => setSetupEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-sans"
+                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-sans"
                     />
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export default function AdminLoginForm() {
                       placeholder="Choose a strong password"
                       value={setupPassword}
                       onChange={(e) => setSetupPassword(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-mono"
+                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-mono"
                     />
                   </div>
                 </div>
@@ -186,7 +186,7 @@ export default function AdminLoginForm() {
                 <button
                   type="submit"
                   disabled={setupLoading}
-                  className="w-full py-2.5 px-4 bg-black text-white hover:bg-neutral-800 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-primary text-white hover:bg-primary-700 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {setupLoading ? (
                     <>
@@ -234,7 +234,7 @@ export default function AdminLoginForm() {
                       placeholder="admin@company.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-sans"
+                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-sans"
                     />
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function AdminLoginForm() {
                       placeholder="••••••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 pr-10 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-black focus:bg-white transition-all font-mono"
+                      className="w-full pl-10 pr-10 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-mono"
                     />
                     <button
                       type="button"
@@ -267,7 +267,7 @@ export default function AdminLoginForm() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-2.5 px-4 bg-black text-white hover:bg-neutral-800 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-primary text-white hover:bg-primary-700 disabled:bg-neutral-300 rounded-xl text-sm font-semibold tracking-tight transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {loading ? (
                     <>
@@ -284,7 +284,7 @@ export default function AdminLoginForm() {
               </form>
 
               <div className="mt-6 pt-4 border-t border-neutral-100 text-center">
-                <Link href="/client/login" className="text-xs text-neutral-500 hover:text-black transition-colors font-medium">
+                <Link href="/client/login" className="text-xs text-neutral-500 hover:text-primary transition-colors font-medium">
                   Client Portal Login →
                 </Link>
               </div>
