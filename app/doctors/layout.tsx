@@ -11,14 +11,14 @@ export default function DoctorsLayout({
     <div className="min-h-screen bg-white text-black font-sans antialiased selection:bg-primary selection:text-white border-t-2 border-primary flex flex-col justify-between">
       {/* Shared Public Header */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-primary/10">
-        <div className="max-w-6xl mx-auto px-6 h-20 md:h-auto md:py-8 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-6 h-20 md:h-24 md:py-0 flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image 
               src="/Logo(1).png" 
               alt="TopClues" 
               width={500} 
               height={500} 
-              className="h-12 sm:h-14 w-auto md:w-[400px] md:h-auto object-contain" 
+              className="h-12 sm:h-14 w-auto md:w-[220px] md:h-auto object-contain" 
               priority 
             />
           </Link>
