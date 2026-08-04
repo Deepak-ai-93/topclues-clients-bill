@@ -199,9 +199,9 @@ export default function TutorialPage() {
               <Image
                 src="/Logo(1).png"
                 alt="Logo"
-                width={120}
-                height={120}
-                className="w-16 md:w-20"
+                width={300}
+                height={300}
+                className="w-28 sm:w-40 md:w-[300px] h-auto"
               />
             </div>
           </div>

@@ -21,7 +21,7 @@ export default function DoctorHubLandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-primary/10">
         <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image src="/Logo(1).png" alt="TopClues" width={140} height={48} className="h-12 w-auto object-contain" priority />
+            <Image src="/Logo(1).png" alt="TopClues" width={300} height={300} className="h-12 sm:h-14 md:h-16 w-auto object-contain" priority />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-tight">
@@ -405,7 +405,7 @@ export default function DoctorHubLandingPage() {
       <footer className="border-t border-primary py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-mono text-neutral-500">
           <div className="flex items-center space-x-4">
-            <Image src="/Logo(1).png" alt="TopClues" width={100} height={32} className="h-8 w-auto object-contain" />
+            <Image src="/Logo(1).png" alt="TopClues" width={140} height={140} className="h-12 md:h-14 w-auto object-contain" />
             <span>© {new Date().getFullYear()} TopClues. All rights reserved.</span>
           </div>
           <div className="flex items-center space-x-6">

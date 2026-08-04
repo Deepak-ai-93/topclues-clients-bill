@@ -67,9 +67,9 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
             <Image
               src="/Logo(1).png"
               alt="Logo"
-              width={120}
-              height={120}
-              className="w-16 md:w-20"
+              width={300}
+              height={300}
+              className="w-28 md:w-40 h-auto"
             />
           </div>
           <p className="text-[10px] text-neutral-400 font-mono tracking-widest uppercase">Doctor Hub</p>

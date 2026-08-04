@@ -16,9 +16,9 @@ export default function DoctorsLayout({
             <Image 
               src="/Logo(1).png" 
               alt="TopClues" 
-              width={140} 
-              height={48} 
-              className="h-12 w-auto object-contain" 
+              width={300} 
+              height={300} 
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain" 
               priority 
             />
           </Link>
@@ -79,9 +79,9 @@ export default function DoctorsLayout({
             <Image 
               src="/Logo(1).png" 
               alt="TopClues" 
-              width={100} 
-              height={32} 
-              className="h-8 w-auto object-contain" 
+              width={140} 
+              height={140} 
+              className="h-12 md:h-14 w-auto object-contain" 
             />
             <span>© {new Date().getFullYear()} TopClues. All rights reserved.</span>
           </div>

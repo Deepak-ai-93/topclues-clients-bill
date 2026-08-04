@@ -77,9 +77,9 @@ export default function DoctorProfilePage() {
             <Image
               src="/Logo(1).png"
               alt="TopClues"
-              width={160}
-              height={48}
-              className="h-8 sm:h-9 md:h-10 w-auto max-w-[120px] sm:max-w-[140px] md:max-w-[160px] object-contain"
+              width={300}
+              height={300}
+              className="h-10 sm:h-12 md:h-14 w-auto max-w-[150px] sm:max-w-[180px] md:max-w-[200px] object-contain"
               priority
             />
           </div>

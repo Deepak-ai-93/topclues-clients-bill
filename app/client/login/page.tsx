@@ -86,9 +86,9 @@ export default function ClientLoginPage() {
             <Image
               src="/Logo(1).png"
               alt="Logo"
-              width={120}
-              height={120}
-              className="w-20 md:w-24"
+              width={300}
+              height={300}
+              className="w-40 sm:w-56 md:w-[300px] h-auto"
             />
           </div>
           <span className="text-[10px] text-neutral-500 font-mono border border-neutral-300 px-1.5 py-0.5 rounded">Powered by TopClues Solution</span>
