@@ -18,7 +18,7 @@ export default function DoctorsLayout({
               alt="TopClues" 
               width={500} 
               height={500} 
-              className="h-12 sm:h-14 w-auto md:w-[500px] md:h-auto object-contain" 
+              className="h-12 sm:h-14 w-auto md:w-[400px] md:h-auto object-contain" 
               priority 
             />
           </Link>

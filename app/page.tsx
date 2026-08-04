@@ -21,7 +21,7 @@ export default function DoctorHubLandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-primary/10">
         <div className="max-w-6xl mx-auto px-6 h-20 md:h-auto md:py-8 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image src="/Logo(1).png" alt="TopClues" width={500} height={500} className="h-12 sm:h-14 w-auto md:w-[500px] md:h-auto object-contain" priority />
+            <Image src="/Logo(1).png" alt="TopClues" width={500} height={500} className="h-12 sm:h-14 w-auto md:w-[400px] md:h-auto object-contain" priority />
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8 text-sm font-medium tracking-tight">
