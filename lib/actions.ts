@@ -26,8 +26,18 @@ export async function hasAdminUser() {
   }
 }
 
-export async function setupInitialAdmin(data: { email: string; password: string }) {
+export async function setupInitialAdmin(data: { email: string; password: string; setupKey?: string }) {
   try {
+    // Require the setup key (ADMIN_SETUP_SECRET) so strangers cannot claim
+    // the first admin account on a fresh deployment.
+    const expectedKey = process.env.ADMIN_SETUP_SECRET;
+    if (!expectedKey) {
+      return { success: false, error: 'First-time admin setup is disabled. Create the admin account via the database seed script instead.' };
+    }
+    if (!data.setupKey || data.setupKey !== expectedKey) {
+      return { success: false, error: 'Invalid setup key. Ask the Topclues agency for the admin setup key.' };
+    }
+
     // Check if an admin already exists
     const { hasAdmin } = await hasAdminUser();
     if (hasAdmin) {

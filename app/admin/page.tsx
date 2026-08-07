@@ -7,13 +7,15 @@ import {
   Users, 
   FileText, 
   Plus, 
-  ArrowRight,
   UploadCloud,
   FileCheck,
   Calendar,
-  UserPlus,
-  BarChart3
+  UserPlus
 } from 'lucide-react';
+import StatCard from '@/components/ui/stat-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
 interface RecentDocument {
   id: string;
@@ -81,165 +83,110 @@ export default function AdminDashboardPage() {
         </div>
 
         <div className="flex gap-3">
-          <Link
-            href="/admin/clients"
-            className="flex items-center gap-2 px-4 py-2 bg-primary text-white hover:bg-primary-700 rounded-xl text-xs font-semibold transition-all shadow-sm"
-          >
+          <Button href="/admin/clients" size="sm">
             <Plus className="w-3.5 h-3.5" />
             Add Client
-          </Link>
-          <Link
-            href="/admin/billing"
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-neutral-200 text-neutral-800 hover:bg-neutral-50 rounded-xl text-xs font-semibold transition-all shadow-sm"
-          >
+          </Button>
+          <Button href="/admin/billing" variant="outline" size="sm">
             <UploadCloud className="w-3.5 h-3.5 text-neutral-500" />
             Upload Invoice
-          </Link>
+          </Button>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        {/* KPI: Total Clients */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Registered Clients</span>
-            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
-              <Users className="w-4 h-4 text-neutral-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <div>
-              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalClients}</span>
-              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Secure Auth Accounts</p>
-            </div>
-            <Link href="/admin/clients" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
-              Manage <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-
-        {/* KPI: Total Documents */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Invoice Vault</span>
-            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
-              <FileText className="w-4 h-4 text-neutral-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <div>
-              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalDocuments}</span>
-              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Invoices & Receipts Logged</p>
-            </div>
-            <Link href="/admin/billing" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
-              Invoice console <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-
-        {/* KPI: Content Calendar */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Content Calendar</span>
-            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
-              <Calendar className="w-4 h-4 text-neutral-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <div>
-              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalContent}</span>
-              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Scheduled Assets</p>
-            </div>
-            <Link href="/admin/content" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
-              Manage <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-
-        {/* KPI: Leads */}
-        <div className="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:border-neutral-300 transition-all group">
-          <div className="flex justify-between items-start">
-            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">Leads Pipeline</span>
-            <div className="p-2 bg-neutral-50 rounded-lg border border-neutral-100 group-hover:bg-neutral-100 transition-all">
-              <UserPlus className="w-4 h-4 text-neutral-500" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <div>
-              <span className="text-3xl font-bold tracking-tight text-neutral-900">{stats.totalLeads}</span>
-              <p className="text-[10px] text-neutral-400 mt-1 uppercase font-mono">Active Leads Tracked</p>
-            </div>
-            <Link href="/admin/leads" className="text-xs font-semibold text-neutral-900 flex items-center gap-1 hover:underline">
-              Manage <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          label="Registered Clients"
+          value={stats.totalClients}
+          hint="Secure auth accounts"
+          icon={Users}
+          href="/admin/clients"
+        />
+        <StatCard
+          label="Invoice Vault"
+          value={stats.totalDocuments}
+          hint="Invoices & receipts"
+          icon={FileText}
+          href="/admin/billing"
+        />
+        <StatCard
+          label="Content Calendar"
+          value={stats.totalContent}
+          hint="Scheduled assets"
+          icon={Calendar}
+          href="/admin/content"
+        />
+        <StatCard
+          label="Leads Pipeline"
+          value={stats.totalLeads}
+          hint="Active leads tracked"
+          icon={UserPlus}
+          href="/admin/leads"
+        />
       </div>
 
       {/* Recent Activity Table */}
-      <div className="bg-white border border-neutral-200 rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-5 border-b border-neutral-100 flex items-center justify-between">
+      <Card className="overflow-hidden">
+        <CardHeader className="flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <FileCheck className="w-4.5 h-4.5 text-neutral-500" />
-            <h2 className="text-sm font-semibold text-neutral-950">Recent Invoice Uploads</h2>
+            <CardTitle className="text-sm font-semibold text-neutral-950">Recent Invoice Uploads</CardTitle>
           </div>
-          <span className="text-[10px] font-mono bg-neutral-100 text-neutral-500 px-2 py-0.5 rounded border border-neutral-200">
-            AUDITED
-          </span>
-        </div>
+          <Badge variant="accent" dot>Audited</Badge>
+        </CardHeader>
 
-        {stats.recentDocuments.length === 0 ? (
-          <div className="py-12 text-center">
-            <FileText className="w-10 h-10 text-neutral-300 mx-auto mb-2" />
-            <p className="text-xs text-neutral-500 font-medium">No invoices uploaded yet.</p>
-            <Link 
-              href="/admin/billing"
-              className="text-xs font-semibold text-neutral-900 underline mt-2 inline-block hover:text-neutral-700"
-            >
-              Upload your first invoice
-            </Link>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="border-b border-neutral-200 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
-                  <th className="py-3 px-6">Invoice Title</th>
-                  <th className="py-3 px-6">Client Name</th>
-                  <th className="py-3 px-6">Invoice Date</th>
-                  <th className="py-3 px-6">File Name</th>
-                  <th className="py-3 px-6 text-right">Uploaded At</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-neutral-100 text-xs">
-                {stats.recentDocuments.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-neutral-50/50 transition-colors">
-                    <td className="py-3.5 px-6 font-semibold text-neutral-900">{doc.title}</td>
-                    <td className="py-3.5 px-6 text-neutral-700">
-                      {doc.client ? (
-                        <div>
-                          <div className="font-semibold">{doc.client.name}</div>
-                          <div className="text-[10px] text-neutral-400">{doc.client.email}</div>
-                        </div>
-                      ) : (
-                        <span className="text-neutral-400 italic">Deleted Client</span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-6 text-neutral-500 font-mono">{doc.billing_date}</td>
-                    <td className="py-3.5 px-6 font-mono text-neutral-500">{doc.pdf_name}</td>
-                    <td className="py-3.5 px-6 text-right text-neutral-400">
-                      {new Date(doc.created_at).toLocaleDateString()}
-                    </td>
+        <CardContent className="p-0">
+          {stats.recentDocuments.length === 0 ? (
+            <div className="py-12 text-center">
+              <FileText className="w-10 h-10 text-neutral-300 mx-auto mb-2" />
+              <p className="text-xs text-neutral-500 font-medium">No invoices uploaded yet.</p>
+              <Link 
+                href="/admin/billing"
+                className="text-xs font-semibold text-neutral-900 underline mt-2 inline-block hover:text-neutral-700"
+              >
+                Upload your first invoice
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="border-b border-neutral-200 bg-neutral-50/50 text-[10px] font-bold text-neutral-400 uppercase tracking-wider">
+                    <th className="py-3 px-6">Invoice Title</th>
+                    <th className="py-3 px-6">Client Name</th>
+                    <th className="py-3 px-6">Invoice Date</th>
+                    <th className="py-3 px-6">File Name</th>
+                    <th className="py-3 px-6 text-right">Uploaded At</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+                </thead>
+                <tbody className="divide-y divide-neutral-100 text-xs">
+                  {stats.recentDocuments.map((doc) => (
+                    <tr key={doc.id} className="hover:bg-neutral-50/50 transition-colors">
+                      <td className="py-3.5 px-6 font-semibold text-neutral-900">{doc.title}</td>
+                      <td className="py-3.5 px-6 text-neutral-700">
+                        {doc.client ? (
+                          <div>
+                            <div className="font-semibold">{doc.client.name}</div>
+                            <div className="text-[10px] text-neutral-400">{doc.client.email}</div>
+                          </div>
+                        ) : (
+                          <span className="text-neutral-400 italic">Deleted Client</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-6 text-neutral-500 font-mono">{doc.billing_date}</td>
+                      <td className="py-3.5 px-6 font-mono text-neutral-500">{doc.pdf_name}</td>
+                      <td className="py-3.5 px-6 text-right text-neutral-400">
+                        {new Date(doc.created_at).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
     </div>
   );

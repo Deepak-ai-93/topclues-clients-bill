@@ -36,14 +36,26 @@ The design system for **Topclues Doctor Hub** focuses on **clarity, precision, a
 
 ### Usage Rules
 
-- **Primary buttons / CTAs:** `bg-primary text-white hover:bg-primary-700 border border-primary`
-- **Secondary buttons:** `bg-white text-black hover:bg-neutral-100 border border-primary`
-- **Cards:** `border border-primary` (plain cards stay `bg-white`); featured cards `border-2 border-primary bg-primary text-white`
+- **Primary buttons / CTAs:** `bg-primary text-white hover:bg-primary-700 border border-primary` (use shared `Button` primitive, `variant="primary"`)
+- **Secondary buttons:** `bg-white text-black hover:bg-neutral-100 border border-primary` (shared `Button`, `variant="secondary"`)
+- **Calm portal cards (dashboards, admin):** `bg-white border border-neutral-200 rounded-2xl shadow-card` (shared `Card` primitive / `StatCard`) — hover lifts to `shadow-raised`
+- **Editorial marketing cards (landing page):** `border border-primary rounded-xl bg-white hover:shadow-raised` — the landing keeps the strong editorial identity
+- **Featured / highlighted cards:** `border-2 border-primary bg-primary text-white` (packages, welcome bars)
+- **Active sidebar item:** calm pill — `bg-primary-50 text-primary-700 font-semibold` + left accent bar (`w-0.5 bg-primary`) instead of solid blue block
+- **Status pills:** shared `Badge` primitive — `primary` / `accent` / `amber` / `rose` / `neutral` variants; success `accent` uses `bg-accent-50 text-accent-700 border-accent-200`
+- **Empty states:** shared `EmptyState` primitive — dashed border, inviting copy ("No content queued right now") with an action link
 - **Links & hover:** `hover:text-primary`, `hover:bg-primary`
-- **Success / positive pills:** `bg-accent-100 text-accent-800 border-accent-300`; solid green CTAs (WhatsApp) `bg-accent-600 hover:bg-accent-700`
 - **Status colors:** amber = attention, red = overdue/failed, grey = inactive (unchanged)
 - **Modal scrims** stay dark (`bg-black/40`–`/60`)
-- **Body text** stays near-black (`neutral-900` / `text-black`) for readability
+- **Body text** stays near-black (`neutral-900`) for readability; keep `font-mono` labels at `neutral-500`+ for contrast
+
+### Motion & Elevation Tokens (`app/globals.css`)
+
+- Shadows: `shadow-card` (default card), `shadow-raised` (hover lift), `shadow-overlay` (modals), `shadow-primary` (primary CTAs)
+- Radius scale: `--radius-sm/md/lg/xl/2xl` (cards use `rounded-2xl`)
+- Motion: `animate-fade-up` / `animate-fade-in` / `animate-pulse-line` (ECG trace) / `animate-blink` (live dots); scroll reveals use `motion` `whileInView` with `ease: [0.16, 1, 0.3, 1]` and `viewport: { once: true }`
+- **Reduced motion:** `MotionConfig reducedMotion="user"` on the landing page + global CSS `prefers-reduced-motion` kill-switch
+- **Focus:** global `:focus-visible` outline in `primary-500` — do not remove
 
 ---
 

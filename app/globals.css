@@ -4,6 +4,7 @@
   --font-sans: var(--font-sans), "Inter", sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", monospace;
 
+  /* ---- Brand palette: TopClues blue + green on white ---- */
   --color-primary-50: #eef3fa;
   --color-primary-100: #d9e6f5;
   --color-primary-200: #b5cdeb;
@@ -26,4 +27,90 @@
   --color-accent-700: #276631;
   --color-accent-800: #205228;
   --color-accent: #3a9b47;
+
+  /* ---- Elevation: soft, layered shadows ---- */
+  --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --shadow-raised: 0 2px 4px rgb(16 24 40 / 0.05), 0 8px 24px -8px rgb(16 24 40 / 0.12);
+  --shadow-overlay: 0 4px 8px rgb(16 24 40 / 0.06), 0 24px 48px -12px rgb(16 24 40 / 0.2);
+  --shadow-primary: 0 1px 2px rgb(53 108 176 / 0.3), 0 8px 20px -6px rgb(53 108 176 / 0.45);
+
+  /* ---- Radius scale ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  /* ---- Motion: deliberate curves ---- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --animate-fade-up: fade-up 0.7s var(--ease-out-expo) both;
+  --animate-fade-in: fade-in 0.5s ease-out both;
+  --animate-pulse-line: pulse-line 3.2s var(--ease-in-out-soft) infinite;
+  --animate-tick-up: tick-up 1.6s var(--ease-out-expo) infinite;
+  --animate-blink: blink 1.4s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes pulse-line {
+    0% { stroke-dashoffset: 620; }
+    60% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -620; }
+  }
+  @keyframes tick-up {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-2px); opacity: 0.85; }
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-white text-neutral-900 font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-primary text-white;
+  }
+
+  /* Visible keyboard focus everywhere — WCAG 2.2 */
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }

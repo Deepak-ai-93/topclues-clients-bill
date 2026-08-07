@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import { supabase, supabaseAdmin } from './supabase';
+import { signSession, verifySession } from './session';
 
 export interface SessionData {
   userId: string;
@@ -15,9 +16,15 @@ export async function getSession(): Promise<SessionData | null> {
     if (!sessionCookie || !sessionCookie.value) {
       return null;
     }
-    const data = JSON.parse(Buffer.from(sessionCookie.value, 'base64').toString('utf-8')) as SessionData;
+
+    // Verify the HMAC signature FIRST — forged cookies are rejected here.
+    const data = (await verifySession(sessionCookie.value)) as SessionData | null;
+    if (!data) {
+      return null;
+    }
     
-    // Validate that the profile still exists in Supabase
+    // Validate that the profile still exists in Supabase and use the DB role
+    // as the source of truth (never the cookie).
     const { data: profile, error } = await supabaseAdmin
       .from('profiles')
       .select('id, email, role')
@@ -62,18 +69,18 @@ export async function loginUser(email: string, passwordHash: string): Promise<{ 
       return { success: false, error: 'User profile not found.' };
     }
 
-    // Create Session
+    // Create Session — payload is HMAC-signed so it cannot be forged
     const sessionData: SessionData = {
       userId: authData.user.id,
       email: authData.user.email || email,
       role: profile.role as 'admin' | 'client',
     };
     
-    const base64Session = Buffer.from(JSON.stringify(sessionData)).toString('base64');
+    const signedSession = await signSession(sessionData);
     
     // Set Cookie
     const cookieStore = await cookies();
-    cookieStore.set('client_portal_session', base64Session, {
+    cookieStore.set('client_portal_session', signedSession, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

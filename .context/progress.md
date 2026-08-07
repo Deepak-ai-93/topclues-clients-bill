@@ -139,13 +139,90 @@ Implemented the **Client Portal (Implementation Plan)** and **Public Doctor Dire
 #### 13. Version Control & GitHub Sync (August 4)
 - Committed and pushed to `origin/master`.
 
+#### 14. Doctor Hub Modules — Full Database Layer (Phases 0–1)
+- **Phase 0 (foundations):**
+  - `supabase/migrations/20260720000000_create_profiles.sql` — `profiles` table (FK → `auth.users`), `is_admin()` / `set_updated_at()` helpers, RLS policies, indexes.
+  - `supabase/migrations/20260722000000_schema_fixes.sql` — backfills `profiles` from legacy `users`, drops legacy `users` table + FK refs, creates `billing_documents`, RLS for legacy tables.
+  - `supabase/migrations/20260726000000_content_workflow_fixes.sql` — `content_calendars.asset_url/asset_name`, widened status/platform/source CHECKs, RLS for `analytics_reports` / `content_calendars` / `leads`.
+- **Phase 1 (modules):**
+  - `supabase/migrations/20260801000000_doctor_hub_modules.sql` — `content_comments`, `package_usage`, `special_offers` + `offer_claims`, `reviews_feedback`, `meetings`, `notifications`, `campaigns`, `social_snapshots`, `documents`, `lead_followups`; extended `support_tickets` / `leads` / `content_calendars`; RLS + indexes; storage buckets `documents`, `offer-assets`, `meeting-attachments`.
+  - `supabase/migrations/20260802000000_profile_package_link.sql` — `profiles.package_id` (→ `packages`), `clinic_name`, `specialization`.
+- **Hard auth** — `middleware.ts` guards `/client/*` and `/admin/*` via `getSession()` cookie; role-mismatch redirects; `next` query preserved.
+- **Seed** — `supabase/seed.sql`: auth users + full demo dataset (fixed UUIDs `…a001` admin, `…c101` doctor, `…b001` package). Credentials: `admin@topclues.in`/`Admin@123`, `dr.jay@topclues.in`/`Doctor@123`.
+- Cleanup: removed `lib/db.ts` + `db.json` (fake DB layer); rewrote `.env.example`.
+
+#### 15. Client Portal — All 9 Missing Routes (Phase 2)
+- Built every route the 17-item sidebar was pointing at (all live Supabase data via new server actions, no demo fixtures):
+  - `app/client/calendar/page.tsx` — month grid + list views, platform/status filters.
+  - `app/client/reports/page.tsx` — archive list, search/type filter, download.
+  - `app/client/invoices/page.tsx` — summary stats, status filter, invoice download.
+  - `app/client/leads/page.tsx` — search/filter, detail drawer with follow-up history, status update, call/WhatsApp links, CSV export.
+  - `app/client/campaigns/page.tsx` — stat cards, per-campaign spend/CPL.
+  - `app/client/social/page.tsx` — platform cards with brand colors.
+  - `app/client/reviews/page.tsx` — star-rating form, external links, history.
+  - `app/client/documents/page.tsx` — category/search filter, secure download.
+  - `app/client/settings/page.tsx` — security/notifications/language/privacy tabs, password change.
+- `app/invoice/[id]/route.ts` — secure signed-URL invoice redirect (ownership-checked).
+- `lib/actions.ts` grew ~40 new server actions (client + admin) — content comments, billing, campaigns, social, documents, reviews, meetings, notifications, lead follow-ups, offers/claims, tickets + replies, password change, and the admin CRUD counterparts.
+
+#### 16. Live Data Conversion (Phase 3)
+- `app/client/package/page.tsx` — rewritten: live `getClientPackageData`, usage tracker with progress bars, renewal date.
+- `app/client/profile/page.tsx` — live profile load/save, avatar upload/download.
+- `app/client/meetings/page.tsx` — live upcoming/past meetings, join links, meeting-request ticket.
+- `app/client/notifications/page.tsx` — live notifications, unread/read filters, mark-all-read, deep-link navigation.
+- `app/client/support/page.tsx` — live tickets, creation form, threaded replies (`addTicketReply`).
+- `app/client/offers/page.tsx` — live offers + claim state from `offer_claims` (action now returns claims).
+
+#### 17. Admin Console Parity Pages (Phase 4)
+- `app/admin/offers/page.tsx` — create offer (auto discount %), inline status change, delete.
+- `app/admin/reviews/page.tsx` — moderation (pending/approved/rejected), rating stats.
+- `app/admin/meetings/page.tsx` — schedule meetings (datetime, type, link, agenda), status change, delete.
+- `app/admin/documents/page.tsx` — upload via base64 → `documents` bucket, expiry tracking, download, delete (removes storage object).
+- `app/admin/notifications/page.tsx` — per-client notifications with type + deep link, delete.
+- `app/admin/tickets/page.tsx` — reply to client threads, status/priority updates, delete.
+- `admin-sidebar.tsx` — 6 new nav links + DockFooter updated.
+- Verified: `npx tsc --noEmit` clean; `npm run build` passes (46 routes). `npm run lint` is broken repo-wide by `@rushstack/eslint-patch` vs ESLint 9 (pre-existing, unrelated).
+
+#### 18. Deployment Sync (August 4)
+- Committed `0bb1ad8` — *"feat: doctor hub modules — live client routes, admin pages, supabase migrations"* (35 files, +7191/-829).
+- Committed `e612622` — *"fix: make doctor hub migrations idempotent for existing remote schema"* — all pending migrations rewritten with `IF NOT EXISTS` / `DROP … IF EXISTS` so they apply cleanly to both fresh and the partially-provisioned remote DB.
+- Pushed both to `origin/master` on `github.com/Deepak-ai-93/topclues-clients-bill`.
+- Applied all 5 pending migrations to the **remote** Supabase project via `supabase db push --include-all`; `supabase migration list` now shows all 9 local ↔ remote in sync.
+- Verified remotely: 11 new module tables live; `profiles`, `billing_documents`, `support_tickets` column backfills applied; storage buckets `documents` / `offer-assets` / `meeting-attachments` created.
+- `.env.local` verified complete (URL, publishable key, `DATABASE_URL`, service-role key, access token) and remains gitignored (`.env*` except `.env.example`).
+
+#### 19. Calm Design System Rollout (August 7)
+- **Shared UI primitives** — new `components/ui/` library used across portals:
+  - `button.tsx` — `Button` (CVA variants primary/secondary/outline/ghost/danger, sizes sm/md/lg, optional `href` via next/link, `external` prop) + exported `buttonVariants`.
+  - `card.tsx` — `Card` / `CardHeader` / `CardTitle` / `CardDescription` / `CardContent` / `CardFooter` (calm white cards, `shadow-card`, hover lift to `shadow-raised`).
+  - `badge.tsx` — `Badge` (primary/accent/neutral/amber/rose/solid pill variants, optional blinking `dot`) + exported `badgeVariants`.
+  - `stat-card.tsx` — `StatCard` (label, value, hint, icon, optional trend + href) for dashboard KPI grids.
+  - `empty-state.tsx` — `EmptyState` (dashed-border, icon, title, description, optional action) for zero-data panels.
+- **Signature hero widget** — `components/GrowthMonitor.tsx`: "Clinic Growth Monitor" vital-signs card (live patient-lead counter with tick-up animation, animated ECG pulse-line SVG in the blue→green brand gradient, approvals/rating/ROI mini-stats, mini bar chart, blinking live dot).
+- **Design tokens** (`app/globals.css` `@theme`) — shadow scale (`shadow-card`/`shadow-raised`/`shadow-overlay`/`shadow-primary`), radius scale (`--radius-sm…2xl`), motion curves (`--ease-out-expo`, `--ease-in-out-soft`) + keyframes (`fade-up`, `fade-in`, `pulse-line`, `tick-up`, `blink`), global `:focus-visible` primary outline, `prefers-reduced-motion` kill-switch, `scrollbar-none` utility.
+- **Restyled pages (calm pass):**
+  - `app/page.tsx` — landing rebuilt around the GrowthMonitor as hero thesis, `MotionConfig reducedMotion="user"`, fade-up scroll reveals, section headers with `//` mono eyebrows, calm card/button/CTA treatment.
+  - `app/client/page.tsx` — dashboard migrated to `StatCard` grid, `Badge`, `EmptyState`; live 6-month lead chart built from real lead data (no mock chart).
+  - `app/admin/page.tsx` — dashboard migrated to `StatCard`, `Card`, `Badge`, `Button`; hover-lift recent-uploads table.
+  - `app/admin/admin-sidebar.tsx` + `app/client/client-sidebar.tsx` — active link is now a calm pill (`bg-primary-50 text-primary-700` + left accent bar) instead of solid blue block; `aria-current` added.
+- **Docs** — `.context/design.md` usage rules updated (primitive-first guidance, calm portal cards vs editorial landing cards, motion & elevation tokens, reduced-motion + focus rules).
+- Verified: `npx tsc --noEmit` clean; `npm run build` passes (46 routes). Not committed (awaiting review).
+- **Remaining (next session):** roll the new primitives out to the other portal pages (client leads/calendar/reports/invoices/offers/reviews/documents/social/settings/support/campaigns/meetings/notifications/package/profile + admin billing/clients/leads/content/documents/meetings/tickets/offers/reviews/reports/notifications) which still use inline `shadow-sm` styles.
+
+#### 20. Admin Panel Access Hardening — Signed Session Cookies (August 7)
+- **Vulnerability fixed:** the portal session cookie was **unsigned base64 JSON** (`btoa(JSON.stringify({...}))`), so anyone could hand-craft a cookie with `{"role":"admin"}` and pass the edge middleware gate for `/admin/*`.
+- `lib/session.ts` (new) — HMAC-SHA256 signing/verification via the **Web Crypto API** so it runs in both Edge (middleware) and Node (server actions/layouts). Cookie format: `<base64(payload)>.<base64(hmac)>`. Production fails closed (throws) if `SESSION_SECRET` is missing.
+- `middleware.ts` — now `async`; calls `verifySession()` instead of trusting `atob` payload. Forged/tampered cookies are treated as no session → redirect to login.
+- `lib/auth.ts` — `loginUser` sets a signed cookie; `getSession()` verifies the signature first, then still re-checks the role from the `profiles` table in Supabase (DB is the source of truth, never the cookie).
+- `SESSION_SECRET` added to `.env.local` (gitignored, random 64-hex) and documented in `.env.example`.
+- Verified: `npm run build` clean; live tests — `/admin` and `/admin/leads` with **forged admin cookie** → 307 redirect to `/admin/login` (was exploitable before); `/client` → 307 to `/client/login`; `/admin/login` stays public (200).
+
 ## Immediate Next Steps & Backlog
-- [ ] Fix by creating remaining empty client routes hit by the 17-item sidebar: `/client/calendar`, `/client/reports`, `/client/invoices`, `/client/leads`, `/client/campaigns`, `/client/social`, `/client/reviews`, `/client/documents`, `/client/settings` (currently `client-sidebar` links to them).
-- [ ] Apply `supabase/migrations/..._doctor_hub_modules.sql` (content_comments, package_usage, special_offers, reviews, meetings, notifications, campaigns, social_snapshots, support_tickets_v2, ticket_messages) plus `content_calendars` approval columns.
-- [ ] Connect Supabase Auth for production OTP & password authentication.
-- [ ] Connect Supabase storage buckets for report PDFs & invoice downloads.
+- [ ] Run `supabase/seed.sql` against the remote project (remote currently has 0 packages and no demo data) — or migrate the 2 existing auth users (`dbagada910@gmail.com`, `unique@gmail.com`) into `profiles` with real package assignments.
+- [ ] Content page (`/client/content`) + admin content — align approval actions with new comment threads (`getContentComments` / `addContentComment`).
+- [ ] Dashboard (`/client` + `/admin`) — replace remaining mock/hardcoded chart data with live actions.
+- [ ] Fix `npm run lint` (repo-wide `@rushstack/eslint-patch` vs ESLint 9 incompatibility).
 - [ ] Generate AI headshot images for the 6 additional demo doctors → `public/doctors/*.jpg` and point `lib/doctors-data.ts` at them.
-- [ ] Add Offers / Meetings / Reviews / Notifications management pages to the Admin console (`/admin/offers`, `/admin/support`, `/admin/meetings`, `/admin/social`, `/admin/campaigns`, `/admin/notifications`).
 - [ ] Build out real doctor data from Supabase (replace demo data with live DB queries).
 - [ ] Implement actual appointment booking form linked to backend/WhatsApp API.
 - [ ] Photo Gallery & Video sections for the doctor profile page.

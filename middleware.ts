@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { verifySession } from '@/lib/session';
 
 interface SessionData {
   userId: string;
@@ -7,12 +8,16 @@ interface SessionData {
   role: 'admin' | 'client';
 }
 
-function readSession(request: NextRequest): SessionData | null {
+/**
+ * Reads and VERIFIES the signed session cookie. A forged or tampered cookie
+ * (e.g. someone hand-crafting `{"role":"admin"}`) fails the HMAC check and is
+ * treated as no session — so the admin console stays locked at the edge.
+ */
+async function readSession(request: NextRequest): Promise<SessionData | null> {
   try {
     const cookie = request.cookies.get('client_portal_session');
     if (!cookie?.value) return null;
-    const json = atob(cookie.value);
-    const data = JSON.parse(json) as SessionData;
+    const data = (await verifySession(cookie.value)) as SessionData | null;
     if (!data?.userId || !data?.role) return null;
     return data;
   } catch {
@@ -20,9 +25,9 @@ function readSession(request: NextRequest): SessionData | null {
   }
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const session = readSession(request);
+  const session = await readSession(request);
 
   // Client portal: requires a 'client' session (login page is public)
   if (pathname.startsWith('/client') && !pathname.startsWith('/client/login')) {

@@ -100,13 +100,17 @@ export default function ClientSidebar({ clientName, email, children }: ClientSid
               key={link.href}
               href={link.href}
               onClick={() => setSidebarOpen(false)}
-              className={`flex items-center gap-3 px-3 py-2 text-xs font-medium transition-colors ${
+              aria-current={isActive ? 'page' : undefined}
+              className={`relative flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-primary text-white rounded-lg'
-                  : 'text-neutral-600 hover:bg-neutral-100 rounded-lg'
+                  ? 'bg-primary-50 text-primary-700 font-semibold'
+                  : 'text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900'
               }`}
             >
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-neutral-400'}`} />
+              {isActive && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-full bg-primary" aria-hidden="true" />
+              )}
+              <Icon className={`w-4 h-4 ${isActive ? 'text-primary-600' : 'text-neutral-400'}`} />
               <span>{link.label}</span>
             </Link>
           );

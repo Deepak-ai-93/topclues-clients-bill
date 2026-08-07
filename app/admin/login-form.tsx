@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { loginUserAction, getServerSession, setupInitialAdmin, hasAdminUser } from '../../lib/actions';
+import { loginUserAction, getServerSession, setupInitialAdmin } from '../../lib/actions';
 import { motion } from 'motion/react';
 import Image from 'next/image';
 import { Lock, Mail, Eye, EyeOff, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
@@ -17,10 +17,11 @@ export default function AdminLoginForm() {
   const [pageLoading, setPageLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // First-time admin setup
+  // First-time admin setup (requires ADMIN_SETUP_SECRET key)
   const [needsSetup, setNeedsSetup] = useState(false);
   const [setupEmail, setSetupEmail] = useState('');
   const [setupPassword, setSetupPassword] = useState('');
+  const [setupKey, setSetupKey] = useState('');
   const [setupLoading, setSetupLoading] = useState(false);
 
   useEffect(() => {
@@ -47,14 +48,14 @@ export default function AdminLoginForm() {
 
   const handleSetupAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!setupEmail || !setupPassword) {
-      setError('Please fill in all fields.');
+    if (!setupEmail || !setupPassword || !setupKey) {
+      setError('Please fill in all fields, including the setup key.');
       return;
     }
     setSetupLoading(true);
     setError(null);
     try {
-      const res = await setupInitialAdmin({ email: setupEmail, password: setupPassword });
+      const res = await setupInitialAdmin({ email: setupEmail, password: setupPassword, setupKey });
       if (res.success) {
         const loginRes = await loginUserAction(setupEmail, setupPassword);
         if (loginRes.success) {
@@ -132,7 +133,7 @@ export default function AdminLoginForm() {
             <>
               <div className="mb-6">
                 <h2 className="text-xl font-bold tracking-tight text-neutral-900">Initialize System</h2>
-                <p className="text-sm text-neutral-500 mt-1">Create the first admin account.</p>
+                <p className="text-sm text-neutral-500 mt-1">Create the first admin account. Requires the agency setup key.</p>
               </div>
 
               <form onSubmit={handleSetupAdmin} className="space-y-5">
@@ -181,6 +182,25 @@ export default function AdminLoginForm() {
                       className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-mono"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-neutral-600 uppercase tracking-wider" htmlFor="setup_key">
+                    Setup Key
+                  </label>
+                  <div className="relative">
+                    <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
+                    <input
+                      id="setup_key"
+                      type="password"
+                      required
+                      placeholder="Agency setup key"
+                      value={setupKey}
+                      onChange={(e) => setSetupKey(e.target.value)}
+                      className="w-full pl-10 pr-4 py-2.5 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:outline-none focus:border-primary focus:bg-white transition-all font-mono"
+                    />
+                  </div>
+                  <p className="text-[11px] text-neutral-400 mt-1">Provided by the Topclues agency to initialize the first admin.</p>
                 </div>
 
                 <button
