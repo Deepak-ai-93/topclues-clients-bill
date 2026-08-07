@@ -206,7 +206,8 @@ Implemented the **Client Portal (Implementation Plan)** and **Public Doctor Dire
   - `app/admin/page.tsx` — dashboard migrated to `StatCard`, `Card`, `Badge`, `Button`; hover-lift recent-uploads table.
   - `app/admin/admin-sidebar.tsx` + `app/client/client-sidebar.tsx` — active link is now a calm pill (`bg-primary-50 text-primary-700` + left accent bar) instead of solid blue block; `aria-current` added.
 - **Docs** — `.context/design.md` usage rules updated (primitive-first guidance, calm portal cards vs editorial landing cards, motion & elevation tokens, reduced-motion + focus rules).
-- Verified: `npx tsc --noEmit` clean; `npm run build` passes (46 routes). Not committed (awaiting review).
+- Verified: `npx tsc --noEmit` clean; `npm run build` passes (46 routes).
+- Committed with the security work as `1192252` (see section 20) and pushed to `origin/master`.
 - **Remaining (next session):** roll the new primitives out to the other portal pages (client leads/calendar/reports/invoices/offers/reviews/documents/social/settings/support/campaigns/meetings/notifications/package/profile + admin billing/clients/leads/content/documents/meetings/tickets/offers/reviews/reports/notifications) which still use inline `shadow-sm` styles.
 
 #### 20. Admin Panel Access Hardening — Signed Session Cookies (August 7)
@@ -215,12 +216,16 @@ Implemented the **Client Portal (Implementation Plan)** and **Public Doctor Dire
 - `middleware.ts` — now `async`; calls `verifySession()` instead of trusting `atob` payload. Forged/tampered cookies are treated as no session → redirect to login.
 - `lib/auth.ts` — `loginUser` sets a signed cookie; `getSession()` verifies the signature first, then still re-checks the role from the `profiles` table in Supabase (DB is the source of truth, never the cookie).
 - `SESSION_SECRET` added to `.env.local` (gitignored, random 64-hex) and documented in `.env.example`.
+- **Admin takeover backdoor closed** — the public `/admin/login` first-time setup flow (`setupInitialAdmin`) let anyone claim the first admin account on a fresh deployment. It now requires an `ADMIN_SETUP_SECRET` env key (with a setup-key field in the login UI) and errors out when the key isn't configured; `hasAdminUser` import cleaned up from the form.
 - Verified: `npm run build` clean; live tests — `/admin` and `/admin/leads` with **forged admin cookie** → 307 redirect to `/admin/login` (was exploitable before); `/client` → 307 to `/client/login`; `/admin/login` stays public (200).
+- **Commit & push:** `1192252` — *"feat: calm design system rollout + harden admin panel access"* (26 files, +1762/-598) on `origin/master`.
 
 ## Immediate Next Steps & Backlog
-- [ ] Run `supabase/seed.sql` against the remote project (remote currently has 0 packages and no demo data) — or migrate the 2 existing auth users (`dbagada910@gmail.com`, `unique@gmail.com`) into `profiles` with real package assignments.
+- [ ] **PENDING — run `supabase/seed.sql` against the remote project** so `admin@topclues.in` / `Admin@123` exists and the first-time setup backdoor is fully moot (setup is now also gated by `ADMIN_SETUP_SECRET` as defense-in-depth). Remote currently has 0 packages / 0 demo data — or migrate the 2 existing auth users (`dbagada910@gmail.com`, `unique@gmail.com`) into `profiles` with real package assignments.
+- [ ] Set `SESSION_SECRET` + `ADMIN_SETUP_SECRET` on the production deployment (Vercel) env vars — the app fails closed without them.
 - [ ] Content page (`/client/content`) + admin content — align approval actions with new comment threads (`getContentComments` / `addContentComment`).
-- [ ] Dashboard (`/client` + `/admin`) — replace remaining mock/hardcoded chart data with live actions.
+- [ ] Dashboard — client + admin KPI stats already drain live actions (`getAdminDashboardData`, live 6-month lead chart); remaining mock/hardcoded chart data (e.g. admin performance charts) to be replaced.
+- [ ] Roll the new UI primitives out to the remaining portal pages (see section 19).
 - [ ] Fix `npm run lint` (repo-wide `@rushstack/eslint-patch` vs ESLint 9 incompatibility).
 - [ ] Generate AI headshot images for the 6 additional demo doctors → `public/doctors/*.jpg` and point `lib/doctors-data.ts` at them.
 - [ ] Build out real doctor data from Supabase (replace demo data with live DB queries).
